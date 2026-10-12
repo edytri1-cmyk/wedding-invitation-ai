@@ -1,0 +1,6 @@
+streamlit
+pandas
+jinja2
+google-genai
+groq
+python-dotenv

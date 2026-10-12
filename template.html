@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Undangan Pernikahan - {{ groom_name }} & {{ bride_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+        .font-serif-custom { font-family: 'Playfair Display', serif; }
+        
+        /* CSS Snap Scroll Multi-Page */
+        .snap-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            scroll-behavior: smooth;
+        }
+        .snap-page {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* DYNAMIC SPARKLING & FLOATING ANIMATION */
+        .sparkle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 223, 128, 0.95) 0%, rgba(255, 180, 50, 0.5) 40%, rgba(255, 255, 255, 0) 70%);
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            pointer-events: none;
+            animation: floatSparkle 6s infinite ease-in-out, colorShift 8s infinite alternate ease-in-out;
+        }
+
+        /* Animation 1: Vertical & Horizontal Floating Motion */
+        @keyframes floatSparkle {
+            0% {
+                transform: translateY(10px) translateX(0px) scale(0.4);
+                opacity: 0.1;
+            }
+            30% {
+                opacity: 0.9;
+                transform: translateY(-40px) translateX(15px) scale(1.1);
+            }
+            60% {
+                opacity: 0.6;
+                transform: translateY(-80px) translateX(-10px) scale(0.8);
+            }
+            100% {
+                transform: translateY(-120px) translateX(5px) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* Animation 2: Dynamic Color Shift (Gold -> Rose Gold -> Soft Purple -> Amber) */
+        @keyframes colorShift {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)); }
+            50% { filter: hue-rotate(45deg) drop-shadow(0 0 12px rgba(255, 105, 180, 0.9)); }
+            100% { filter: hue-rotate(-30deg) drop-shadow(0 0 10px rgba(255, 192, 203, 0.8)); }
+        }
+
+        /* GLOWING DYNAMIC MOTION BACKGROUND */
+        .motion-bg {
+            background-size: 300% 300%;
+            animation: luxuryGradient 10s ease infinite;
+            position: relative;
+        }
+
+        @keyframes luxuryGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Ambient Light Glow Overlay */
+        .ambient-glow {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(251, 191, 36, 0.15), transparent 70%);
+            animation: ambientPulse 5s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes ambientPulse {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            100% { opacity: 0.8; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="{{ theme_bg }} {{ theme_text }} min-h-screen flex justify-center bg-gray-950">
+
+    <!-- Container HP Fullscreen -->
+    <div class="w-full max-w-md h-screen shadow-2xl relative {{ theme_card_bg }} motion-bg overflow-hidden">
+        
+        <!-- Ambient Glow Overlay -->
+        <div class="ambient-glow"></div>
+
+        <!-- Dynamic Sparkling Particles Layer -->
+        <div class="sparkle w-6 h-6 bottom-10 left-6" style="animation-duration: 5s; animation-delay: 0s;"></div>
+        <div class="sparkle w-10 h-10 bottom-20 left-1/4" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
+        <div class="sparkle w-8 h-8 bottom-12 right-8" style="animation-duration: 6s; animation-delay: 0.8s;"></div>
+        <div class="sparkle w-12 h-12 bottom-32 right-1/4" style="animation-duration: 8s; animation-delay: 2.2s;"></div>
+        <div class="sparkle w-5 h-5 bottom-1/2 left-10" style="animation-duration: 5.5s; animation-delay: 3s;"></div>
+        <div class="sparkle w-9 h-9 bottom-1/3 right-12" style="animation-duration: 6.5s; animation-delay: 1.1s;"></div>
+
+        <!-- Snap Scroll Viewport -->
+        <div class="snap-container relative z-10">
+            
+            <!-- PAGE 1: HALAMAN UTAMA / COVER -->
+            <section class="snap-page flex flex-col justify-between p-8 text-center relative z-10">
+                <div class="mt-8 space-y-3">
+                    <p class="text-xs tracking-widest uppercase opacity-80">The Wedding Of</p>
+                    <h1 class="text-4xl font-serif-custom font-semibold tracking-wide">
+                        {{ groom_name }} <span class="text-2xl text-amber-400">&</span> {{ bride_name }}
+                    </h1>
+                    {% if guest_name %}
+                    <div class="mt-4 p-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                        <p class="text-[10px] uppercase tracking-widest opacity-75">Kepada Yth.</p>
+                        <p class="text-base font-semibold font-serif-custom text-amber-300">{{ guest_name }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="my-4 flex justify-center">
+                    <div class="w-56 h-72 rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/30">
+                        <img src="{{ photo_url }}" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <div class="space-y-2 pb-6">
+                    <p class="text-xs opacity-80 italic">"{{ quote_text }}"</p>
+                    <div class="animate-bounce pt-2 text-xs opacity-60">👆 Usap ke atas untuk melanjutkannya</div>
+                </div>
+            </section>
+
+            <!-- PAGE PREWEDDING PHOTOS: 1 PAGE 1 FOTO -->
+            {% if gallery_photos %}
+                {% for photo in gallery_photos %}
+                <section class="snap-page flex flex-col justify-center items-center p-6 relative z-10">
+                    <p class="text-xs uppercase tracking-widest opacity-70 mb-3">Momen Bahagia Kami</p>
+                    <div class="w-full h-[75vh] rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20">
+                        <img src="{{ photo }}" class="w-full h-full object-cover">
+                    </div>
+                </section>
+                {% endfor %}
+            {% endif %}
+
+            <!-- PAGE GABUNGAN: ACARA, LOKASI & KONFIRMASI KEHADIRAN (RSVP) -->
+            <section class="snap-page flex flex-col justify-center p-5 relative z-10 overflow-y-auto">
+                <h2 class="text-xl font-serif-custom font-semibold text-center mb-3 text-amber-300">Detail Acara & RSVP</h2>
+                
+                <!-- Card Detail Acara & Lokasi -->
+                <div class="p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-center space-y-2 shadow-lg mb-3">
+                    <p class="text-sm font-semibold">📅 {{ event_date }}</p>
+                    <p class="text-xs opacity-90">📍 {{ event_location }}</p>
+                    
+                    {% if maps_url %}
+                    <a href="{{ maps_url }}" target="_blank" class="inline-block mt-1 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-1.5 rounded-full text-[11px] shadow transition">
+                        🗺️ Buka Google Maps
+                    </a>
+                    {% endif %}
+
+                    {% if bank_info %}
+                    <div class="pt-2 border-t border-white/10 text-[11px]">
+                        <p class="font-semibold text-amber-300">🎁 Amplop Digital</p>
+                        <p class="opacity-90">{{ bank_info }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Card Form RSVP & Ucapan -->
+                <div class="p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 space-y-2.5 shadow-lg" id="rsvp-card">
+                    <p class="text-xs font-semibold text-center text-amber-200">Konfirmasi Kehadiran</p>
+                    <div>
+                        <label class="text-[10px] opacity-80">Nama Anda:</label>
+                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-1.5 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] opacity-80">Kehadiran:</label>
+                        <select id="rsvp-status" class="w-full p-1.5 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white">
+                            <option>Hadir</option>
+                            <option>Ragu-ragu</option>
+                            <option>Maaf, Tidak Bisa Hadir</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] opacity-80">Ucapan & Doa:</label>
+                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-1.5 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white h-12"></textarea>
+                    </div>
+                    <button onclick="submitRSVP()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-1.5 rounded-lg text-xs shadow-md transition">
+                        Kirim RSVP
+                    </button>
+                </div>
+
+                <script>
+                    function submitRSVP() {
+                        var nama = document.getElementById('rsvp-nama').value;
+                        var status = document.getElementById('rsvp-status').value;
+                        var ucapan = document.getElementById('rsvp-ucapan').value;
+
+                        if(!nama) {
+                            alert("Mohon isi nama Anda.");
+                            return;
+                        }
+
+                        var card = document.getElementById('rsvp-card');
+                        card.innerHTML = `
+                            <div class="text-center py-4 space-y-2">
+                                <p class="text-2xl">✅</p>
+                                <p class="text-xs font-bold text-amber-300">Terima Kasih, ${nama}!</p>
+                                <p class="text-[11px] opacity-80">Konfirmasi kehadiran (${status}) dan ucapan Anda telah berhasil terkirim.</p>
+                            </div>
+                        `;
+                    }
+                </script>
+            </section>
+
+            <!-- PAGE QR CHECK-IN TAMU -->
+            <section class="snap-page flex flex-col justify-center items-center p-6 text-center relative z-10">
+                <h2 class="text-2xl font-serif-custom font-semibold mb-2 text-amber-300">QR Code Check-In</h2>
+                <p class="text-xs opacity-75 mb-6">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
+                
+                <div class="p-4 bg-white rounded-2xl shadow-2xl">
+                    <div id="qrcode"></div>
+                </div>
+                <p class="text-xs font-semibold mt-4 text-amber-200">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
+
+                <div class="text-[10px] opacity-50 absolute bottom-4">
+                    Generated with AI Invitation Agent
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Floating Audio Player -->
+    {% if music_url %}
+    <div class="fixed bottom-4 right-4 z-50">
+        <audio id="bg-audio" loop src="{{ music_url }}"></audio>
+        <button onclick="toggleAudio()" class="bg-amber-500 text-slate-900 p-3 rounded-full shadow-2xl font-bold flex items-center justify-center">
+            🎵 <span id="audio-status" class="ml-1 text-xs">Play</span>
+        </button>
+    </div>
+    <script>
+        function toggleAudio() {
+            var audio = document.getElementById('bg-audio');
+            var status = document.getElementById('audio-status');
+            if (audio.paused) { audio.play(); status.innerText = "Pause"; } 
+            else { audio.pause(); status.innerText = "Play"; }
+        }
+    </script>
+    {% endif %}
+
+    <!-- Generate QR Code JS -->
+    <script>
+        window.onload = function() {
+            var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
+            new QRCode(document.getElementById("qrcode"), {
+                text: "CHECKIN-" + encodeURIComponent(guest),
+                width: 160,
+                height: 160
+            });
+        }
+    </script>
+</body>
+</html>
