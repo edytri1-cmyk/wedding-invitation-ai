@@ -510,12 +510,12 @@ else:
                 except Exception as e:
                     st.error(f"Gagal merender template HTML: {e}")
 
-        with col_preview:
-    st.subheader("👁️ Pratinjau Tampilan Undangan")
-    if "rendered_html" in st.session_state:
-        st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
-    else:
-        st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
+    with col_preview:
+        st.subheader("👁️ Pratinjau Tampilan Undangan")
+        if "rendered_html" in st.session_state:
+            st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
+        else:
+            st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
     # TAHAP 3
     elif active_step == menu_steps[2]:
