@@ -73,7 +73,7 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
             try:
                 gemini_client = genai.Client(api_key=GEMINI_KEY)
                 response = gemini_client.models.generate_content(
-                    model='gemini-3.8-flash',
+                    model='gemini-2.5-flash',
                     contents=prompt
                 )
                 if response and response.text:
@@ -134,8 +134,8 @@ if guest_name:
         html_template = saved_invitation["rendered_html"]
         final_html = html_template.replace("Budi Sudarsono", guest_name)
         
-        # GANTI DARI st.components.v1.html MENJADI st.markdown AGAR BISA SCROLL NATURAL
-        st.markdown(final_html, unsafe_allow_html=True)
+        # GUNAKAN st.components.v1.html DENGAN HEIGHT TINGGI AGAR TAMPIL SEMPURNA & BISA SCROLL
+        st.components.v1.html(final_html, height=1200, scrolling=True)
     else:
         st.markdown("### 💍 Undangan Pernikahan")
         st.warning("⚠️ Undangan belum di-generate oleh pemilik acara.")
@@ -152,7 +152,7 @@ if app_mode == "🔑 Admin":
     st.title("🔑 Dashboard Admin & Pemantauan Owner")
     
     admin_pass = st.sidebar.text_input("Password Admin:", type="password")
-    if admin_pass != "owner123":  # Ubah password sesuai keinginan
+    if admin_pass != "owner123": 
         st.warning("⚠️ Silakan masukkan password admin di sidebar untuk mengakses dashboard.")
         st.stop()
 
@@ -512,7 +512,8 @@ else:
             with col_preview:
                 st.subheader("👁️ Pratinjau Tampilan Undangan")
                 if "rendered_html" in st.session_state:
-                    st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
+                    # GUNAKAN st.components.v1.html DENGAN HEIGHT 800 AGAR RENDER DESAIN WEB UTUH
+                    st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
