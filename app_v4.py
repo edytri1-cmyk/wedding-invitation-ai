@@ -439,83 +439,82 @@ else:
                 
                 btn_generate = st.button("🚀 Generate & Kunci Desain AI", type="primary", use_container_width=True, disabled=is_session_active)
 
-        if btn_generate:
-            with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
-                prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text. Format JSON."
+                if btn_generate:
+                    with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
+                        prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text. Format JSON."
 
-                gallery_photos = []
-                if uploaded_photos and len(uploaded_photos) > 0:
-                    for photo in uploaded_photos:
-                        b64_photo = file_to_base64(photo)
-                        if b64_photo:
-                            gallery_photos.append(b64_photo)
+                        gallery_photos = []
+                        if uploaded_photos and len(uploaded_photos) > 0:
+                            for photo in uploaded_photos:
+                                b64_photo = file_to_base64(photo)
+                                if b64_photo:
+                                    gallery_photos.append(b64_photo)
+                        else:
+                            gallery_photos = [default_photo_url]
+
+                        ai_data, provider_used = generate_ai_content(prompt, theme_choice, groom_name, bride_name)
+
+                        st.info(f"API Provider yang merespons: {provider_used}")
+
+                        st.session_state["design_ready"] = True
+                        st.session_state["groom_name"] = groom_name
+                        st.session_state["bride_name"] = bride_name
+
+                        try:
+                            template_content = """
+                            <div class="{{theme_bg}} {{theme_text}} p-8 rounded-xl shadow-lg max-w-md mx-auto text-center font-sans">
+                                <h1 class="text-3xl font-bold mb-2">{{groom_name}} & {{bride_name}}</h1>
+                                <p class="italic text-sm mb-4">"{{quote_text}}"</p>
+                                <hr class="my-4 border-gray-600">
+                                <p class="font-semibold">{{event_date}}</p>
+                                <p class="text-sm mb-4">{{event_location}}</p>
+                                <img src="{{photo_url}}" class="rounded-lg mx-auto w-full h-64 object-cover mb-4">
+                                <p class="text-xs">Kepada Yth. <b>{{guest_name}}</b></p>
+                            </div>
+                            """
+                            if os.path.exists("template.html"):
+                                with open("template.html", "r", encoding="utf-8") as f:
+                                    template_content = f.read()
+
+                            jinja_template = Template(template_content)
+                            rendered_html = jinja_template.render(
+                                groom_name=groom_name,
+                                bride_name=bride_name,
+                                quote_text=ai_data.get("quote"),
+                                event_date=event_date.strftime("%d %B %Y"),
+                                event_day=event_day,
+                                event_time=event_time,
+                                event_location=event_location,
+                                maps_url=maps_url,
+                                photo_url=gallery_photos[0],
+                                gallery_photos=gallery_photos,
+                                bank_info=bank_info,
+                                music_url=final_music_url,
+                                guest_name=test_guest_name,
+                                theme_bg=ai_data.get("theme_bg", "bg-slate-900"),
+                                theme_card_bg=ai_data.get("theme_card_bg", "bg-slate-800"),
+                                theme_text=ai_data.get("theme_text", "text-amber-100")
+                            )
+
+                            invitation_payload = {
+                                "rendered_html": rendered_html,
+                                "groom_name": groom_name,
+                                "bride_name": bride_name,
+                                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            }
+                            save_json(INVITATION_DATA_FILE, invitation_payload)
+
+                            st.session_state["rendered_html"] = rendered_html
+                            st.success(f"✅ Undangan Berhasil Dibuat & Disimpan Permanen (Diproses via {provider_used})!")
+                        except Exception as e:
+                            st.error(f"Gagal merender template HTML: {e}")
+
+            with col_preview:
+                st.subheader("👁️ Pratinjau Tampilan Undangan")
+                if "rendered_html" in st.session_state:
+                    st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
                 else:
-                    gallery_photos = [default_photo_url]
-
-                ai_data, provider_used = generate_ai_content(prompt, theme_choice, groom_name, bride_name)
-
-                st.info(f"API Provider yang merespons: {provider_used}")
-
-                st.session_state["design_ready"] = True
-                st.session_state["groom_name"] = groom_name
-                st.session_state["bride_name"] = bride_name
-
-                try:
-                    template_content = """
-                    <div class="{{theme_bg}} {{theme_text}} p-8 rounded-xl shadow-lg max-w-md mx-auto text-center font-sans">
-                        <h1 class="text-3xl font-bold mb-2">{{groom_name}} & {{bride_name}}</h1>
-                        <p class="italic text-sm mb-4">"{{quote_text}}"</p>
-                        <hr class="my-4 border-gray-600">
-                        <p class="font-semibold">{{event_date}}</p>
-                        <p class="text-sm mb-4">{{event_location}}</p>
-                        <img src="{{photo_url}}" class="rounded-lg mx-auto w-full h-64 object-cover mb-4">
-                        <p class="text-xs">Kepada Yth. <b>{{guest_name}}</b></p>
-                    </div>
-                    """
-                    if os.path.exists("template.html"):
-                        with open("template.html", "r", encoding="utf-8") as f:
-                            template_content = f.read()
-
-                    jinja_template = Template(template_content)
-                    rendered_html = jinja_template.render(
-                        groom_name=groom_name,
-                        bride_name=bride_name,
-                        quote_text=ai_data.get("quote"),
-                        event_date=event_date.strftime("%d %B %Y"),
-                        event_day=event_day,
-                        event_time=event_time,
-                        event_location=event_location,
-                        maps_url=maps_url,
-                        photo_url=gallery_photos[0],
-                        gallery_photos=gallery_photos,
-                        bank_info=bank_info,
-                        music_url=final_music_url,
-                        guest_name=test_guest_name,
-                        theme_bg=ai_data.get("theme_bg", "bg-slate-900"),
-                        theme_card_bg=ai_data.get("theme_card_bg", "bg-slate-800"),
-                        theme_text=ai_data.get("theme_text", "text-amber-100")
-                    )
-
-                    # Simpan permanen ke file JSON agar bisa diakses via link tamu (?to=...)
-                    invitation_payload = {
-                        "rendered_html": rendered_html,
-                        "groom_name": groom_name,
-                        "bride_name": bride_name,
-                        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    }
-                    save_json(INVITATION_DATA_FILE, invitation_payload)
-
-                    st.session_state["rendered_html"] = rendered_html
-                    st.success(f"✅ Undangan Berhasil Dibuat & Disimpan Permanen (Diproses via {provider_used})!")
-                except Exception as e:
-                    st.error(f"Gagal merender template HTML: {e}")
-
-    with col_preview:
-        st.subheader("👁️ Pratinjau Tampilan Undangan")
-        if "rendered_html" in st.session_state:
-            st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
-        else:
-            st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
+                    st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
     # TAHAP 3
     elif active_step == menu_steps[2]:
