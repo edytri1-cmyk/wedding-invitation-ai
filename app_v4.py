@@ -121,7 +121,7 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
 st.sidebar.title("🛠️ Navigasi Sistem")
-app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 Klien (Wedding Generator)", "🔑 Dashboard Admin"])
+app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 User (Wedding Invitation AI)", "🔑 Admin"])
 
 # =========================================================
 # KONDISI 1: DASHBOARD ADMIN
