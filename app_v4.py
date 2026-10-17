@@ -124,6 +124,30 @@ st.sidebar.title("🛠️ Navigasi Sistem")
 app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 User (Wedding Invitation AI)", "🔑 Admin"])
 
 # =========================================================
+# DETEKSI JIKA DISETEL URL TAMU UNDANGAN (?to=NAMA_TAMU)
+# =========================================================
+query_params = st.query_params
+guest_name = query_params.get("to", None)
+
+if guest_name:
+    # 1. Ambil data HTML dari file atau session jika ada
+    # Jika Anda ingin menampilkan halaman undangan penuh tanpa menu portal generator:
+    if "rendered_html" in st.session_state:
+        st.components.v1.html(st.session_state["rendered_html"], height=1000, scrolling=True)
+    else:
+        # Tampilan sederhana / fallback jika tamu langsung buka link
+        st.markdown(f"# 💍 Undangan Pernikahan")
+        st.subheader(f"Kepada Yth. **{guest_name}**")
+        st.info("Mempelai mengundang Anda untuk hadir di acara pernikahan kami.")
+        
+        # Jika ada HTML yang sudah di-render, tampilkan di sini
+        if "rendered_html" in st.session_state:
+            st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
+            
+    # Hentikan eksekusi kode di bawahnya agar menu generator tidak muncul untuk tamu
+    st.stop()
+
+# =========================================================
 # KONDISI 1: DASHBOARD ADMIN
 # =========================================================
 if app_mode == "🔑 Dashboard Admin":
