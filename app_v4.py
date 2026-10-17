@@ -73,7 +73,7 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
             try:
                 gemini_client = genai.Client(api_key=GEMINI_KEY)
                 response = gemini_client.models.generate_content(
-                    model='gemini-2.5-flash',
+                    model='gemini-3.8-flash',
                     contents=prompt
                 )
                 if response and response.text:
