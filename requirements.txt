@@ -1,4 +1,5 @@
 streamlit
+midtransclient
 pandas
 jinja2
 google-genai
