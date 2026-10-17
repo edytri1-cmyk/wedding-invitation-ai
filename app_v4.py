@@ -132,12 +132,13 @@ if guest_name:
     
     if saved_invitation and "rendered_html" in saved_invitation:
         html_template = saved_invitation["rendered_html"]
-        # Render ulang atau ganti nama tamu default di HTML dengan nama tamu dari URL parameter
         final_html = html_template.replace("Budi Sudarsono", guest_name)
-        st.components.v1.html(final_html, height=1000, scrolling=True)
+        
+        # GANTI DARI st.components.v1.html MENJADI st.markdown AGAR BISA SCROLL NATURAL
+        st.markdown(final_html, unsafe_allow_html=True)
     else:
         st.markdown("### 💍 Undangan Pernikahan")
-        st.warning("⚠️ Undangan belum di-generate oleh pemilik acara. Silakan hubungi pengantin.")
+        st.warning("⚠️ Undangan belum di-generate oleh pemilik acara.")
         
     st.stop()
 
@@ -510,11 +511,11 @@ else:
                     st.error(f"Gagal merender template HTML: {e}")
 
         with col_preview:
-            st.subheader("👁️ Pratinjau Tampilan Undangan")
-            if "rendered_html" in st.session_state:
-                st.components.v1.html(st.session_state["rendered_html"], height=750, scrolling=True)
-            else:
-                st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
+    st.subheader("👁️ Pratinjau Tampilan Undangan")
+    if "rendered_html" in st.session_state:
+        st.markdown(st.session_state["rendered_html"], unsafe_allow_html=True)
+    else:
+        st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
     # TAHAP 3
     elif active_step == menu_steps[2]:
