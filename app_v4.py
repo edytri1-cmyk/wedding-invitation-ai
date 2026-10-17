@@ -20,6 +20,7 @@ RSVP_FILE = "rsvp_data.json"
 ORDERS_FILE = "orders_data.json"
 CHAT_FILE = "chat_messages.json"
 STATS_FILE = "stats_visitors.json"
+INVITATION_DATA_FILE = "generated_invitation.json"
 
 def load_json(filename, default_val):
     if os.path.exists(filename):
@@ -120,9 +121,6 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 # ---------------------------------------------------------
 st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
-st.sidebar.title("🛠️ Navigasi Sistem")
-app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 User (Wedding Invitation AI)", "🔑 Admin"])
-
 # =========================================================
 # DETEKSI JIKA DISETEL URL TAMU UNDANGAN (?to=NAMA_TAMU)
 # =========================================================
@@ -130,27 +128,26 @@ query_params = st.query_params
 guest_name = query_params.get("to", None)
 
 if guest_name:
-    # 1. Ambil data HTML dari file atau session jika ada
-    # Jika Anda ingin menampilkan halaman undangan penuh tanpa menu portal generator:
-    if "rendered_html" in st.session_state:
-        st.components.v1.html(st.session_state["rendered_html"], height=1000, scrolling=True)
+    saved_invitation = load_json(INVITATION_DATA_FILE, {})
+    
+    if saved_invitation and "rendered_html" in saved_invitation:
+        html_template = saved_invitation["rendered_html"]
+        # Render ulang atau ganti nama tamu default di HTML dengan nama tamu dari URL parameter
+        final_html = html_template.replace("Budi Sudarsono", guest_name)
+        st.components.v1.html(final_html, height=1000, scrolling=True)
     else:
-        # Tampilan sederhana / fallback jika tamu langsung buka link
-        st.markdown(f"# 💍 Undangan Pernikahan")
-        st.subheader(f"Kepada Yth. **{guest_name}**")
-        st.info("Mempelai mengundang Anda untuk hadir di acara pernikahan kami.")
+        st.markdown("### 💍 Undangan Pernikahan")
+        st.warning("⚠️ Undangan belum di-generate oleh pemilik acara. Silakan hubungi pengantin.")
         
-        # Jika ada HTML yang sudah di-render, tampilkan di sini
-        if "rendered_html" in st.session_state:
-            st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
-            
-    # Hentikan eksekusi kode di bawahnya agar menu generator tidak muncul untuk tamu
     st.stop()
+
+st.sidebar.title("🛠️ Navigasi Sistem")
+app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 User (Wedding Invitation AI)", "🔑 Admin"])
 
 # =========================================================
 # KONDISI 1: DASHBOARD ADMIN
 # =========================================================
-if app_mode == "🔑 Dashboard Admin":
+if app_mode == "🔑 Admin":
     st.title("🔑 Dashboard Admin & Pemantauan Owner")
     
     admin_pass = st.sidebar.text_input("Password Admin:", type="password")
@@ -498,8 +495,17 @@ else:
                         theme_text=ai_data.get("theme_text", "text-amber-100")
                     )
 
+                    # Simpan permanen ke file JSON agar bisa diakses via link tamu (?to=...)
+                    invitation_payload = {
+                        "rendered_html": rendered_html,
+                        "groom_name": groom_name,
+                        "bride_name": bride_name,
+                        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    }
+                    save_json(INVITATION_DATA_FILE, invitation_payload)
+
                     st.session_state["rendered_html"] = rendered_html
-                    st.success(f"✅ Undangan Berhasil Dibuat (Diproses via {provider_used})!")
+                    st.success(f"✅ Undangan Berhasil Dibuat & Disimpan Permanen (Diproses via {provider_used})!")
                 except Exception as e:
                     st.error(f"Gagal merender template HTML: {e}")
 
