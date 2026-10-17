@@ -153,18 +153,26 @@
                 <h2 class="text-xl font-serif-custom font-semibold text-center mb-3 text-amber-300">Detail Acara & RSVP</h2>
                 
                 <!-- Card Detail Acara & Lokasi -->
-                <div class="p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-center space-y-2 shadow-lg mb-3">
-                    <p class="text-sm font-semibold">📅 {{ event_date }}</p>
-                    <p class="text-xs opacity-90">📍 {{ event_location }}</p>
+                <!-- Card Detail Acara & Lokasi -->
+                <div class="detail-acara-box p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg mb-3 text-center flex flex-col items-center">
+                    <!-- Menampilkan Hari, Tanggal, dan Jam -->
+                    <p class="text-sm font-semibold mb-1">
+                        📅 {{ event_day }}, {{ event_date }}
+                    </p>
+                    <p class="text-sm mb-3">
+                        ⏰ Pukul {{ event_time }}
+                    </p>
                     
-                    {% if maps_url %}
-                    <a href="{{ maps_url }}" target="_blank" class="inline-block mt-1 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-1.5 rounded-full text-[11px] shadow transition">
+                    <p class="text-xs mb-3">
+                        📍 {{ event_location }}
+                    </p>
+
+                    <a href="{{ maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-3 py-1 rounded text-xs font-semibold mb-3">
                         🗺️ Buka Google Maps
                     </a>
-                    {% endif %}
 
                     {% if bank_info %}
-                    <div class="pt-2 border-t border-white/10 text-[11px]">
+                    <div class="pt-2 border-t border-white/10 text-[11px] mt-2">
                         <p class="font-semibold text-amber-300">🎁 Amplop Digital</p>
                         <p class="opacity-90">{{ bank_info }}</p>
                     </div>
