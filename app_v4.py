@@ -573,7 +573,7 @@ else:
 
             st.markdown("---")
             
-            default_base_url = "https://wedding-ai-generator.streamlit.app"
+            default_base_url = "https://wedding-invitation-ai.streamlit.app"
             base_url = st.text_input("Base URL Web Undangan Anda", default_base_url)
             
             custom_template = st.text_area(
