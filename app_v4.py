@@ -369,7 +369,7 @@ elif active_step == menu_steps[2]:
                             transaction_params = {
                                 "transaction_details": {
                                     "order_id": order_id_trx,
-                                    "gross_amount": 49000
+                                    "gross_amount": 10
                                 },
                                 "customer_details": {
                                     "first_name": buyer_name,
@@ -378,7 +378,7 @@ elif active_step == menu_steps[2]:
                                 },
                                 "item_details": [{
                                     "id": "LIC-30",
-                                    "price": 49000,
+                                    "price": 10,
                                     "quantity": 1,
                                     "name": "Lisensi Wedding AI Invitation 30 Hari"
                                 }]
