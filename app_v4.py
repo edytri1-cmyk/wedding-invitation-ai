@@ -116,91 +116,252 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 
 
 # ---------------------------------------------------------
-# UI STREAMLIT & LAYOUT UTAMA (USER JOURNEY)
+# PENGATURAN UTAMA & PEMILIHAN MODE (CLIENT VS ADMIN)
 # ---------------------------------------------------------
-st.set_page_config(page_title="Wedding AI Generator", layout="wide")
+st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
-st.title("💍 Wedding AI Invitation Generator")
+st.sidebar.title("🛠️ Navigasi Sistem")
+app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 Klien (Wedding Generator)", "🔑 Dashboard Admin"])
 
-# Inisialisasi Session State
-if "agreed_terms" not in st.session_state:
-    st.session_state["agreed_terms"] = False
+# =========================================================
+# KONDISI 1: DASHBOARD ADMIN
+# =========================================================
+if app_mode == "🔑 Dashboard Admin":
+    st.title("🔑 Dashboard Admin & Pemantauan Owner")
+    
+    admin_pass = st.sidebar.text_input("Password Admin:", type="password")
+    if admin_pass != "owner123":  # Ubah password sesuai keinginan
+        st.warning("⚠️ Silakan masukkan password admin di sidebar untuk mengakses dashboard.")
+        st.stop()
 
-menu_steps = [
-    "1️⃣ Penjelasan & Keamanan Data ➡️",
-    "2️⃣ Desain & Preview Undangan ➡️",
-    "3️⃣ Paket, Monetisasi & Broadcast ➡️",
-    "4️⃣ Manajemen RSVP Tamu"
-]
+    st.sidebar.success("✅ Login Admin Berhasil")
 
-active_step = st.radio(
-    "🧭 **Alur User Journey Aplikasi:**", 
-    menu_steps, 
-    horizontal=True,
-    index=0
-)
+    admin_menu = st.sidebar.radio(
+        "Pilih Menu Admin:", 
+        [
+            "💳 Dashboard Pendapatan", 
+            "🔑 Aktivasi & Override Manual", 
+            "📊 Statistik & Tren Kunjungan", 
+            "💬 Live Helpdesk Chat"
+        ]
+    )
 
-st.markdown("---")
+    # 1. Dashboard Pendapatan
+    if admin_menu == "💳 Dashboard Pendapatan":
+        st.subheader("💳 Dashboard Rekap & Monitoring Pendapatan")
+        st.info("Memantau total transaksi sukses dan akumulasi pendapatan dari lisensi undangan digital.")
 
-# Cek validitas masa aktif kode aktivasi (30 hari)
-orders_db = load_json(ORDERS_FILE, {})
-activated_code = st.session_state.get("activated_code_input", "")
-is_session_active = False
-
-if activated_code in orders_db:
-    order_info = orders_db[activated_code]
-    if order_info.get("status") == "ACTIVATED":
-        activated_date = datetime.strptime(order_info["activated_at"], "%Y-%m-%d %H:%M:%S")
-        if datetime.now() - activated_date <= timedelta(days=30):
-            is_session_active = True
+        orders_data = load_json(ORDERS_FILE, {})
+        if not orders_data:
+            st.warning("Belum ada data pesanan atau transaksi yang tercatat.")
         else:
-            st.sidebar.error("⚠️ Masa aktif kode aktivasi Anda telah melebihi 30 hari dan telah kedaluwarsa.")
+            order_list = []
+            for code, info in orders_data.items():
+                order_list.append({
+                    "Order ID / Kode": code,
+                    "Nama Pemilik": info.get("name", "Tidak Diketahui"),
+                    "Status": info.get("status", "UNKNOWN"),
+                    "Waktu Aktivasi": info.get("activated_at", "-")
+                })
+            
+            df_orders = pd.DataFrame(order_list)
+            total_orders = len(df_orders)
+            total_activated = len(df_orders[df_orders["Status"] == "ACTIVATED"])
+            estimated_revenue = total_activated * 49000
+            
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Total Transaksi Tercatat", total_orders)
+            col2.metric("Lisensi Aktif", total_activated)
+            col3.metric("Estimasi Pendapatan", f"Rp {estimated_revenue:,.0f}".replace(",", "."))
+            
+            st.markdown("---")
+            st.markdown("### 📋 Daftar Detail Transaksi & Lisensi")
+            st.dataframe(df_orders, use_container_width=True, hide_index=True)
 
+    # 2. Aktivasi & Override Manual
+    elif admin_menu == "🔑 Aktivasi & Override Manual":
+        st.subheader("🔑 Fitur Override & Aktivasi Manual Darurat")
+        st.info("Gunakan menu ini untuk memberikan atau memperpanjang akses lisensi secara manual kepada klien jika terjadi kendala pembayaran.")
 
-# =========================================================
-# TAHAP 1: Penjelasan & Keamanan Data
-# =========================================================
-if active_step == menu_steps[0]:
-    st.subheader("📖 1. Panduan Aplikasi & Jaminan Keamanan Data")
-    
-    col_info1, col_info2 = st.columns(2)
-    with col_info1:
-        st.markdown("""
-        ### 🌟 Tentang Aplikasi
-        **Wedding AI Generator** adalah platform pembuatan undangan pernikahan digital cerdas berbasis AI. 
-        Anda dapat mendesain undangan impian, mengatur musik latar belakang, menyebar undangan secara massal ke WhatsApp, 
-        serta memantau kehadiran tamu (RSVP) secara real-time.
+        with st.form("manual_override_form"):
+            col_f1, col_f2 = st.columns(2)
+            with col_f1:
+                manual_code = st.text_input("Kode Unik / Order ID (contoh: WAI-INV-12345)")
+                client_name = st.text_input("Nama Klien / Mempelai", "Klien VIP")
+            with col_f2:
+                client_email = st.text_input("Email Klien", "klien@example.com")
+                override_status = st.selectbox("Status Lisensi", ["ACTIVATED", "EXPIRED", "PENDING"])
+                
+            submitted_override = st.form_submit_button("🚀 Simpan / Override Aktivasi", type="primary")
+            
+            if submitted_override:
+                if manual_code.strip():
+                    orders_data = load_json(ORDERS_FILE, {})
+                    orders_data[manual_code.strip()] = {
+                        "name": client_name,
+                        "email": client_email,
+                        "status": override_status,
+                        "activated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    }
+                    save_json(ORDERS_FILE, orders_data)
+                    st.success(f"✅ Berhasil meng-override lisensi untuk Order ID: **{manual_code.strip()}** dengan status **{override_status}**!")
+                    st.rerun()
+                else:
+                    st.error("⚠️ Masukkan Kode Unik / Order ID yang valid.")
+
+        st.markdown("---")
+        st.markdown("### 📋 Kelola / Cabut Akses Lisensi")
+        orders_data = load_json(ORDERS_FILE, {})
+        if orders_data:
+            selected_code_to_delete = st.selectbox("Pilih Order ID untuk Dihapus/Direvoke:", ["-- Pilih --"] + list(orders_data.keys()))
+            if selected_code_to_delete != "-- Pilih --":
+                if st.button("🗑️ Revoke / Hapus Akses Lisensi Ini", type="secondary"):
+                    del orders_data[selected_code_to_delete]
+                    save_json(ORDERS_FILE, orders_data)
+                    st.success(f"Akses untuk {selected_code_to_delete} berhasil dicabut.")
+                    st.rerun()
+
+    # 3. Statistik & Tren Kunjungan
+    elif admin_menu == "📊 Statistik & Tren Kunjungan":
+        st.subheader("📊 Statistik Pengunjung & Tren Harian")
+        st.info("Memantau jumlah kunjungan harian ke aplikasi utama undangan digital.")
         
-        ### 🚀 Cara Penggunaan:
-        1. **Pahami & Setujui** Syarat dan Ketentuan di halaman ini.
-        2. Lanjut ke **Tahap 2**: Isi data mempelai, upload foto galeri, pilih tema AI, dan atur backsound musik. Generate undangan dan lihat preview-nya secara langsung.
-        3. Lanjut ke **Tahap 3**: Lakukan pembayaran transfer, konfirmasi pembayaran, masukkan kode aktivasi yang dikirim admin via email untuk membuka akses penuh selama 30 hari.
-        4. Lanjut ke **Tahap 4**: Pantau kehadiran tamu (RSVP) dan ucapan doa yang masuk ke buku tamu digital Anda.
-        """)
-    
-    with col_info2:
-        st.markdown("""
-        ### 🔒 Jaminan Keamanan & Privasi Data
-        * **Enkripsi Data:** Seluruh data pribadi dan foto dikelola secara aman dalam sesi pengguna.
-        * **Kerahasiaan Kontak Tamu:** Data nama tamu yang Anda unggah dapat anda hapus setelah selesai.
-        * **Kendali Penuh:** Anda memiliki kendali penuh untuk memperbarui data kapan saja.
-        """)
-    
-    st.markdown("---")
-    agreement = st.checkbox("Saya telah membaca, memahami penjelasan aplikasi, dan menyetujui syarat serta kebijakan keamanan data.", value=st.session_state["agreed_terms"])
-    
-    if agreement:
-        st.session_state["agreed_terms"] = True
-        st.success("✅ Anda telah menyetujui ketentuan. Silakan klik menu **'2️⃣ Desain & Preview Undangan'** di atas untuk melanjutkan.")
-    else:
+        stats_data = load_json(STATS_FILE, {})
+        if not stats_data:
+            st.info("Belum ada data kunjungan tercatat.")
+        else:
+            df_stats = pd.DataFrame(list(stats_data.items()), columns=["Tanggal", "Jumlah Pengunjung"])
+            df_stats = df_stats.sort_values(by="Tanggal", ascending=False)
+            
+            total_visitors = df_stats["Jumlah Pengunjung"].sum()
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            today_visitors = stats_data.get(today_str, 0)
+            
+            col_s1, col_s2 = st.columns(2)
+            col_s1.metric("Total Kunjungan Kumulatif", total_visitors)
+            col_s2.metric("Kunjungan Hari Ini", today_visitors)
+            
+            st.markdown("---")
+            st.dataframe(df_stats, use_container_width=True, hide_index=True)
+            
+            st.markdown("### 📈 Grafik Tren Pengunjung Harian")
+            st.bar_chart(df_stats.set_index("Tanggal"))
+
+    # 4. Live Helpdesk Chat (Admin Reply)
+    elif admin_menu == "💬 Live Helpdesk Chat":
+        st.subheader("💬 Live Chat Helpdesk dengan Pengguna (Privat per Sesi)")
+        
+        chat_history = load_json(CHAT_FILE, [])
+        if not chat_history:
+            st.info("Belum ada pesan chat masuk dari pengguna manapun.")
+        else:
+            active_sessions = list(set([c.get("session_id", "Unknown") for c in chat_history]))
+            selected_session = st.selectbox("Pilih Pengguna / Sesi:", active_sessions)
+            
+            st.markdown(f"--- \n**Sedang membalas chat untuk Sesi:** `{selected_session}`")
+            session_chats = [c for c in chat_history if c.get("session_id") == selected_session]
+            
+            @st.fragment(run_every=3)
+            def render_admin_selected_chat():
+                chat_container = st.container(height=350)
+                with chat_container:
+                    for chat in session_chats:
+                        sender_label = f"👤 **User ({selected_session})**" if chat['sender'] == "User" else "🛠️ **Admin**"
+                        st.markdown(f"{sender_label} *({chat['time']})*:\n{chat['message']}")
+                        st.markdown("---")
+            
+            render_admin_selected_chat()
+            
+            admin_reply = st.text_input(f"Balas Pesan ke {selected_session}:", key=f"reply_{selected_session}")
+            if st.button("Kirim Balasan ke User Ini", key=f"btn_reply_{selected_session}"):
+                if admin_reply.strip():
+                    chat_history.append({
+                        "session_id": selected_session,
+                        "sender": "Admin",
+                        "message": admin_reply,
+                        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    })
+                    save_json(CHAT_FILE, chat_history)
+                    st.success("Balasan terkirim ke user!")
+                    st.rerun()
+
+# =========================================================
+# KONDISI 2: KLIEN (WEDDING GENERATOR)
+# =========================================================
+else:
+    st.title("💍 Wedding AI Invitation Generator")
+
+    if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
-        st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
 
+    menu_steps = [
+        "1️⃣ Penjelasan & Keamanan Data ➡️",
+        "2️⃣ Desain & Preview Undangan ➡️",
+        "3️⃣ Paket, Monetisasi & Broadcast ➡️",
+        "4️⃣ Manajemen RSVP Tamu"
+    ]
 
-# =========================================================
-# TAHAP 2: Data Wedding, Upload Foto, Tema, Backsound & Preview
-# =========================================================
-elif active_step == menu_steps[1]:
+    active_step = st.radio(
+        "🧭 **Alur User Journey Aplikasi:**", 
+        menu_steps, 
+        horizontal=True,
+        index=0
+    )
+
+    st.markdown("---")
+
+    orders_db = load_json(ORDERS_FILE, {})
+    activated_code = st.session_state.get("activated_code_input", "")
+    is_session_active = False
+
+    if activated_code in orders_db:
+        order_info = orders_db[activated_code]
+        if order_info.get("status") == "ACTIVATED":
+            activated_date = datetime.strptime(order_info["activated_at"], "%Y-%m-%d %H:%M:%S")
+            if datetime.now() - activated_date <= timedelta(days=30):
+                is_session_active = True
+            else:
+                st.sidebar.error("⚠️ Masa aktif kode aktivasi Anda telah melebihi 30 hari dan telah kedaluwarsa.")
+
+    # TAHAP 1
+    if active_step == menu_steps[0]:
+        st.subheader("📖 1. Panduan Aplikasi & Jaminan Keamanan Data")
+        
+        col_info1, col_info2 = st.columns(2)
+        with col_info1:
+            st.markdown("""
+            ### 🌟 Tentang Aplikasi
+            **Wedding AI Generator** adalah platform pembuatan undangan pernikahan digital cerdas berbasis AI. 
+            Anda dapat mendesain undangan impian, mengatur musik latar belakang, menyebar undangan secara massal ke WhatsApp, 
+            serta memantau kehadiran tamu (RSVP) secara real-time.
+            
+            ### 🚀 Cara Penggunaan:
+            1. **Pahami & Setujui** Syarat dan Ketentuan di halaman ini.
+            2. Lanjut ke **Tahap 2**: Isi data mempelai, upload foto galeri, pilih tema AI, dan atur backsound musik. Generate undangan dan lihat preview-nya secara langsung.
+            3. Lanjut ke **Tahap 3**: Lakukan pembayaran transfer, konfirmasi pembayaran, masukkan kode aktivasi yang dikirim admin via email untuk membuka akses penuh selama 30 hari.
+            4. Lanjut ke **Tahap 4**: Pantau kehadiran tamu (RSVP) dan ucapan doa yang masuk ke buku tamu digital Anda.
+            """)
+        
+        with col_info2:
+            st.markdown("""
+            ### 🔒 Jaminan Keamanan & Privasi Data
+            * **Enkripsi Data:** Seluruh data pribadi dan foto dikelola secara aman dalam sesi pengguna.
+            * **Kerahasiaan Kontak Tamu:** Data nama tamu yang Anda unggah dapat anda hapus setelah selesai.
+            * **Kendali Penuh:** Anda memiliki kendali penuh untuk memperbarui data kapan saja.
+            """)
+        
+        st.markdown("---")
+        agreement = st.checkbox("Saya telah membaca, memahami penjelasan aplikasi, dan menyetujui syarat serta kebijakan keamanan data.", value=st.session_state["agreed_terms"])
+        
+        if agreement:
+            st.session_state["agreed_terms"] = True
+            st.success("✅ Anda telah menyetujui ketentuan. Silakan klik menu **'2️⃣ Desain & Preview Undangan'** di atas untuk melanjutkan.")
+        else:
+            st.session_state["agreed_terms"] = False
+            st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
+
+    # TAHAP 2
+    elif active_step == menu_steps[1]:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
         else:
@@ -325,240 +486,229 @@ elif active_step == menu_steps[1]:
             else:
                 st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
-
-# =========================================================
-# TAHAP 3: Paket, Pembayaran Otomatis (Midtrans) & Broadcast
-# =========================================================
-elif active_step == menu_steps[2]:
-    if not st.session_state.get("design_ready", False):
-        st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
-    else:
-        st.subheader("🚀 3. Redaksi WhatsApp, Link Tamu, & Pembayaran Otomatis")
-        
-        st.markdown("### 💳 Pembayaran Lisensi Akses 30 Hari (Otomatis via Midtrans)")
-        st.info("💡 Sistem pembayaran menggunakan **Midtrans Sandbox (Uji Coba)**.")
-
-        if is_session_active:
-            st.success("🎉 **Layanan Aktif!** Lisensi Anda berlaku penuh (Maksimal 30 hari sejak aktivasi). Seluruh fitur tahap 3 dan 4 dapat digunakan.")
+    # TAHAP 3
+    elif active_step == menu_steps[2]:
+        if not st.session_state.get("design_ready", False):
+            st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
         else:
-            st.warning("⚠️ Akses unduh link dan rekap RSVP terkunci. Silakan lakukan pembayaran otomatis di bawah ini.")
+            st.subheader("🚀 3. Redaksi WhatsApp, Link Tamu, & Pembayaran Otomatis")
             
-            with st.form("midtrans_payment_form"):
-                st.markdown("#### Form Data Pembeli")
-                buyer_name = st.text_input("Nama Lengkap", value=st.session_state.get("groom_name", ""))
-                buyer_email = st.text_input("Email Anda", value="client@example.com")
-                buyer_wa = st.text_input("Nomor WhatsApp", value="08123456789")
+            st.markdown("### 💳 Pembayaran Lisensi Akses 30 Hari (Otomatis via Midtrans)")
+            st.info("💡 Sistem pembayaran menggunakan **Midtrans Sandbox (Uji Coba)**.")
+
+            if is_session_active:
+                st.success("🎉 **Layanan Aktif!** Lisensi Anda berlaku penuh (Maksimal 30 hari sejak aktivasi). Seluruh fitur tahap 3 dan 4 dapat digunakan.")
+            else:
+                st.warning("⚠️ Akses unduh link dan rekap RSVP terkunci. Silakan lakukan pembayaran otomatis di bawah ini.")
                 
-                submitted_payment = st.form_submit_button("💳 Bayar Sekarang (Rp 49.000)", type="primary")
-
-                if submitted_payment:
-                    if buyer_name and buyer_email:
-                        try:
-                            # Ambil kunci dari st.secrets atau fallback ke variabel lokal
-                            mid_server_key = st.secrets["midtrans"]["server_key"] if "midtrans" in st.secrets else "SB-Mid-server-R1VA5qDJJ5ePzOsP5igqK0Xs"
-                            mid_client_key = st.secrets["midtrans"]["client_key"] if "midtrans" in st.secrets else "SB-Mid-client-CDejLrtqwH_UEbTAXSKD23Wv"
-
-                            snap = midtransclient.Snap(
-                                is_production=False,
-                                server_key=mid_server_key,
-                                client_key=mid_client_key
-                            )
-
-                            order_id_trx = f"WAI-INV-{int(time.time())}"
-                            
-                            transaction_params = {
-                                "transaction_details": {
-                                    "order_id": order_id_trx,
-                                    "gross_amount": 10
-                                },
-                                "customer_details": {
-                                    "first_name": buyer_name,
-                                    "email": buyer_email,
-                                    "phone": buyer_wa
-                                },
-                                "item_details": [{
-                                    "id": "LIC-30",
-                                    "price": 10,
-                                    "quantity": 1,
-                                    "name": "Lisensi Wedding AI Invitation 30 Hari"
-                                }]
-                            }
-
-                            charge_response = snap.create_transaction(transaction_params)
-                            redirect_url = charge_response['redirect_url']
-                            
-                            st.success("✅ Link Pembayaran Berhasil Dibuat!")
-                            st.markdown(f"👉 **[Klik Di Sini untuk Menyelesaikan Pembayaran]({redirect_url})**", unsafe_allow_html=True)
-                            
-                        except Exception as e:
-                            st.error(f"Gagal terhubung ke Midtrans: {str(e)}")
-                    else:
-                        st.error("Harap isi Nama dan Email Anda.")
-
-            st.markdown("---")
-            st.markdown("#### 🔑 Aktivasi Otomatis / Manual Kode Unik")
-            
-            code_input = st.text_input("Masukkan Kode Aktivasi / Order ID")
-            if st.button("Aktivasi Sekarang"):
-                if code_input.strip():
-                    orders_db[code_input] = {
-                        "name": "Simulasi Pembeli",
-                        "status": "ACTIVATED",
-                        "activated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    }
-                    save_json(ORDERS_FILE, orders_db)
+                with st.form("midtrans_payment_form"):
+                    st.markdown("#### Form Data Pembeli")
+                    buyer_name = st.text_input("Nama Lengkap", value=st.session_state.get("groom_name", ""))
+                    buyer_email = st.text_input("Email Anda", value="client@example.com")
+                    buyer_wa = st.text_input("Nomor WhatsApp", value="08123456789")
                     
-                    st.session_state["activated_code_input"] = code_input
-                    st.success("🎉 Simulasi Aktivasi Berhasil! Halaman akan dimuat ulang.")
-                    st.rerun()
-                else:
-                    st.error("❌ Masukkan kode yang valid.")
+                    submitted_payment = st.form_submit_button("💳 Bayar Sekarang (Rp 49.000)", type="primary")
 
-        st.markdown("---")
-        
-        # Broadcast & Link Tamu
-        default_base_url = "https://share.streamlit.io" # Sesuaikan jika sudah di-deploy
-        base_url = st.text_input("Base URL Web Undangan Anda", default_base_url)
-        
-        custom_template = st.text_area(
-            "Template Redaksi Pesan WhatsApp",
-            "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i *[NAMA_TAMU]* untuk menghadiri acara pernikahan kami.\n\nDetail undangan dapat diakses pada link berikut:\n[LINK_UNDANGAN]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\nTerima kasih.",
-            height=110
-        )
+                    if submitted_payment:
+                        if buyer_name and buyer_email:
+                            try:
+                                mid_server_key = st.secrets["midtrans"]["server_key"] if "midtrans" in st.secrets else "SB-Mid-server-R1VA5qDJJ5ePzOsP5igqK0Xs"
+                                mid_client_key = st.secrets["midtrans"]["client_key"] if "midtrans" in st.secrets else "SB-Mid-client-CDejLrtqwH_UEbTAXSKD23Wv"
 
-        st.markdown("---")
-        input_method = st.radio("Metode Input Daftar Tamu:", ["Upload File CSV (Rekomendasi Massal)", "Ketik / Paste Teks Manual"], horizontal=True)
+                                snap = midtransclient.Snap(
+                                    is_production=False,
+                                    server_key=mid_server_key,
+                                    client_key=mid_client_key
+                                )
 
-        guest_list = []
-        if input_method == "Upload File CSV (Rekomendasi Massal)":
-            uploaded_csv = st.file_uploader("Upload File CSV (Format: Kolom 'Nama')", type=["csv"])
-            if uploaded_csv is not None:
-                try:
-                    df_input = pd.read_csv(uploaded_csv)
-                    col_name = [c for c in df_input.columns if 'nama' in c.lower()]
-                    guest_list = df_input[col_name[0]].dropna().astype(str).tolist() if col_name else df_input.iloc[:, 0].dropna().astype(str).tolist()
-                    st.success(f"✅ Berhasil memuat {len(guest_list)} nama tamu!")
-                except Exception as e:
-                    st.error(f"Gagal membaca file CSV: {e}")
-        else:
-            raw_guests = st.text_area("Masukkan Nama Tamu (Satu Nama Per Baris)", "Budi Sudarsono\nKeluarga Besar Ahmad\nDr. Hendra & Istri", height=120)
-            guest_list = [g.strip() for g in raw_guests.split("\n") if g.strip()]
+                                order_id_trx = f"WAI-INV-{int(time.time())}"
+                                
+                                transaction_params = {
+                                    "transaction_details": {
+                                        "order_id": order_id_trx,
+                                        "gross_amount": 10
+                                    },
+                                    "customer_details": {
+                                        "first_name": buyer_name,
+                                        "email": buyer_email,
+                                        "phone": buyer_wa
+                                    },
+                                    "item_details": [{
+                                        "id": "LIC-30",
+                                        "price": 10,
+                                        "quantity": 1,
+                                        "name": "Lisensi Wedding AI Invitation 30 Hari"
+                                    }]
+                                }
 
-        if guest_list:
-            st.markdown("---")
-            table_data = []
-            for idx, guest in enumerate(guest_list, 1):
-                encoded_name = urllib.parse.quote(guest)
-                guest_link = f"{base_url}?to={encoded_name}"
-                wa_redaksi = custom_template.replace("[NAMA_TAMU]", guest).replace("[LINK_UNDANGAN]", guest_link)
+                                charge_response = snap.create_transaction(transaction_params)
+                                redirect_url = charge_response['redirect_url']
+                                
+                                st.success("✅ Link Pembayaran Berhasil Dibuat!")
+                                st.markdown(f"👉 **[Klik Di Sini untuk Menyelesaikan Pembayaran]({redirect_url})**", unsafe_allow_html=True)
+                                
+                            except Exception as e:
+                                st.error(f"Gagal terhubung ke Midtrans: {str(e)}")
+                        else:
+                            st.error("Harap isi Nama dan Email Anda.")
+
+                st.markdown("---")
+                st.markdown("#### 🔑 Aktivasi Otomatis / Manual Kode Unik")
                 
-                table_data.append({
-                    "No": idx,
-                    "Nama Tamu": guest,
-                    "Link Khusus": guest_link,
-                    "Redaksi WhatsApp Ready": wa_redaksi
-                })
+                code_input = st.text_input("Masukkan Kode Aktivasi / Order ID")
+                if st.button("Aktivasi Sekarang"):
+                    if code_input.strip():
+                        orders_db[code_input] = {
+                            "name": "Simulasi Pembeli",
+                            "status": "ACTIVATED",
+                            "activated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        save_json(ORDERS_FILE, orders_db)
+                        
+                        st.session_state["activated_code_input"] = code_input
+                        st.success("🎉 Simulasi Aktivasi Berhasil! Halaman akan dimuat ulang.")
+                        st.rerun()
+                    else:
+                        st.error("❌ Masukkan kode yang valid.")
 
-            df_result = pd.DataFrame(table_data)
-
-            st.dataframe(
-                df_result,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "Link Khusus": st.column_config.LinkColumn("Link Undangan (Klik/Copy)"),
-                    "Redaksi WhatsApp Ready": st.column_config.TextColumn("Redaksi WA", width="large")
-                }
+            st.markdown("---")
+            
+            default_base_url = "https://share.streamlit.io"
+            base_url = st.text_input("Base URL Web Undangan Anda", default_base_url)
+            
+            custom_template = st.text_area(
+                "Template Redaksi Pesan WhatsApp",
+                "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i *[NAMA_TAMU]* untuk menghadiri acara pernikahan kami.\n\nDetail undangan dapat diakses pada link berikut:\n[LINK_UNDANGAN]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\nTerima kasih.",
+                height=110
             )
 
-            csv_data = df_result.to_csv(index=False).encode('utf-8')
-            
-            if is_session_active:
-                st.download_button(
-                    "📥 Download Rekap CSV (Lengkap dengan Redaksi Teks WA)",
-                    data=csv_data,
-                    file_name="rekap_redaksi_undangan_wa.csv",
-                    mime="text/csv",
-                    type="primary",
-                    use_container_width=True
-                )
-            else:
-                st.warning("🔒 Tombol download terkunci. Selesaikan pembayaran untuk mengunduh rekap CSV.")
-
-
-# =========================================================
-# TAHAP 4: Manajemen RSVP & Buku Tamu
-# =========================================================
-elif active_step == menu_steps[3]:
-    st.subheader("📊 4. Manajemen RSVP & Buku Tamu Digital")
-    
-    if not is_session_active:
-        st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
-    else:
-        rsvp_list = load_json(RSVP_FILE, [])
-
-        if not rsvp_list:
-            st.info("Belum ada data RSVP masuk dari tamu undangan.")
-        else:
-            df_rsvp = pd.DataFrame(rsvp_list)
-            
-            total_respon = len(df_rsvp)
-            total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-            total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
-            total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Total Respon Tamu", total_respon)
-            m2.metric("Pasti Hadir", total_hadir)
-            m3.metric("Ragu-Ragu", total_ragu)
-            m4.metric("Tidak Hadir", total_absen)
-
             st.markdown("---")
-            st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
-            st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
+            input_method = st.radio("Metode Input Daftar Tamu:", ["Upload File CSV (Rekomendasi Massal)", "Ketik / Paste Teks Manual"], horizontal=True)
 
-            csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
-            st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name="rekap_status_rsvp_tamu.csv", mime="text/csv")
+            guest_list = []
+            if input_method == "Upload File CSV (Rekomendasi Massal)":
+                uploaded_csv = st.file_uploader("Upload File CSV (Format: Kolom 'Nama')", type=["csv"])
+                if uploaded_csv is not None:
+                    try:
+                        df_input = pd.read_csv(uploaded_csv)
+                        col_name = [c for c in df_input.columns if 'nama' in c.lower()]
+                        guest_list = df_input[col_name[0]].dropna().astype(str).tolist() if col_name else df_input.iloc[:, 0].dropna().astype(str).tolist()
+                        st.success(f"✅ Berhasil memuat {len(guest_list)} nama tamu!")
+                    except Exception as e:
+                        st.error(f"Gagal membaca file CSV: {e}")
+            else:
+                raw_guests = st.text_area("Masukkan Nama Tamu (Satu Nama Per Baris)", "Budi Sudarsono\nKeluarga Besar Ahmad\nDr. Hendra & Istri", height=120)
+                guest_list = [g.strip() for g in raw_guests.split("\n") if g.strip()]
 
-
-# =========================================================
-# LIVE HELPDESK CHAT (DI SIDEBAR)
-# =========================================================
-if "user_session_id" not in st.session_state:
-    st.session_state["user_session_id"] = f"USER-{str(uuid.uuid4())[:8]}"
-
-current_user_session = st.session_state["user_session_id"]
-
-user_msg = st.sidebar.text_input("Tulis Pesan ke Admin:", key="user_chat_input")
-if st.sidebar.button("Kirim Pesan", key="btn_send_user_chat"):
-    if user_msg.strip():
-        chat_history = load_json(CHAT_FILE, [])
-        chat_history.append({
-            "session_id": current_user_session,
-            "sender": "User",
-            "message": user_msg,
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-        save_json(CHAT_FILE, chat_history)
-        st.sidebar.success("Pesan terkirim!")
-        st.rerun()
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("**Riwayat Percakapan Anda:**")
-
-@st.fragment(run_every=3)
-def render_user_chat_history():
-    chat_history = load_json(CHAT_FILE, [])
-    my_chats = [c for c in chat_history if c.get("session_id") == current_user_session]
-    
-    chat_container = st.sidebar.container(height=250)
-    with chat_container:
-        if not my_chats:
-            st.info("Belum ada pesan.")
-        else:
-            for chat in my_chats:
-                sender_label = "👤 **Anda**" if chat['sender'] == "User" else "🛠️ **Admin**"
-                st.markdown(f"{sender_label} *({chat['time']})*:\n{chat['message']}")
+            if guest_list:
                 st.markdown("---")
+                table_data = []
+                for idx, guest in enumerate(guest_list, 1):
+                    encoded_name = urllib.parse.quote(guest)
+                    guest_link = f"{base_url}?to={encoded_name}"
+                    wa_redaksi = custom_template.replace("[NAMA_TAMU]", guest).replace("[LINK_UNDANGAN]", guest_link)
+                    
+                    table_data.append({
+                        "No": idx,
+                        "Nama Tamu": guest,
+                        "Link Khusus": guest_link,
+                        "Redaksi WhatsApp Ready": wa_redaksi
+                    })
 
-render_user_chat_history()
+                df_result = pd.DataFrame(table_data)
+
+                st.dataframe(
+                    df_result,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Link Khusus": st.column_config.LinkColumn("Link Undangan (Klik/Copy)"),
+                        "Redaksi WhatsApp Ready": st.column_config.TextColumn("Redaksi WA", width="large")
+                    }
+                )
+
+                csv_data = df_result.to_csv(index=False).encode('utf-8')
+                
+                if is_session_active:
+                    st.download_button(
+                        "📥 Download Rekap CSV (Lengkap dengan Redaksi Teks WA)",
+                        data=csv_data,
+                        file_name="rekap_redaksi_undangan_wa.csv",
+                        mime="text/csv",
+                        type="primary",
+                        use_container_width=True
+                    )
+                else:
+                    st.warning("🔒 Tombol download terkunci. Selesaikan pembayaran untuk mengunduh rekap CSV.")
+
+    # TAHAP 4
+    elif active_step == menu_steps[3]:
+        st.subheader("📊 4. Manajemen RSVP & Buku Tamu Digital")
+        
+        if not is_session_active:
+            st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
+        else:
+            rsvp_list = load_json(RSVP_FILE, [])
+
+            if not rsvp_list:
+                st.info("Belum ada data RSVP masuk dari tamu undangan.")
+            else:
+                df_rsvp = pd.DataFrame(rsvp_list)
+                
+                total_respon = len(df_rsvp)
+                total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
+                total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+
+                m1, m2, m3, m4 = st.columns(4)
+                m1.metric("Total Respon Tamu", total_respon)
+                m2.metric("Pasti Hadir", total_hadir)
+                m3.metric("Ragu-Ragu", total_ragu)
+                m4.metric("Tidak Hadir", total_absen)
+
+                st.markdown("---")
+                st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
+                st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
+
+                csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
+                st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name="rekap_status_rsvp_tamu.csv", mime="text/csv")
+
+    # LIVE HELPDESK CHAT (DI SIDEBAR KLIEN)
+    if "user_session_id" not in st.session_state:
+        st.session_state["user_session_id"] = f"USER-{str(uuid.uuid4())[:8]}"
+
+    current_user_session = st.session_state["user_session_id"]
+
+    user_msg = st.sidebar.text_input("Tulis Pesan ke Admin:", key="user_chat_input")
+    if st.sidebar.button("Kirim Pesan", key="btn_send_user_chat"):
+        if user_msg.strip():
+            chat_history = load_json(CHAT_FILE, [])
+            chat_history.append({
+                "session_id": current_user_session,
+                "sender": "User",
+                "message": user_msg,
+                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+            save_json(CHAT_FILE, chat_history)
+            st.sidebar.success("Pesan terkirim!")
+            st.rerun()
+
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("**Riwayat Percakapan Anda:**")
+
+    @st.fragment(run_every=3)
+    def render_user_chat_history():
+        chat_history = load_json(CHAT_FILE, [])
+        my_chats = [c for c in chat_history if c.get("session_id") == current_user_session]
+        
+        chat_container = st.sidebar.container(height=250)
+        with chat_container:
+            if not my_chats:
+                st.info("Belum ada pesan.")
+            else:
+                for chat in my_chats:
+                    sender_label = "👤 **Anda**" if chat['sender'] == "User" else "🛠️ **Admin**"
+                    st.markdown(f"{sender_label} *({chat['time']})*:\n{chat['message']}")
+                    st.markdown("---")
+
+    render_user_chat_history()
