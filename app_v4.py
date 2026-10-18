@@ -126,18 +126,14 @@ st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 # =========================================================
 query_params = st.query_params
 
-# 1. TANGKAP DATA RSVP TERLEBIH DAHULU (SEBELUM st.stop())
 rsvp_action = query_params.get("rsvp_action", None)
-
 if rsvp_action == "true":
     incoming_name = query_params.get("nama", "Tamu Anonim")
     incoming_status = query_params.get("status", "Hadir")
     incoming_ucapan = query_params.get("ucapan", "-")
     
-    # Load database RSVP yang ada
     rsvp_list = load_json(RSVP_FILE, [])
     
-    # Tambahkan data baru ke JSON
     rsvp_list.append({
         "Nama Tamu": urllib.parse.unquote(incoming_name),
         "Kehadiran": urllib.parse.unquote(incoming_status),
@@ -145,27 +141,18 @@ if rsvp_action == "true":
         "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
     
-    # Simpan permanen ke rsvp_data.json
     save_json(RSVP_FILE, rsvp_list)
 
-
-# 2. TAMPILKAN HALAMAN UNDANGAN TAMU JIKA ADANYA PARAMETER ?to=
 guest_name = query_params.get("to", None)
-
 if guest_name:
     saved_invitation = load_json(INVITATION_DATA_FILE, {})
-    
     if saved_invitation and "rendered_html" in saved_invitation:
         html_template = saved_invitation["rendered_html"]
         final_html = html_template.replace("Budi Sudarsono", guest_name)
-        
-        # Render tampilan undangan
         st.components.v1.html(final_html, height=1200, scrolling=True)
     else:
         st.markdown("### 💍 Undangan Pernikahan")
         st.warning("⚠️ Undangan belum di-generate oleh pemilik acara.")
-        
-    # HANYA STOP JIKA TIDAK SEDANG MENGIRIM RSVP, ATAU TETAP STOP SETELAH MERENDER UNDANGAN
     st.stop()
 
 st.sidebar.title("🛠️ Navigasi Sistem")
