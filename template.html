@@ -194,8 +194,8 @@
                         return;
                     }
             
-                    // Ambil base URL saat ini dan tambahkan parameter RSVP
-                    var currentUrl = window.location.href.split('?')[0];
+                    // Kirim data ke parent window (Streamlit utama) melalui postMessage atau arahkan parent window
+                    var currentUrl = window.parent.location.href.split('?')[0];
                     var guestNameParam = "{{ guest_name if guest_name else '' }}";
                     
                     var targetUrl = currentUrl + "?to=" + encodeURIComponent(guestNameParam) + 
@@ -204,11 +204,10 @@
                                     "&status=" + encodeURIComponent(status) + 
                                     "&ucapan=" + encodeURIComponent(ucapan);
             
-                    // Arahkan halaman ke URL pengiriman untuk menyimpan ke server
-                    window.location.href = targetUrl;
+                    // Arahkan halaman utama Streamlit ke URL target agar terbaca oleh Python di app.py
+                    window.parent.location.href = targetUrl;
                 }
             </script>
-            </section>
 
             <!-- SECTION QR CODE CHECK-IN TAMU -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
