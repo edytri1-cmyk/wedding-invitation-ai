@@ -207,8 +207,12 @@
                     // Kirim data langsung ke Google Sheets Web App (Bebas dari blokir iframe Streamlit)
                     var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
                     
+                    // Mengambil user_id dari URL parameter (misal: ?user_id=user123) atau default
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const currentUserId = urlParams.get('user_id') || "user_1"; // Sesuaikan dengan logika session Anda
+                    
                     var payload = {
-                        user_id: "{{ current_user_id }}", // ID unik user pembuat undangan
+                        user_id: currentUserId, // Mengirimkan user_id yang dinamis
                         nama: nama,
                         status: status,
                         ucapan: ucapan
