@@ -183,7 +183,7 @@
                     </button>
                 </div>
 
-                <script>
+            <script>
                 function submitRSVP() {
                     var nama = document.getElementById('rsvp-nama').value;
                     var status = document.getElementById('rsvp-status').value;
@@ -194,33 +194,30 @@
                         return;
                     }
             
-                    // 1. Tampilkan indikator sukses di layar HP secara instan
+                    // Tampilkan pesan sukses instan di HP
                     var card = document.getElementById('rsvp-card');
                     card.innerHTML = `
                         <div class="text-center py-6 space-y-2">
                             <p class="text-3xl">✅</p>
                             <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                            <p class="text-xs opacity-80">Konfirmasi kehadiran (${status}) berhasil direkam.</p>
+                            <p class="text-xs opacity-80">Konfirmasi kehadiran Anda berhasil disimpan.</p>
                         </div>
                     `;
             
-                    // 2. Susun URL tujuan ke server utama Streamlit
-                    var baseUrl = "https://wedding-invitation-ai.streamlit.app/";
-                    var guestNameParam = "{{ guest_name if guest_name else '' }}";
+                    // Kirim data langsung ke Google Sheets Web App (Bebas dari blokir iframe Streamlit)
+                    var scriptUrl = "MASUKKAN_URL_WEB_APP_GOOGLE_SCRIPT_ANDA_DI_SINI";
                     
-                    var targetUrl = baseUrl + "?to=" + encodeURIComponent(guestNameParam) + 
-                                    "&rsvp_action=true" +
-                                    "&nama=" + encodeURIComponent(nama) + 
-                                    "&status=" + encodeURIComponent(status) + 
-                                    "&ucapan=" + encodeURIComponent(ucapan);
+                    var payload = {
+                        nama: nama,
+                        status: status,
+                        ucapan: ucapan
+                    };
             
-                    // 3. Gunakan fetch background agar server membaca kedatangan data, lalu redirect
-                    fetch(targetUrl, { mode: 'no-cors' }).then(function() {
-                        setTimeout(function() {
-                            window.top.location.href = targetUrl;
-                        }, 500);
-                    }).catch(function(err) {
-                        window.top.location.href = targetUrl;
+                    fetch(scriptUrl, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
                     });
                 }
             </script>
