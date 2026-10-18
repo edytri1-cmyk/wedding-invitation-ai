@@ -126,8 +126,9 @@ st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 # =========================================================
 query_params = st.query_params
 
-# Cek apakah ada kiriman data RSVP dari form HTML
+# 1. TANGKAP DATA RSVP TERLEBIH DAHULU (SEBELUM st.stop())
 rsvp_action = query_params.get("rsvp_action", None)
+
 if rsvp_action == "true":
     incoming_name = query_params.get("nama", "Tamu Anonim")
     incoming_status = query_params.get("status", "Hadir")
@@ -136,7 +137,7 @@ if rsvp_action == "true":
     # Load database RSVP yang ada
     rsvp_list = load_json(RSVP_FILE, [])
     
-    # Tambahkan data baru
+    # Tambahkan data baru ke JSON
     rsvp_list.append({
         "Nama Tamu": urllib.parse.unquote(incoming_name),
         "Kehadiran": urllib.parse.unquote(incoming_status),
@@ -144,12 +145,11 @@ if rsvp_action == "true":
         "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
     
-    # Simpan kembali ke rsvp_data.json
+    # Simpan permanen ke rsvp_data.json
     save_json(RSVP_FILE, rsvp_list)
-    
-    # Bersihkan parameter rsvp_action agar tidak berulang saat direfresh
-    st.success("✅ Terima kasih! Konfirmasi kehadiran Anda berhasil disimpan.")
 
+
+# 2. TAMPILKAN HALAMAN UNDANGAN TAMU JIKA ADANYA PARAMETER ?to=
 guest_name = query_params.get("to", None)
 
 if guest_name:
@@ -159,12 +159,13 @@ if guest_name:
         html_template = saved_invitation["rendered_html"]
         final_html = html_template.replace("Budi Sudarsono", guest_name)
         
-        # GUNAKAN st.components.v1.html DENGAN HEIGHT TINGGI AGAR TAMPIL SEMPURNA & BISA SCROLL
+        # Render tampilan undangan
         st.components.v1.html(final_html, height=1200, scrolling=True)
     else:
         st.markdown("### 💍 Undangan Pernikahan")
         st.warning("⚠️ Undangan belum di-generate oleh pemilik acara.")
         
+    # HANYA STOP JIKA TIDAK SEDANG MENGIRIM RSVP, ATAU TETAP STOP SETELAH MERENDER UNDANGAN
     st.stop()
 
 st.sidebar.title("🛠️ Navigasi Sistem")
