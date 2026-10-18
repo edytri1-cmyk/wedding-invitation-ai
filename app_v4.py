@@ -717,8 +717,14 @@ else:
             GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsaN2n7MKVozzpZ-61okbgxjp8JE1CgA6HG2TUEn2AMqBDFOJ3vdtHeTlJDngnlIFa7P3zgf1ppzvX/pub?gid=0&single=true&output=csv"
             
             try:
+                # Ambil ID user yang sedang aktif di session
+                current_user = st.session_state.get("user_id", "user_1")
+                
                 # Membaca data langsung secara real-time dari Google Sheets
                 df_rsvp = pd.read_csv(GOOGLE_SHEET_CSV_URL)
+
+                # FILTER DATA: Hanya ambil baris milik user ini
+                df_rsvp = df_all[df_all['User_ID'] == current_user]
                 
                 if df_rsvp.empty:
                     st.info("Belum ada data RSVP masuk dari tamu undangan.")
