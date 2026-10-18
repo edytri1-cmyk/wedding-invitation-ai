@@ -184,26 +184,30 @@
                 </div>
 
                 <script>
-                    function submitRSVP() {
-                        var nama = document.getElementById('rsvp-nama').value;
-                        var status = document.getElementById('rsvp-status').value;
-                        var ucapan = document.getElementById('rsvp-ucapan').value;
-
-                        if(!nama) {
-                            alert("Mohon isi nama Anda.");
-                            return;
-                        }
-
-                        var card = document.getElementById('rsvp-card');
-                        card.innerHTML = `
-                            <div class="text-center py-4 space-y-2">
-                                <p class="text-2xl">✅</p>
-                                <p class="text-xs font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                                <p class="text-[11px] opacity-80">Konfirmasi kehadiran (${status}) dan ucapan Anda telah berhasil terkirim.</p>
-                            </div>
-                        `;
+                function submitRSVP() {
+                    var nama = document.getElementById('rsvp-nama').value;
+                    var status = document.getElementById('rsvp-status').value;
+                    var ucapan = document.getElementById('rsvp-ucapan').value;
+            
+                    if(!nama) {
+                        alert("Mohon isi nama Anda.");
+                        return;
                     }
-                </script>
+            
+                    // Ambil base URL saat ini dan tambahkan parameter RSVP
+                    var currentUrl = window.location.href.split('?')[0];
+                    var guestNameParam = "{{ guest_name if guest_name else '' }}";
+                    
+                    var targetUrl = currentUrl + "?to=" + encodeURIComponent(guestNameParam) + 
+                                    "&rsvp_action=true" +
+                                    "&nama=" + encodeURIComponent(nama) + 
+                                    "&status=" + encodeURIComponent(status) + 
+                                    "&ucapan=" + encodeURIComponent(ucapan);
+            
+                    // Arahkan halaman ke URL pengiriman untuk menyimpan ke server
+                    window.location.href = targetUrl;
+                }
+            </script>
             </section>
 
             <!-- SECTION QR CODE CHECK-IN TAMU -->
