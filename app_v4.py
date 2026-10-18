@@ -326,6 +326,34 @@ if app_mode == "🔑 Admin":
                     st.success("Balasan terkirim ke user!")
                     st.rerun()
 
+    # Tambahkan menu ini di dalam pilihan admin_menu
+    elif admin_menu == "🔍 Debug RSVP Database":
+        st.subheader("🔍 Pemeriksa Database rsvp_data.json")
+        
+        if os.path.exists("rsvp_data.json"):
+            st.success("✅ File `rsvp_data.json` ditemukan di server Streamlit Cloud.")
+            
+            # Baca isi file
+            data_rsvp = load_json("rsvp_data.json", [])
+            
+            st.metric("Total Data Masuk", len(data_rsvp))
+            
+            if data_rsvp:
+                st.json(data_rsvp)  # Menampilkan data dalam format JSON yang rapi
+                
+                # Tombol untuk mengunduh file JSON langsung dari cloud
+                json_str = json.dumps(data_rsvp, indent=2, ensure_ascii=False)
+                st.download_button(
+                    label="📥 Download rsvp_data.json",
+                    data=json_str,
+                    file_name="rsvp_data.json",
+                    mime="application/json"
+                )
+            else:
+                st.warning("⚠️ File ada, tetapi datanya masih kosong `[]`.")
+        else:
+            st.error("❌ File `rsvp_data.json` belum ada di server (belum pernah ada data yang tersimpan).")
+
 # =========================================================
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
 # =========================================================
