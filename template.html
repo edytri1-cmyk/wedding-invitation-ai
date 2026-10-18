@@ -194,45 +194,37 @@
                         return;
                     }
             
-                    // 1. Berikan umpan balik langsung di layar agar pengguna tahu form berhasil dikirim
+                    // 1. Berikan umpan balik instan di layar HP
                     var card = document.getElementById('rsvp-card');
                     card.innerHTML = `
                         <div class="text-center py-6 space-y-2">
                             <p class="text-3xl">✅</p>
                             <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                            <p class="text-xs opacity-80">Konfirmasi kehadiran (${status}) dan ucapan Anda sedang disimpan...</p>
+                            <p class="text-xs opacity-80">Konfirmasi kehadiran (${status}) sedang dikirim ke server...</p>
                         </div>
                     `;
             
-                    // 2. Dapatkan URL utama dari Streamlit
+                    // 2. Gunakan Domain Utama Streamlit secara langsung agar pasti sampai ke server
+                    var baseUrl = "https://wedding-invitation-ai.streamlit.app/";
                     var guestNameParam = "{{ guest_name if guest_name else '' }}";
-                    var baseUrl = window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0 
-                        ? window.location.ancestorOrigins[0] 
-                        : document.referrer;
             
-                    if (!baseUrl || baseUrl === "") {
-                        baseUrl = window.location.href.split('?')[0];
-                    } else {
-                        baseUrl = baseUrl.split('?')[0];
-                    }
-
-        // 3. Susun URL target dengan parameter RSVP
-        var targetUrl = baseUrl + "?to=" + encodeURIComponent(guestNameParam) + 
-                        "&rsvp_action=true" +
-                        "&nama=" + encodeURIComponent(nama) + 
-                        "&status=" + encodeURIComponent(status) + 
-                        "&ucapan=" + encodeURIComponent(ucapan);
-
-        // 4. Kirim dan muat ulang jendela paling atas (window.top)
-        setTimeout(function() {
-            try {
-                window.top.location.href = targetUrl;
-            } catch (e) {
-                window.parent.location.href = targetUrl;
-            }
-        }, 800);
-    }
-</script>
+                    // 3. Susun URL lengkap dengan parameter RSVP
+                    var targetUrl = baseUrl + "?to=" + encodeURIComponent(guestNameParam) + 
+                                    "&rsvp_action=true" +
+                                    "&nama=" + encodeURIComponent(nama) + 
+                                    "&status=" + encodeURIComponent(status) + 
+                                    "&ucapan=" + encodeURIComponent(ucapan);
+            
+                    // 4. Kirim dan muat ulang halaman utama
+                    setTimeout(function() {
+                        try {
+                            window.top.location.href = targetUrl;
+                        } catch (e) {
+                            window.parent.location.href = targetUrl;
+                        }
+                    }, 800);
+                }
+            </script>
 
             <!-- SECTION QR CODE CHECK-IN TAMU -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
