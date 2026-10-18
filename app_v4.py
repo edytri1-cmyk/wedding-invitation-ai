@@ -714,7 +714,7 @@ else:
             st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
         else:
             # GANTI URL DI BAWAH INI DENGAN URL CSV PUBLIK DARI GOOGLE SHEET ANDA
-            GOOGLE_SHEET_CSV_URL = "MASUKKAN_URL_CSV_GOOGLE_SHEET_ANDA_DI_SINI"
+            GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsaN2n7MKVozzpZ-61okbgxjp8JE1CgA6HG2TUEn2AMqBDFOJ3vdtHeTlJDngnlIFa7P3zgf1ppzvX/pub?gid=0&single=true&output=csv"
             
             try:
                 # Membaca data langsung secara real-time dari Google Sheets
