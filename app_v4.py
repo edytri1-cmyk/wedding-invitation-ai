@@ -73,7 +73,7 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
             try:
                 gemini_client = genai.Client(api_key=GEMINI_KEY)
                 response = gemini_client.models.generate_content(
-                    model='gemini-3.8-flash',
+                    model='gemini-2.5-flash',
                     contents=prompt
                 )
                 if response and response.text:
@@ -121,6 +121,12 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 # ---------------------------------------------------------
 st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
+# Inisialisasi Unique User ID per Session Streamlit
+if "user_id" not in st.session_state:
+    st.session_state["user_id"] = f"user_{str(uuid.uuid4())[:8]}"
+
+current_user = st.session_state["user_id"]
+
 # =========================================================
 # DETEKSI PENGIRIMAN RSVP ATAU URL TAMU UNDANGAN
 # =========================================================
@@ -131,12 +137,13 @@ if rsvp_action == "true":
     incoming_name = query_params.get("nama", "Tamu Anonim")
     incoming_status = query_params.get("status", "Hadir")
     incoming_ucapan = query_params.get("ucapan", "-")
+    target_user_id = query_params.get("user_id", current_user)
     
     # Load database RSVP yang ada
     rsvp_list = load_json(RSVP_FILE, [])
     
-    # Cek apakah data dengan nama dan waktu berdekatan sudah ada untuk menghindari duplikat ganda
     new_entry = {
+        "User_ID": target_user_id,
         "Nama Tamu": urllib.parse.unquote(incoming_name),
         "Kehadiran": urllib.parse.unquote(incoming_status),
         "Ucapan & Doa": urllib.parse.unquote(incoming_ucapan),
@@ -162,6 +169,7 @@ if guest_name:
     st.stop()
 
 st.sidebar.title("🛠️ Navigasi Sistem")
+st.sidebar.markdown(f"🆔 **ID Sesi Anda:** `{current_user}`")
 app_mode = st.sidebar.radio("Pilih Mode Aplikasi:", ["💍 User (Wedding Invitation AI)", "🔑 Admin"])
 
 # =========================================================
@@ -184,7 +192,7 @@ if app_mode == "🔑 Admin":
             "🔑 Aktivasi & Override Manual", 
             "📊 Statistik & Tren Kunjungan", 
             "💬 Live Helpdesk Chat",
-            "🔍 Debug RSVP Database" # <-- Tambahkan ini
+            "🔍 Debug RSVP Database"
         ]
     )
 
@@ -341,6 +349,7 @@ if app_mode == "🔑 Admin":
                 save_json("rsvp_data.json", [])
                 st.success("File berhasil dibuat!")
                 st.rerun()
+
 # =========================================================
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
 # =========================================================
@@ -495,16 +504,41 @@ else:
                         st.session_state["bride_name"] = bride_name
 
                         try:
-                            template_content = """
-                            <div class="{{theme_bg}} {{theme_text}} p-8 rounded-xl shadow-lg max-w-md mx-auto text-center font-sans">
-                                <h1 class="text-3xl font-bold mb-2">{{groom_name}} & {{bride_name}}</h1>
-                                <p class="italic text-sm mb-4">"{{quote_text}}"</p>
+                            template_content = f"""
+                            <div class="{{{{theme_bg}}}} {{^{{theme_text}}}} p-8 rounded-xl shadow-lg max-w-md mx-auto text-center font-sans">
+                                <h1 class="text-3xl font-bold mb-2">{{{{groom_name}}}} & {{{{bride_name}}}}</h1>
+                                <p class="italic text-sm mb-4">"{{{{quote_text}}}}"</p>
                                 <hr class="my-4 border-gray-600">
-                                <p class="font-semibold">{{event_date}}</p>
-                                <p class="text-sm mb-4">{{event_location}}</p>
-                                <img src="{{photo_url}}" class="rounded-lg mx-auto w-full h-64 object-cover mb-4">
-                                <p class="text-xs">Kepada Yth. <b>{{guest_name}}</b></p>
+                                <p class="font-semibold">{{{{event_date}}}}</p>
+                                <p class="text-sm mb-4">{{{{event_location}}}}</p>
+                                <img src="{{{{photo_url}}}}" class="rounded-lg mx-auto w-full h-64 object-cover mb-4">
+                                <p class="text-xs">Kepada Yth. <b>{{{{guest_name}}}}</b></p>
+                                <!-- Form RSVP menyertakan user_id session -->
+                                <div class="mt-6 p-4 bg-black/20 rounded-lg">
+                                    <h3 class="text-lg font-bold mb-2">Konfirmasi Kehadiran (RSVP)</h3>
+                                    <input type="text" id="rsvp-nama" placeholder="Nama Anda" value="{{{{guest_name}}}}" class="w-full p-2 mb-2 text-black rounded text-sm"><br>
+                                    <select id="rsvp-status" class="w-full p-2 mb-2 text-black rounded text-sm">
+                                        <option value="Hadir">Hadir</option>
+                                        <option value="Ragu-ragu">Ragu-ragu</option>
+                                        <option value="Maaf, Tidak Bisa Hadir">Maaf, Tidak Bisa Hadir</option>
+                                    </select><br>
+                                    <textarea id="rsvp-ucapan" placeholder="Ucapan & Doa" class="w-full p-2 mb-2 text-black rounded text-sm"></textarea><br>
+                                    <button onclick="submitRSVP()" class="w-full bg-amber-500 text-black font-bold p-2 rounded text-sm">Kirim RSVP</button>
+                                </div>
                             </div>
+                            <script>
+                                function submitRSVP() {
+                                    var nama = document.getElementById('rsvp-nama').value;
+                                    var status = document.getElementById('rsvp-status').value;
+                                    var ucapan = document.getElementById('rsvp-ucapan').value;
+                                    var currentUserId = "{current_user}";
+                                    
+                                    if (!nama) {{ alert("Nama wajib diisi"); return; }}
+                                    
+                                    var targetUrl = window.location.pathname + "?rsvp_action=true&user_id=" + encodeURIComponent(currentUserId) + "&nama=" + encodeURIComponent(nama) + "&status=" + encodeURIComponent(status) + "&ucapan=" + encodeURIComponent(ucapan) + "&to=" + encodeURIComponent(nama);
+                                    window.location.href = targetUrl;
+                                }
+                            </script>
                             """
                             if os.path.exists("template.html"):
                                 with open("template.html", "r", encoding="utf-8") as f:
@@ -527,7 +561,8 @@ else:
                                 guest_name=test_guest_name,
                                 theme_bg=ai_data.get("theme_bg", "bg-slate-900"),
                                 theme_card_bg=ai_data.get("theme_card_bg", "bg-slate-800"),
-                                theme_text=ai_data.get("theme_text", "text-amber-100")
+                                theme_text=ai_data.get("theme_text", "text-amber-100"),
+                                current_user_id=current_user
                             )
 
                             invitation_payload = {
@@ -546,7 +581,6 @@ else:
             with col_preview:
                 st.subheader("👁️ Pratinjau Tampilan Undangan")
                 if "rendered_html" in st.session_state:
-                    # GUNAKAN st.components.v1.html DENGAN HEIGHT 800 AGAR RENDER DESAIN WEB UTUH
                     st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
@@ -631,80 +665,8 @@ else:
                         save_json(ORDERS_FILE, orders_db)
                         
                         st.session_state["activated_code_input"] = code_input
-                        st.success("🎉 Simulasi Aktivasi Berhasil! Halaman akan dimuat ulang.")
+                        st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.rerun()
-                    else:
-                        st.error("❌ Masukkan kode yang valid.")
-
-            st.markdown("---")
-            
-            default_base_url = "https://wedding-invitation-ai.streamlit.app"
-            base_url = st.text_input("Base URL Web Undangan Anda", default_base_url)
-            
-            custom_template = st.text_area(
-                "Template Redaksi Pesan WhatsApp",
-                "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i *[NAMA_TAMU]* untuk menghadiri acara pernikahan kami.\n\nDetail undangan dapat diakses pada link berikut:\n[LINK_UNDANGAN]\n\nMerupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\nTerima kasih.",
-                height=110
-            )
-
-            st.markdown("---")
-            input_method = st.radio("Metode Input Daftar Tamu:", ["Upload File CSV (Rekomendasi Massal)", "Ketik / Paste Teks Manual"], horizontal=True)
-
-            guest_list = []
-            if input_method == "Upload File CSV (Rekomendasi Massal)":
-                uploaded_csv = st.file_uploader("Upload File CSV (Format: Kolom 'Nama')", type=["csv"])
-                if uploaded_csv is not None:
-                    try:
-                        df_input = pd.read_csv(uploaded_csv)
-                        col_name = [c for c in df_input.columns if 'nama' in c.lower()]
-                        guest_list = df_input[col_name[0]].dropna().astype(str).tolist() if col_name else df_input.iloc[:, 0].dropna().astype(str).tolist()
-                        st.success(f"✅ Berhasil memuat {len(guest_list)} nama tamu!")
-                    except Exception as e:
-                        st.error(f"Gagal membaca file CSV: {e}")
-            else:
-                raw_guests = st.text_area("Masukkan Nama Tamu (Satu Nama Per Baris)", "Budi Sudarsono\nKeluarga Besar Ahmad\nDr. Hendra & Istri", height=120)
-                guest_list = [g.strip() for g in raw_guests.split("\n") if g.strip()]
-
-            if guest_list:
-                st.markdown("---")
-                table_data = []
-                for idx, guest in enumerate(guest_list, 1):
-                    encoded_name = urllib.parse.quote(guest)
-                    guest_link = f"{base_url}?to={encoded_name}"
-                    wa_redaksi = custom_template.replace("[NAMA_TAMU]", guest).replace("[LINK_UNDANGAN]", guest_link)
-                    
-                    table_data.append({
-                        "No": idx,
-                        "Nama Tamu": guest,
-                        "Link Khusus": guest_link,
-                        "Redaksi WhatsApp Ready": wa_redaksi
-                    })
-
-                df_result = pd.DataFrame(table_data)
-
-                st.dataframe(
-                    df_result,
-                    use_container_width=True,
-                    hide_index=True,
-                    column_config={
-                        "Link Khusus": st.column_config.LinkColumn("Link Undangan (Klik/Copy)"),
-                        "Redaksi WhatsApp Ready": st.column_config.TextColumn("Redaksi WA", width="large")
-                    }
-                )
-
-                csv_data = df_result.to_csv(index=False).encode('utf-8')
-                
-                if is_session_active:
-                    st.download_button(
-                        "📥 Download Rekap CSV (Lengkap dengan Redaksi Teks WA)",
-                        data=csv_data,
-                        file_name="rekap_redaksi_undangan_wa.csv",
-                        mime="text/csv",
-                        type="primary",
-                        use_container_width=True
-                    )
-                else:
-                    st.warning("🔒 Tombol download terkunci. Selesaikan pembayaran untuk mengunduh rekap CSV.")
 
     # TAHAP 4
     elif active_step == menu_steps[3]:
@@ -713,82 +675,29 @@ else:
         if not is_session_active:
             st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
         else:
-            # GANTI URL DI BAWAH INI DENGAN URL CSV PUBLIK DARI GOOGLE SHEET ANDA
-            GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsaN2n7MKVozzpZ-61okbgxjp8JE1CgA6HG2TUEn2AMqBDFOJ3vdtHeTlJDngnlIFa7P3zgf1ppzvX/pub?gid=0&single=true&output=csv"
+            rsvp_data = load_json(RSVP_FILE, [])
             
-            try:
-                # Ambil ID user dari session, jika tidak ada gunakan default_user
-                current_user = st.session_state.get("user_id", "default_user")
-
-                df_all = pd.read_csv(GOOGLE_SHEET_CSV_URL)
-
-                # Bersihkan nama kolom dari spasi yang tidak disengaja
-                df_all.columns = df_all.columns.str.strip()
-
-                # Filter berdasarkan User_ID
-                df_rsvp = df_all[df_all['User_ID'] == current_user]
-                
-                if df_rsvp.empty:
-                    st.info("Belum ada data RSVP masuk dari tamu undangan.")
-                else:
-                    total_respon = len(df_rsvp)
-                    # Sesuaikan nama kolom dengan header di Google Sheet Anda
-                    total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-                    total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
-                    total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-
-                    m1, m2, m3, m4 = st.columns(4)
-                    m1.metric("Total Respon Tamu", total_respon)
-                    m2.metric("Pasti Hadir", total_hadir)
-                    m3.metric("Ragu-Ragu", total_ragu)
-                    m4.metric("Tidak Hadir", total_absen)
-
-                    st.markdown("---")
-                    st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
-                    st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
-
-                    csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
-                    st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name="rekap_status_rsvp_tamu.csv", mime="text/csv")
+            # Filter data berdasarkan User_ID sesi aktif
+            user_rsvp = [item for item in rsvp_data if item.get("User_ID") == current_user]
             
-            except Exception as e:
-                st.warning("Belum ada data RSVP masuk atau URL Google Sheet belum dikonfigurasi dengan benar.")
-
-    # LIVE HELPDESK CHAT (DI SIDEBAR KLIEN)
-    if "user_session_id" not in st.session_state:
-        st.session_state["user_session_id"] = f"USER-{str(uuid.uuid4())[:8]}"
-
-    current_user_session = st.session_state["user_session_id"]
-
-    user_msg = st.sidebar.text_input("Tulis Pesan ke Admin:", key="user_chat_input")
-    if st.sidebar.button("Kirim Pesan", key="btn_send_user_chat"):
-        if user_msg.strip():
-            chat_history = load_json(CHAT_FILE, [])
-            chat_history.append({
-                "session_id": current_user_session,
-                "sender": "User",
-                "message": user_msg,
-                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            })
-            save_json(CHAT_FILE, chat_history)
-            st.sidebar.success("Pesan terkirim!")
-            st.rerun()
-
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("**Riwayat Percakapan Anda:**")
-
-    @st.fragment(run_every=3)
-    def render_user_chat_history():
-        chat_history = load_json(CHAT_FILE, [])
-        my_chats = [c for c in chat_history if c.get("session_id") == current_user_session]
-        
-        chat_container = st.sidebar.container(height=250)
-        with chat_container:
-            if not my_chats:
-                st.info("Belum ada pesan.")
+            if not user_rsvp:
+                st.info(f"Belum ada data RSVP masuk untuk ID Pengguna: `{current_user}`")
             else:
-                for chat in my_chats:
-                    sender_label = "👤 **Anda**" if chat['sender'] == "User" else "🛠️ **Admin**"
-                    st.markdown(f"{sender_label} *({chat['time']})*:\n{chat['message']}")
-                    st.markdown("---")
+                df_rsvp = pd.DataFrame(user_rsvp)
+                total_respon = len(df_rsvp)
+                total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
+                total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
 
-    render_user_chat_history()
+                m1, m2, m3, m4 = st.columns(4)
+                m1.metric("Total Respon Tamu", total_respon)
+                m2.metric("Pasti Hadir", total_hadir)
+                m3.metric("Ragu-Ragu", total_ragu)
+                m4.metric("Tidak Hadir", total_absen)
+
+                st.markdown("---")
+                st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
+                st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
+
+                csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
+                st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name=f"rekap_rsvp_{current_user}.csv", mime="text/csv")
