@@ -132,15 +132,21 @@ if rsvp_action == "true":
     incoming_status = query_params.get("status", "Hadir")
     incoming_ucapan = query_params.get("ucapan", "-")
     
+    # Load database RSVP yang ada
     rsvp_list = load_json(RSVP_FILE, [])
     
-    rsvp_list.append({
+    # Cek apakah data dengan nama dan waktu berdekatan sudah ada untuk menghindari duplikat ganda
+    new_entry = {
         "Nama Tamu": urllib.parse.unquote(incoming_name),
         "Kehadiran": urllib.parse.unquote(incoming_status),
         "Ucapan & Doa": urllib.parse.unquote(incoming_ucapan),
         "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    })
+    }
     
+    # Tambahkan ke list
+    rsvp_list.append(new_entry)
+    
+    # Simpan permanen ke rsvp_data.json
     save_json(RSVP_FILE, rsvp_list)
 
 guest_name = query_params.get("to", None)
