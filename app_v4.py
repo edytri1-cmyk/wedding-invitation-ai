@@ -125,6 +125,32 @@ st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 # DETEKSI JIKA DISETEL URL TAMU UNDANGAN (?to=NAMA_TAMU)
 # =========================================================
 query_params = st.query_params
+# =========================================================
+# DETEKSI PENGIRIMAN RSVP ATAU URL TAMU UNDANGAN
+# =========================================================
+query_params = st.query_params
+
+# Cek apakah ada kiriman data RSVP dari form HTML
+rsvp_action = query_params.get("rsvp_action", None)
+if rsvp_action == "true":
+    incoming_name = query_params.get("nama", "Tamu Anonim")
+    incoming_status = query_params.get("status", "Hadir")
+    incoming_ucapan = query_params.get("ucapan", "-")
+    
+    # Load database RSVP yang ada
+    rsvp_list = load_json(RSVP_FILE, [])
+    
+    # Tambahkan data baru
+    rsvp_list.append({
+        "Nama Tamu": urllib.parse.unquote(incoming_name),
+        "Kehadiran": urllib.parse.unquote(incoming_status),
+        "Ucapan & Doa": urllib.parse.unquote(incoming_ucapan),
+        "Waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+    
+    # Simpan kembali ke rsvp_data.json
+    save_json(RSVP_FILE, rsvp_list)
+    
 guest_name = query_params.get("to", None)
 
 if guest_name:
