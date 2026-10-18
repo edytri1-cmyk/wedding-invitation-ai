@@ -122,10 +122,6 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
 # =========================================================
-# DETEKSI JIKA DISETEL URL TAMU UNDANGAN (?to=NAMA_TAMU)
-# =========================================================
-query_params = st.query_params
-# =========================================================
 # DETEKSI PENGIRIMAN RSVP ATAU URL TAMU UNDANGAN
 # =========================================================
 query_params = st.query_params
@@ -151,6 +147,9 @@ if rsvp_action == "true":
     # Simpan kembali ke rsvp_data.json
     save_json(RSVP_FILE, rsvp_list)
     
+    # Bersihkan parameter rsvp_action agar tidak berulang saat direfresh
+    st.success("✅ Terima kasih! Konfirmasi kehadiran Anda berhasil disimpan.")
+
 guest_name = query_params.get("to", None)
 
 if guest_name:
