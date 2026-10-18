@@ -194,35 +194,34 @@
                         return;
                     }
             
-                    // 1. Berikan umpan balik instan di layar HP
+                    // 1. Tampilkan indikator sukses di layar HP secara instan
                     var card = document.getElementById('rsvp-card');
                     card.innerHTML = `
                         <div class="text-center py-6 space-y-2">
                             <p class="text-3xl">✅</p>
                             <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                            <p class="text-xs opacity-80">Konfirmasi kehadiran (${status}) sedang dikirim ke server...</p>
+                            <p class="text-xs opacity-80">Konfirmasi kehadiran (${status}) berhasil direkam.</p>
                         </div>
                     `;
             
-                    // 2. Gunakan Domain Utama Streamlit secara langsung agar pasti sampai ke server
+                    // 2. Susun URL tujuan ke server utama Streamlit
                     var baseUrl = "https://wedding-invitation-ai.streamlit.app/";
                     var guestNameParam = "{{ guest_name if guest_name else '' }}";
-            
-                    // 3. Susun URL lengkap dengan parameter RSVP
+                    
                     var targetUrl = baseUrl + "?to=" + encodeURIComponent(guestNameParam) + 
                                     "&rsvp_action=true" +
                                     "&nama=" + encodeURIComponent(nama) + 
                                     "&status=" + encodeURIComponent(status) + 
                                     "&ucapan=" + encodeURIComponent(ucapan);
             
-                    // 4. Kirim dan muat ulang halaman utama
-                    setTimeout(function() {
-                        try {
+                    // 3. Gunakan fetch background agar server membaca kedatangan data, lalu redirect
+                    fetch(targetUrl, { mode: 'no-cors' }).then(function() {
+                        setTimeout(function() {
                             window.top.location.href = targetUrl;
-                        } catch (e) {
-                            window.parent.location.href = targetUrl;
-                        }
-                    }, 800);
+                        }, 500);
+                    }).catch(function(err) {
+                        window.top.location.href = targetUrl;
+                    });
                 }
             </script>
 
