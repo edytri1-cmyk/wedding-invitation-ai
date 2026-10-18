@@ -713,30 +713,37 @@ else:
         if not is_session_active:
             st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
         else:
-            rsvp_list = load_json(RSVP_FILE, [])
-
-            if not rsvp_list:
-                st.info("Belum ada data RSVP masuk dari tamu undangan.")
-            else:
-                df_rsvp = pd.DataFrame(rsvp_list)
+            # GANTI URL DI BAWAH INI DENGAN URL CSV PUBLIK DARI GOOGLE SHEET ANDA
+            GOOGLE_SHEET_CSV_URL = "MASUKKAN_URL_CSV_GOOGLE_SHEET_ANDA_DI_SINI"
+            
+            try:
+                # Membaca data langsung secara real-time dari Google Sheets
+                df_rsvp = pd.read_csv(GOOGLE_SHEET_CSV_URL)
                 
-                total_respon = len(df_rsvp)
-                total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-                total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
-                total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                if df_rsvp.empty:
+                    st.info("Belum ada data RSVP masuk dari tamu undangan.")
+                else:
+                    total_respon = len(df_rsvp)
+                    # Sesuaikan nama kolom dengan header di Google Sheet Anda
+                    total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                    total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
+                    total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
 
-                m1, m2, m3, m4 = st.columns(4)
-                m1.metric("Total Respon Tamu", total_respon)
-                m2.metric("Pasti Hadir", total_hadir)
-                m3.metric("Ragu-Ragu", total_ragu)
-                m4.metric("Tidak Hadir", total_absen)
+                    m1, m2, m3, m4 = st.columns(4)
+                    m1.metric("Total Respon Tamu", total_respon)
+                    m2.metric("Pasti Hadir", total_hadir)
+                    m3.metric("Ragu-Ragu", total_ragu)
+                    m4.metric("Tidak Hadir", total_absen)
 
-                st.markdown("---")
-                st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
-                st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
+                    st.markdown("---")
+                    st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
+                    st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
 
-                csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
-                st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name="rekap_status_rsvp_tamu.csv", mime="text/csv")
+                    csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
+                    st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name="rekap_status_rsvp_tamu.csv", mime="text/csv")
+            
+            except Exception as e:
+                st.warning("Belum ada data RSVP masuk atau URL Google Sheet belum dikonfigurasi dengan benar.")
 
     # LIVE HELPDESK CHAT (DI SIDEBAR KLIEN)
     if "user_session_id" not in st.session_state:
