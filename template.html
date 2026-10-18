@@ -107,7 +107,7 @@
                     {% endif %}
                 </div>
 
-                <!-- FOTO UTAMA TIDAK TERPOTONG (Menggunakan h-auto dan max-h) -->
+                <!-- FOTO UTAMA TIDAK TERPOTONG -->
                 <div class="w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/30 bg-black/20 mb-6">
                     <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto">
                 </div>
@@ -118,7 +118,7 @@
                 </div>
             </section>
 
-            <!-- SECTION GALERI FOTO PREWEDDING (Tampil utuh tanpa terpotong) -->
+            <!-- SECTION GALERI FOTO PREWEDDING -->
             {% if gallery_photos %}
                 {% for photo in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
@@ -204,15 +204,18 @@
                         </div>
                     `;
             
-                    // Kirim data langsung ke Google Sheets Web App (Bebas dari blokir iframe Streamlit)
+                    // Kirim data langsung ke Google Sheets Web App
                     var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
                     
-                    // Mengambil user_id dari URL parameter (misal: ?user_id=user123) atau default
+                    // PENANGKAPAN USER_ID DINAMIS:
+                    // Priority 1: Ambil dari query parameter URL ?user_id=...
+                    // Priority 2: Fallback ke variabel Jinja2 {{ current_user_id }}
+                    // Priority 3: Fallback ke "default_user"
                     const urlParams = new URLSearchParams(window.location.search);
-                    const currentUserId = urlParams.get('user_id') || "user_1"; // Sesuaikan dengan logika session Anda
+                    const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
                     
                     var payload = {
-                        user_id: currentUserId, // Mengirimkan user_id yang dinamis
+                        user_id: currentUserId, // Mengirimkan user_id yang tepat & dinamis
                         nama: nama,
                         status: status,
                         ucapan: ucapan
