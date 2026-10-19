@@ -121,25 +121,6 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 # ---------------------------------------------------------
 st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
 
-# Tambahkan kode ini di app.py untuk menyembunyikan badge Streamlit secara global
-hide_streamlit_style = """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    .viewerBadge_container__1QSob {display: none !important;}
-    div[data-testid="stToolbar"] {visibility: hidden !important; display: none !important;}
-    div.viewerBadge_link__1S137 {display: none !important;}
-    iframe[title="streamlit_drawable_canvas.streamlit_drawable_canvas"] { }
-    /* Menghilangkan tombol pojok kanan bawah Streamlit Cloud */
-    footer visibility: hidden;
-    .stApp > footer {display: none;}
-    [data-testid="stDecoration"] {display: none;}
-    [data-testid="stStatusWidget"] {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
 # Inisialisasi Unique User ID per Session Streamlit
 if "user_id" not in st.session_state:
     st.session_state["user_id"] = f"user_{str(uuid.uuid4())[:8]}"
