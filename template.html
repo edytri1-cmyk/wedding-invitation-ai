@@ -116,8 +116,31 @@
                     <p class="text-xs opacity-80 italic px-4">"{{ quote_text }}"</p>
                     <div class="animate-bounce pt-4 text-xs opacity-60">👇 Gulir ke bawah untuk melihat undangan</div>
                 </div>
-            </section>
 
+            <!-- COUNTDOWN TIMER MENUJU WEDDING DAY -->
+                <div class="w-full my-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl text-center">
+                    <p class="text-xs uppercase tracking-widest opacity-80 mb-3 font-semibold">⏳ Menghitung Hari Menjelang Acara</p>
+                    <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
+                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
+                            <span id="cd-days" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span class="text-[10px] opacity-75 uppercase">Hari</span>
+                        </div>
+                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
+                            <span id="cd-hours" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span class="text-[10px] opacity-75 uppercase">Jam</span>
+                        </div>
+                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
+                            <span id="cd-minutes" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span class="text-[10px] opacity-75 uppercase">Menit</span>
+                        </div>
+                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
+                            <span id="cd-seconds" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span class="text-[10px] opacity-75 uppercase">Detik</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <!-- SECTION GALERI FOTO PREWEDDING -->
             {% if gallery_photos %}
                 {% for photo in gallery_photos %}
@@ -275,6 +298,44 @@
                 width: 160,
                 height: 160
             });
+        }
+    </script>
+
+    <script>
+        window.onload = function() {
+            // 1. Inisialisasi QR Code
+            var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
+            new QRCode(document.getElementById("qrcode"), {
+                text: "CHECKIN-" + encodeURIComponent(guest),
+                width: 160,
+                height: 160
+            });
+    
+            // 2. Logika Countdown Timer Real-Time
+            // Mengambil tanggal ISO dari Jinja2 (contoh: "2026-12-31")
+            var rawDate = "{{ raw_event_date if raw_event_date else '2026-12-31' }}";
+            var eventTargetDate = new Date(rawDate + "T09:00:00").getTime();
+    
+            var timerInterval = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = eventTargetDate - now;
+    
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("countdown-timer").innerHTML = "<p class='col-span-4 text-sm font-bold text-amber-300 py-2'>🎉 Hari Bahagia Telah Tiba!</p>";
+                    return;
+                }
+    
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+                document.getElementById("cd-days").innerText = days < 10 ? "0" + days : days;
+                document.getElementById("cd-hours").innerText = hours < 10 ? "0" + hours : hours;
+                document.getElementById("cd-minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+            }, 1000);
         }
     </script>
 </body>
