@@ -409,12 +409,12 @@ else:
             st.session_state["agreed_terms"] = False
             st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
 
-    # TAHAP 2
+# TAHAP 2
     elif active_step == menu_steps[1]:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
         else:
-            st.subheader("🎨 2. Data Undangan, Tema Visual, Musik & Preview Undangan")
+            st.subheader("🎨 2. Data Pernikahan, Tema Visual, Musik & Preview Undangan")
             
             col_form, col_preview = st.columns([1, 1])
 
@@ -424,16 +424,44 @@ else:
                 if is_session_active:
                     st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
 
-                groom_name = st.text_input("Nama Mempelai Pria", "Nama Pria", disabled=is_session_active)
-                bride_name = st.text_input("Nama Mempelai Wanita", "Nama Wanita", disabled=is_session_active)
-                theme_choice = st.selectbox("Tema Visual AI", ["Rustic Elegance", "Modern Dark", "Gold Luxury", "Floral Romantic"], disabled=is_session_active)
+                groom_name = st.text_input("Nama Mempelai Pria", "Budi", disabled=is_session_active)
+                bride_name = st.text_input("Nama Mempelai Wanita", "Siti", disabled=is_session_active)
                 
-                event_date = st.date_input("Tanggal Acara", disabled=is_session_active)
-                event_day = st.text_input("Hari Pernikahan", "Sabtu", disabled=is_session_active)
-                event_time = st.text_input("Waktu Pernikahan", "11.00 - 13.00 WIB", disabled=is_session_active)
-                event_location = st.text_input("Lokasi Acara", "Nama Gedung, Nama Kota", disabled=is_session_active)
-                maps_url = st.text_input("URL Google Maps Lokasi", "https://maps.google.com", disabled=is_session_active)
-                bank_info = st.text_input("Informasi Amplop Digital / Bank", "No Rekening a.n xxx", disabled=is_session_active)
+                theme_options = [
+                    "✨ Chic & Modern Gold", 
+                    "⚡ Energetic Sunset Neon", 
+                    "🌸 Chic Pastel Romantic", 
+                    "🌿 Minimalist Emerald Organic", 
+                    "🖤 Dark Luxury Elegance", 
+                    "🏛️ Classic Rustic Wood"
+                ]
+                theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
+
+                st.markdown("---")
+                st.markdown("#### 💍 Detail Acara Akad Nikah")
+                akad_date = st.date_input("Tanggal Akad Nikah", disabled=is_session_active, key="akad_date")
+                akad_day = st.text_input("Hari Akad Nikah", "Sabtu", disabled=is_session_active, key="akad_day")
+                akad_time = st.text_input("Waktu / Jam Akad Nikah", "08.00 - 10.00 WIB", disabled=is_session_active, key="akad_time")
+                akad_location = st.text_input("Lokasi Akad Nikah", "Masjid Agung, Jakarta", disabled=is_session_active, key="akad_loc")
+                akad_maps_url = st.text_input("URL Google Maps Akad", "https://maps.google.com", disabled=is_session_active, key="akad_maps")
+
+                st.markdown("---")
+                st.markdown("#### 🥳 Detail Acara Resepsi Pernikahan")
+                resep_date = st.date_input("Tanggal Resepsi", disabled=is_session_active, key="resep_date")
+                resep_day = st.text_input("Hari Resepsi", "Sabtu", disabled=is_session_active, key="resep_day")
+                resep_time = st.text_input("Waktu / Jam Resepsi", "11.00 - 13.00 WIB", disabled=is_session_active, key="resep_time")
+                resep_location = st.text_input("Lokasi Resepsi", "Gedung Cendrawasih, Jakarta", disabled=is_session_active, key="resep_loc")
+                resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
+
+                st.markdown("---")
+                st.markdown("#### 🤝 Turut Mengundang & Amplop Digital")
+                turut_mengundang = st.text_area(
+                    "Turut Mengundang (Gunakan koma atau baris baru)", 
+                    "Keluarga Besar Pria:\n- Bp. Ahmad & Ibu Siti\nKeluarga Besar Wanita:\n- Bp. Dahlan & Ibu Aminah", 
+                    disabled=is_session_active,
+                    height=100
+                )
+                bank_info = st.text_input("Informasi Amplop Digital / Bank", "BCA 123456789 a.n Budi", disabled=is_session_active)
 
                 st.markdown("---")
                 st.subheader("🖼️ Galeri Foto Pasangan")
@@ -468,7 +496,7 @@ else:
 
                 if btn_generate:
                     with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
-                        prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text. Format JSON."
+                        prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text yang mencerminkan gaya {theme_choice}. Format JSON."
 
                         gallery_photos = []
                         if uploaded_photos and len(uploaded_photos) > 0:
@@ -488,7 +516,6 @@ else:
                         st.session_state["bride_name"] = bride_name
 
                         try:
-                            # MEMBACA TEMPLATE HTML DARI FILE TERPISAH (AMAN DARI SYNTAX ERROR)
                             if os.path.exists("template.html"):
                                 with open("template.html", "r", encoding="utf-8") as f:
                                     template_content = f.read()
@@ -497,17 +524,26 @@ else:
                                 template_content = "<h1>Template tidak ditemukan</h1>"
 
                             jinja_template = Template(template_content)
-                            # Di dalam app.py -> Tahap 2 saat tombol 'btn_generate' diklik:
                             rendered_html = jinja_template.render(
                                 groom_name=groom_name,
                                 bride_name=bride_name,
                                 quote_text=ai_data.get("quote"),
-                                event_date=event_date.strftime("%d %B %Y"),
-                                raw_event_date=event_date.strftime("%Y-%m-%d"),  # 👈 SISIPKAN KODE INI UNTUK COUNTDOWN TIMER
-                                event_day=event_day,
-                                event_time=event_time,
-                                event_location=event_location,
-                                maps_url=maps_url,
+                                # Data Akad
+                                akad_date=akad_date.strftime("%d %B %Y"),
+                                raw_event_date=akad_date.strftime("%Y-%m-%d"),
+                                akad_day=akad_day,
+                                akad_time=akad_time,
+                                akad_location=akad_location,
+                                akad_maps_url=akad_maps_url,
+                                # Data Resepsi
+                                resep_date=resep_date.strftime("%d %B %Y"),
+                                resep_day=resep_day,
+                                resep_time=resep_time,
+                                resep_location=resep_location,
+                                resep_maps_url=resep_maps_url,
+                                # Turut Mengundang
+                                turut_mengundang=turut_mengundang,
+                                # Lainnya
                                 photo_url=gallery_photos[0],
                                 gallery_photos=gallery_photos,
                                 bank_info=bank_info,
@@ -528,7 +564,7 @@ else:
                             save_json(INVITATION_DATA_FILE, invitation_payload)
 
                             st.session_state["rendered_html"] = rendered_html
-                            st.success(f"✅ Undangan Berhasil Dibuat & Disimpan Permanen (Diproses via {provider_used})!")
+                            st.success(f"✅ Undangan Berhasil Dibuat!")
                         except Exception as e:
                             st.error(f"Gagal merender template HTML: {e}")
 
