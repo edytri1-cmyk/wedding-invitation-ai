@@ -521,8 +521,8 @@ else:
                                     "caption": caption
                                 })
     
-    # Simpan ke session_state agar terbawa saat tombol Generate diklik
-    st.session_state['gallery_photos'] = temp_gallery
+                            # Simpan ke session_state agar terbawa saat tombol Generate diklik
+                            st.session_state['gallery_photos'] = temp_gallery
         
                 default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
 
