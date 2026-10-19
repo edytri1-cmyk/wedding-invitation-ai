@@ -489,6 +489,26 @@
         // Jalankan fungsi saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', initVisualEffects);
     </script>
+
+    <script>
+        // Skrip untuk otomatis membuang badge / tombol "Kelola aplikasi" dari DOM
+        document.addEventListener("DOMContentLoaded", function() {
+            const removeStreamlitBadge = setInterval(function() {
+                // Mencari elemen berdasarkan teks "Kelola" atau atribut umum badge Streamlit
+                const elements = document.querySelectorAll('*');
+                elements.forEach(el => {
+                    if (el.innerText && el.innerText.includes("Kelola aplikasi")) {
+                        // Cari pembungkus terluar tombol tersebut lalu hapus / sembunyikan
+                        let container = el.closest('div[class*="viewerBadge"]') || el.parentElement;
+                        if (container) {
+                            container.style.display = 'none';
+                            container.remove();
+                        }
+                    }
+                });
+            }, 500); // Cek setiap 0.5 detik sampai elemennya hilang
+        });
+    </script>
     
 </body>
 </html>
