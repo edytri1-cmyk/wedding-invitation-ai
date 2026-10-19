@@ -630,7 +630,7 @@ else:
                             st.error(f"Gagal merender template HTML: {e}")
 
             with col_preview:
-                st.subheader("👁️ Pratinjau Tampilan Undangan")
+                st.subheader("👁️ Preview Tampilan di HP")
                 if "rendered_html" in st.session_state:
                     st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
