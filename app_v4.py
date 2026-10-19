@@ -191,8 +191,7 @@ if app_mode == "🔑 Admin":
             "💳 Dashboard Pendapatan", 
             "🔑 Aktivasi & Override Manual", 
             "📊 Statistik & Tren Kunjungan", 
-            "💬 Live Helpdesk Chat",
-            "🔍 Debug RSVP Database"
+            "💬 Live Helpdesk Chat"
         ]
     )
 
@@ -334,21 +333,6 @@ if app_mode == "🔑 Admin":
                     save_json(CHAT_FILE, chat_history)
                     st.success("Balasan terkirim ke user!")
                     st.rerun()
-
-    elif admin_menu == "🔍 Debug RSVP Database":
-        st.subheader("🔍 Pemeriksa Database rsvp_data.json")
-        
-        if os.path.exists("rsvp_data.json"):
-            st.success("✅ File `rsvp_data.json` ada di server.")
-            data_rsvp = load_json("rsvp_data.json", [])
-            st.metric("Total Data dalam File", len(data_rsvp))
-            st.json(data_rsvp)
-        else:
-            st.error("❌ File `rsvp_data.json` BELUM ADA di direktori server.")
-            if st.button("🛠️ Buat File rsvp_data.json Kosong"):
-                save_json("rsvp_data.json", [])
-                st.success("File berhasil dibuat!")
-                st.rerun()
 
 # =========================================================
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
