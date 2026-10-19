@@ -438,10 +438,10 @@ else:
                     "🌅 Peach Blossom Sunset",
                     "🖤 Dark Luxury Elegance", 
                     "🏛️ Celestial Midnight Starlight",
-                    "🌊 Royal Ocean Blue",           # Nuansa biru laut yang elegan & menenangkan
-                    "🍷 Burgundy Velvet Romance",     # Nuansa merah anggur yang mewah & hangat
-                    "🌻 Bohemian Sunset Vintage",     # Nuansa cokelat kayu dan kuning bunga matahari
-                    "💎 Diamond Silver Crystal"       # Nuansa putih perak yang futuristik & bersih
+                    "🌊 Royal Ocean Blue",           
+                    "🍷 Burgundy Velvet Romance",     
+                    "🌻 Bohemian Sunset Vintage",     
+                    "💎 Diamond Silver Crystal"       
                 ]
                 theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
 
