@@ -497,11 +497,13 @@ else:
                                 template_content = "<h1>Template tidak ditemukan</h1>"
 
                             jinja_template = Template(template_content)
+                            # Di dalam app.py -> Tahap 2 saat tombol 'btn_generate' diklik:
                             rendered_html = jinja_template.render(
                                 groom_name=groom_name,
                                 bride_name=bride_name,
                                 quote_text=ai_data.get("quote"),
                                 event_date=event_date.strftime("%d %B %Y"),
+                                raw_event_date=event_date.strftime("%Y-%m-%d"),  # 👈 SISIPKAN KODE INI UNTUK COUNTDOWN TIMER
                                 event_day=event_day,
                                 event_time=event_time,
                                 event_location=event_location,
