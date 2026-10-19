@@ -636,20 +636,67 @@ else:
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.rerun()
 
-            # CONTOH GENERATOR LINK WHATSAPP DENGAN USER_ID
-            st.markdown("---")
-            st.markdown("### 📤 Generator Link Undangan WhatsApp")
-            guest_broadcast_name = st.text_input("Nama Tamu yang Akan Diundang", "Bapak Budi & Keluarga")
-            
-            # Membuat link undangan otomatis yang membawa parameter to dan user_id
-            base_app_url = "https://wedding-invitation-ai.streamlit.app/"
-            generated_guest_link = f"{base_app_url}?to={urllib.parse.quote(guest_broadcast_name)}&user_id={current_user}"
-            
-            st.text_input("Salin Link Undangan Spesifik:", value=generated_guest_link)
-            
-            wa_message = f"Kepada Yth. {guest_broadcast_name},\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{generated_guest_link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\n\nTerima Kasih."
-            encoded_wa_msg = urllib.parse.quote(wa_message)
-            st.markdown(f"👉 **[Kirim Undangan via WhatsApp](https://wa.me/?text={encoded_wa_msg})**", unsafe_allow_html=True)
+            # =========================================================
+            # FITUR TAMBAHAN: UPLOAD CSV DAFTAR TAMU & GENERATE LINK MASSAL
+            # =========================================================
+            if is_session_active:
+                st.markdown("---")
+                st.markdown("### 📋 Upload Daftar Tamu (CSV) & Broadcast WhatsApp")
+                st.info("Unggah file CSV berisi daftar nama tamu (kolom harus dinamai **Nama**) untuk men-generate link undangan unik secara massal beserta `user_id` Anda.")
+
+                uploaded_csv = st.file_uploader("Upload File Daftar Tamu (.csv)", type=["csv"])
+                
+                # Template narasi default
+                default_narration = "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{link_undangan}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."
+                
+                custom_narration = st.text_area("Modifikasi Narasi / Pesan WhatsApp:", value=default_narration, height=120)
+                st.caption("Gunakan `{link_undangan}` di dalam teks untuk menempatkan tautan undangan secara otomatis.")
+
+                if uploaded_csv is not None:
+                    try:
+                        df_guests = pd.read_csv(uploaded_csv)
+                        if 'Nama' not in df_guests.columns:
+                            st.error("⚠️ File CSV harus memiliki kolom dengan header bernama **Nama**.")
+                        else:
+                            st.success(f"✅ Berhasil memuat {len(df_guests)} data tamu dari file CSV.")
+                            
+                            base_app_url = "https://wedding-invitation-ai.streamlit.app/"
+                            
+                            generated_links = []
+                            for idx, row in df_guests.iterrows():
+                                guest_n = str(row['Nama'])
+                                # Link unik yang membawa parameter 'to' dan 'user_id'
+                                link_item = f"{base_app_url}?to={urllib.parse.quote(guest_n)}&user_id={current_user}"
+                                message_text = custom_narration.replace("{link_undangan}", link_item)
+                                wa_link = f"https://wa.me/?text={urllib.parse.quote(message_text)}"
+                                
+                                generated_links.append({
+                                    "Nama Tamu": guest_n,
+                                    "Link Undangan": link_item,
+                                    "Link Kirim WhatsApp": wa_link
+                                })
+                            
+                            df_result = pd.DataFrame(generated_links)
+                            st.markdown("#### 📊 Hasil Generate Link Undangan Unik:")
+                            st.dataframe(df_result, use_container_width=True, hide_index=True)
+
+                            # Tombol Download CSV Hasil Generate
+                            csv_output = df_result.to_csv(index=False).encode('utf-8')
+                            st.download_button(
+                                label="📥 Download Daftar Link Undangan (CSV)",
+                                data=csv_output,
+                                file_name=f"link_undangan_tamu_{current_user}.csv",
+                                mime="text/csv"
+                            )
+                    except Exception as e:
+                        st.error(f"Gagal memproses file CSV: {e}")
+                else:
+                    # Generator Manual Satuan (Opsional jika tidak upload CSV)
+                    st.markdown("#### ✍️ Atau Generate Link untuk 1 Tamu:")
+                    single_guest = st.text_input("Nama Tamu Satuan", "Bapak Budi & Keluarga")
+                    if single_guest:
+                        single_link = f"https://wedding-invitation-ai.streamlit.app/?to={urllib.parse.quote(single_guest)}&user_id={current_user}"
+                        st.text_input("Link Undangan Satuan:", value=single_link)
 
     # TAHAP 4
     elif active_step == menu_steps[3]:
