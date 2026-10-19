@@ -479,10 +479,10 @@ else:
                 st.subheader("🖼️ Galeri Foto Pasangan")
                 
                 uploaded_photos = st.file_uploader(
-                    "Upload Foto Galeri (Maksimal 8 foto, @ maks 2MB)",
+                    "Upload Foto Galeri (Maksimal 5 foto, @ maks 2MB)",
                     type=["jpg", "jpeg", "png"],
                     accept_multiple_files=True,
-                    max_entries=8 # Batasi jumlah file langsung di Streamlit
+                    max_entries=5 # Batasi jumlah file langsung di Streamlit
                 )
 
                 # Validasi ukuran file di Python
