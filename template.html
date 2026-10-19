@@ -121,15 +121,6 @@
                 box-shadow: 0 0 8px rgba(254, 240, 138, 0.9);
             }
         }
-
-        /* Menghilangkan tombol Kelola Aplikasi di pojok kanan bawah */
-        .viewerBadge_container__1QSob, 
-        div.viewerBadge_link__1S137,
-        [data-testid="stToolbar"] {
-            display: none !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
         
     </style>
     
@@ -488,26 +479,6 @@
     
         // Jalankan fungsi saat halaman selesai dimuat
         window.addEventListener('DOMContentLoaded', initVisualEffects);
-    </script>
-
-    <script>
-        // Skrip untuk otomatis membuang badge / tombol "Kelola aplikasi" dari DOM
-        document.addEventListener("DOMContentLoaded", function() {
-            const removeStreamlitBadge = setInterval(function() {
-                // Mencari elemen berdasarkan teks "Kelola" atau atribut umum badge Streamlit
-                const elements = document.querySelectorAll('*');
-                elements.forEach(el => {
-                    if (el.innerText && el.innerText.includes("Kelola aplikasi")) {
-                        // Cari pembungkus terluar tombol tersebut lalu hapus / sembunyikan
-                        let container = el.closest('div[class*="viewerBadge"]') || el.parentElement;
-                        if (container) {
-                            container.style.display = 'none';
-                            container.remove();
-                        }
-                    }
-                });
-            }, 500); // Cek setiap 0.5 detik sampai elemennya hilang
-        });
     </script>
     
 </body>
