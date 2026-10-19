@@ -504,45 +504,13 @@ else:
                         st.session_state["bride_name"] = bride_name
 
                         try:
-                            template_content = f"""
-                            <div class="{{{{theme_bg}}}} {{^{{theme_text}}}} p-8 rounded-xl shadow-lg max-w-md mx-auto text-center font-sans">
-                                <h1 class="text-3xl font-bold mb-2">{{{{groom_name}}}} & {{{{bride_name}}}}</h1>
-                                <p class="italic text-sm mb-4">"{{{{quote_text}}}}"</p>
-                                <hr class="my-4 border-gray-600">
-                                <p class="font-semibold">{{{{event_date}}}}</p>
-                                <p class="text-sm mb-4">{{{{event_location}}}}</p>
-                                <img src="{{{{photo_url}}}}" class="rounded-lg mx-auto w-full h-64 object-cover mb-4">
-                                <p class="text-xs">Kepada Yth. <b>{{{{guest_name}}}}</b></p>
-                                <!-- Form RSVP menyertakan user_id session -->
-                                <div class="mt-6 p-4 bg-black/20 rounded-lg">
-                                    <h3 class="text-lg font-bold mb-2">Konfirmasi Kehadiran (RSVP)</h3>
-                                    <input type="text" id="rsvp-nama" placeholder="Nama Anda" value="{{{{guest_name}}}}" class="w-full p-2 mb-2 text-black rounded text-sm"><br>
-                                    <select id="rsvp-status" class="w-full p-2 mb-2 text-black rounded text-sm">
-                                        <option value="Hadir">Hadir</option>
-                                        <option value="Ragu-ragu">Ragu-ragu</option>
-                                        <option value="Maaf, Tidak Bisa Hadir">Maaf, Tidak Bisa Hadir</option>
-                                    </select><br>
-                                    <textarea id="rsvp-ucapan" placeholder="Ucapan & Doa" class="w-full p-2 mb-2 text-black rounded text-sm"></textarea><br>
-                                    <button onclick="submitRSVP()" class="w-full bg-amber-500 text-black font-bold p-2 rounded text-sm">Kirim RSVP</button>
-                                </div>
-                            </div>
-                            <script>
-                                function submitRSVP() {
-                                    var nama = document.getElementById('rsvp-nama').value;
-                                    var status = document.getElementById('rsvp-status').value;
-                                    var ucapan = document.getElementById('rsvp-ucapan').value;
-                                    var currentUserId = "{current_user}";
-                                    
-                                    if (!nama) {{ alert("Nama wajib diisi"); return; }}
-                                    
-                                    var targetUrl = window.location.pathname + "?rsvp_action=true&user_id=" + encodeURIComponent(currentUserId) + "&nama=" + encodeURIComponent(nama) + "&status=" + encodeURIComponent(status) + "&ucapan=" + encodeURIComponent(ucapan) + "&to=" + encodeURIComponent(nama);
-                                    window.location.href = targetUrl;
-                                }
-                            </script>
-                            """
+                            # MEMBACA TEMPLATE HTML DARI FILE TERPISAH (AMAN DARI SYNTAX ERROR)
                             if os.path.exists("template.html"):
                                 with open("template.html", "r", encoding="utf-8") as f:
                                     template_content = f.read()
+                            else:
+                                st.error("⚠️ File `template.html` tidak ditemukan di direktori project!")
+                                template_content = "<h1>Template tidak ditemukan</h1>"
 
                             jinja_template = Template(template_content)
                             rendered_html = jinja_template.render(
@@ -668,6 +636,21 @@ else:
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.rerun()
 
+            # CONTOH GENERATOR LINK WHATSAPP DENGAN USER_ID
+            st.markdown("---")
+            st.markdown("### 📤 Generator Link Undangan WhatsApp")
+            guest_broadcast_name = st.text_input("Nama Tamu yang Akan Diundang", "Bapak Budi & Keluarga")
+            
+            # Membuat link undangan otomatis yang membawa parameter to dan user_id
+            base_app_url = "https://wedding-invitation-ai.streamlit.app/"
+            generated_guest_link = f"{base_app_url}?to={urllib.parse.quote(guest_broadcast_name)}&user_id={current_user}"
+            
+            st.text_input("Salin Link Undangan Spesifik:", value=generated_guest_link)
+            
+            wa_message = f"Kepada Yth. {guest_broadcast_name},\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{generated_guest_link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.\n\nTerima Kasih."
+            encoded_wa_msg = urllib.parse.quote(wa_message)
+            st.markdown(f"👉 **[Kirim Undangan via WhatsApp](https://wa.me/?text={encoded_wa_msg})**", unsafe_allow_html=True)
+
     # TAHAP 4
     elif active_step == menu_steps[3]:
         st.subheader("📊 4. Manajemen RSVP & Buku Tamu Digital")
@@ -677,8 +660,12 @@ else:
         else:
             rsvp_data = load_json(RSVP_FILE, [])
             
-            # Filter data berdasarkan User_ID sesi aktif
-            user_rsvp = [item for item in rsvp_data if item.get("User_ID") == current_user]
+            # Filter data berdasarkan User_ID sesi aktif (Case-insensitive & support default_user lama)
+            user_rsvp = [
+                item for item in rsvp_data 
+                if str(item.get("User_ID", "")).lower() == str(current_user).lower() or 
+                   (current_user == "user_1" and item.get("User_ID") == "default_user")
+            ]
             
             if not user_rsvp:
                 st.info(f"Belum ada data RSVP masuk untuk ID Pengguna: `{current_user}`")
