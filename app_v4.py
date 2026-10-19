@@ -476,8 +476,8 @@ else:
                 bank_info = st.text_input("Informasi Amplop Digital / Bank", "BCA 123456789 a.n Budi", disabled=is_session_active)
 
                 st.markdown("---")
-                st.subheader("🖼️ Galeri Foto Pasangan")
                 
+                st.subheader("🖼️ Galeri Foto Pasangan")
                 uploaded_photos = st.file_uploader(
                     "Upload Foto Galeri (Maksimal 5 foto, @ maks 2MB)",
                     type=["jpg", "jpeg", "png"],
@@ -485,14 +485,33 @@ else:
                     disabled=is_session_active
                 )
                 
+                # List untuk menyimpan data foto beserta caption-nya
+                gallery_data = []
+                
                 # Validasi jumlah dan ukuran file secara manual di Python
                 if uploaded_photos:
                     if len(uploaded_photos) > 5:
                         st.error("⚠️ Maksimal hanya boleh mengupload 5 foto!")
                     else:
+                        has_oversized_file = False
                         for photo in uploaded_photos:
                             if photo.size > 2 * 1024 * 1024: # Batasan 2MB dalam bytes
                                 st.error(f"⚠️ File {photo.name} terlalu besar! Harap upload foto di bawah 2MB.")
+                                has_oversized_file = True
+                        
+                        # Jika semua file ukurannya aman, tampilkan kolom input caption
+                        if not has_oversized_file:
+                            st.markdown("### ✍️ Tulis Keterangan / Cerita Foto:")
+                            for i, photo in enumerate(uploaded_photos):
+                                caption = st.text_input(
+                                    f"Cerita untuk Foto {i+1} ({photo.name})",
+                                    placeholder="Contoh: Momen saat liburan pertama di luar negeri...",
+                                    key=f"caption_{i}"
+                                )
+                                gallery_data.append({
+                                    "photo": photo,
+                                    "caption": caption
+                                })
         
                 default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
 
