@@ -155,35 +155,75 @@
 
             <!-- SECTION DETAIL ACARA, LOKASI & RSVP -->
             <section class="content-section flex flex-col justify-center py-6 space-y-4">
-                <h2 class="text-xl font-serif-custom font-semibold text-center text-amber-300">Detail Acara & RSVP</h2>
+                <h2 class="text-xl font-serif-custom font-semibold text-center text-amber-300">Rangkaian Acara & RSVP</h2>
                 
-                <!-- Card Detail Acara & Lokasi -->
-                <div class="detail-acara-box p-5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center">
-                    <p class="text-sm font-semibold mb-1">
-                        📅 {{ event_day }}, {{ event_date }}
+                <!-- CARD 1: AKAD NIKAH -->
+                <div class="detail-acara-box p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
+                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
+                        💍 Akad Nikah
+                    </span>
+                    <p class="text-sm font-semibold pt-1">
+                        📅 {{ akad_day }}, {{ akad_date }}
                     </p>
-                    <p class="text-sm mb-3">
-                        ⏰ Pukul {{ event_time }}
+                    <p class="text-xs opacity-90">
+                        ⏰ Pukul {{ akad_time }}
                     </p>
-                    
-                    <p class="text-xs mb-4 px-2">
-                        📍 {{ event_location }}
+                    <p class="text-xs opacity-80 px-2">
+                        📍 {{ akad_location }}
                     </p>
-
-                    <a href="{{ maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-4 py-2 rounded-lg text-xs font-semibold shadow-md mb-3">
-                        🗺️ Buka Google Maps
+                    {% if akad_maps_url %}
+                    <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                        🗺️ Google Maps Akad
                     </a>
-
-                    {% if bank_info %}
-                    <div class="pt-3 border-t border-white/10 text-xs w-full mt-2">
-                        <p class="font-semibold text-amber-300 mb-1">🎁 Amplop Digital</p>
-                        <p class="opacity-90">{{ bank_info }}</p>
-                    </div>
                     {% endif %}
                 </div>
 
+                <!-- CARD 2: RESEPSI PERNIKAHAN -->
+                <div class="detail-acara-box p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
+                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
+                        🥳 Resepsi Pernikahan
+                    </span>
+                    <p class="text-sm font-semibold pt-1">
+                        📅 {{ resep_day }}, {{ resep_date }}
+                    </p>
+                    <p class="text-xs opacity-90">
+                        ⏰ Pukul {{ resep_time }}
+                    </p>
+                    <p class="text-xs opacity-80 px-2">
+                        📍 {{ resep_location }}
+                    </p>
+                    {% if resep_maps_url %}
+                    <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                        🗺️ Google Maps Resepsi
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- CARD 3: TURUT MENGUNDANG & AMPLOP DIGITAL -->
+                {% if turut_mengundang or bank_info %}
+                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center space-y-3">
+                    {% if turut_mengundang %}
+                    <div>
+                        <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🤝 Turut Mengundang</p>
+                        <p class="text-xs opacity-90 whitespace-pre-line leading-relaxed">{{ turut_mengundang }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if turut_mengundang and bank_info %}
+                    <hr class="border-white/10 my-2">
+                    {% endif %}
+
+                    {% if bank_info %}
+                    <div>
+                        <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🎁 Amplop Digital</p>
+                        <p class="text-xs opacity-90">{{ bank_info }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
                 <!-- Card Form RSVP & Ucapan -->
-                <div class="p-5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 space-y-3 shadow-lg" id="rsvp-card">
+                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 space-y-3 shadow-lg" id="rsvp-card">
                     <p class="text-xs font-semibold text-center text-amber-200">Konfirmasi Kehadiran</p>
                     <div>
                         <label class="text-[10px] opacity-80">Nama Anda:</label>
@@ -205,54 +245,8 @@
                         Kirim RSVP
                     </button>
                 </div>
-
-            <script>
-                function submitRSVP() {
-                    var nama = document.getElementById('rsvp-nama').value;
-                    var status = document.getElementById('rsvp-status').value;
-                    var ucapan = document.getElementById('rsvp-ucapan').value;
+            </section>
             
-                    if (!nama || nama.trim() === "") {
-                        alert("Mohon isi nama Anda terlebih dahulu.");
-                        return;
-                    }
-            
-                    // Tampilkan pesan sukses instan di HP
-                    var card = document.getElementById('rsvp-card');
-                    card.innerHTML = `
-                        <div class="text-center py-6 space-y-2">
-                            <p class="text-3xl">✅</p>
-                            <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                            <p class="text-xs opacity-80">Konfirmasi kehadiran Anda berhasil disimpan.</p>
-                        </div>
-                    `;
-            
-                    // Kirim data langsung ke Google Sheets Web App
-                    var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-                    
-                    // PENANGKAPAN USER_ID DINAMIS:
-                    // Priority 1: Ambil dari query parameter URL ?user_id=...
-                    // Priority 2: Fallback ke variabel Jinja2 {{ current_user_id }}
-                    // Priority 3: Fallback ke "default_user"
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
-                    
-                    var payload = {
-                        user_id: currentUserId, // Mengirimkan user_id yang tepat & dinamis
-                        nama: nama,
-                        status: status,
-                        ucapan: ucapan
-                    };
-            
-                    fetch(scriptUrl, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-                }
-            </script>
-
             <!-- SECTION QR CODE CHECK-IN TAMU -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
                 <h2 class="text-2xl font-serif-custom font-semibold mb-2 text-amber-300">QR Code Check-In</h2>
