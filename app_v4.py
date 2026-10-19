@@ -441,7 +441,11 @@ else:
                     "🌊 Royal Ocean Blue",           
                     "🍷 Burgundy Velvet Romance",     
                     "🌻 Bohemian Sunset Vintage",     
-                    "💎 Diamond Silver Crystal"       
+                    "💎 Diamond Silver Crystal",
+                    "🌸 Cherry Blossom Japanese Spring",
+                    "🌾 Rustic Wheat & Pampas Grass",
+                    "❄️ Winter Ice Blue Serenity",
+                    "🍋 Mediterranean Lemon & Olive"
                 ]
                 theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
 
