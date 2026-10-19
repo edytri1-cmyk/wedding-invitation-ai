@@ -434,7 +434,6 @@ else:
                     "🌿 Minimalist Emerald Organic", 
                     "🖤 Dark Luxury Elegance", 
                     "🏛️ Classic Rustic Wood",
-                    # --- TAMBAHAN TEMA BARU ---
                     "🌊 Royal Ocean Blue",           # Nuansa biru laut yang elegan & menenangkan
                     "🍷 Burgundy Velvet Romance",     # Nuansa merah anggur yang mewah & hangat
                     "🌻 Bohemian Sunset Vintage",     # Nuansa cokelat kayu dan kuning bunga matahari
