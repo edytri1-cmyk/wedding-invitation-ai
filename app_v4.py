@@ -556,14 +556,15 @@ else:
                     with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
                         prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text yang mencerminkan gaya {theme_choice}. Format JSON."
 
+                        # Ambil data gallery yang berisi foto dan caption dari session_state
                         gallery_photos = []
-                        if uploaded_photos and len(uploaded_photos) > 0:
-                            for photo in uploaded_photos:
-                                b64_photo = file_to_base64(photo)
-                                if b64_photo:
-                                    gallery_photos.append(b64_photo)
+                        raw_gallery = st.session_state.get('gallery_photos', [])
+                        
+                        if raw_gallery and len(raw_gallery) > 0:
+                            gallery_photos = raw_gallery
                         else:
-                            gallery_photos = [default_photo_url]
+                            # Fallback jika tidak ada foto yang di-upload
+                            gallery_photos = [{"photo": default_photo_url, "caption": "Momen Bahagia Kami"}]
 
                         ai_data, provider_used = generate_ai_content(prompt, theme_choice, groom_name, bride_name)
 
@@ -601,8 +602,8 @@ else:
                                 resep_maps_url=resep_maps_url,
                                 # Turut Mengundang
                                 turut_mengundang=turut_mengundang,
-                                # Lainnya
-                                photo_url=gallery_photos[0],
+                                # Lainnya (Mengirim list dictionary yang berisi foto & caption)
+                                photo_url=gallery_photos[0]["photo"] if gallery_photos else default_photo_url,
                                 gallery_photos=gallery_photos,
                                 bank_info=bank_info,
                                 music_url=final_music_url,
