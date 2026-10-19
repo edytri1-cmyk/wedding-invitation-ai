@@ -121,9 +121,20 @@
                 box-shadow: 0 0 8px rgba(254, 240, 138, 0.9);
             }
         }
+
+        /* Menghilangkan tombol Kelola Aplikasi di pojok kanan bawah */
+        .viewerBadge_container__1QSob, 
+        div.viewerBadge_link__1S137,
+        [data-testid="stToolbar"] {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
         
     </style>
+    
 </head>
+    
 <body class="{{ theme_bg }} {{ theme_text }} min-h-screen flex justify-center bg-gray-950">
 
     <!-- Container HP Fullscreen dengan Scroll Alami -->
