@@ -503,9 +503,7 @@ else:
                         if not has_oversized_file:
                             st.markdown("### ✍️ Tulis Keterangan / Cerita Foto:")
                             
-                            # Ganti nama list penampung menjadi gallery_photos agar sesuai dengan template.html
-                            gallery_photos = []
-                            
+                            temp_gallery = []
                             for i, photo in enumerate(uploaded_photos):
                                 caption = st.text_input(
                                     f"Cerita untuk Foto {i+1} ({photo.name})",
@@ -513,16 +511,18 @@ else:
                                     key=f"caption_{i}"
                                 )
                                 
-                                # Konversi file gambar Streamlit ke string Base64 agar bisa ditampilkan di HTML
+                                # Konversi ke Base64
                                 bytes_data = photo.getvalue()
                                 base64_encoded = base64.b64encode(bytes_data).decode("utf-8")
                                 img_src = f"data:image/{photo.type.split('/')[-1]};base64,{base64_encoded}"
                                 
-                                # Masukkan ke dictionary dengan key "photo" dan "caption"
-                                gallery_photos.append({
+                                temp_gallery.append({
                                     "photo": img_src,
                                     "caption": caption
                                 })
+    
+    # Simpan ke session_state agar terbawa saat tombol Generate diklik
+    st.session_state['gallery_photos'] = temp_gallery
         
                 default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
 
