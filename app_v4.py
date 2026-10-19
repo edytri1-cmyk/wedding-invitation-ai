@@ -119,7 +119,7 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
 # ---------------------------------------------------------
 # PENGATURAN UTAMA & PEMILIHAN MODE (CLIENT VS ADMIN)
 # ---------------------------------------------------------
-st.set_page_config(page_title="Wedding AI Generator & Admin", layout="wide")
+st.set_page_config(page_title="Wedding Invitation", layout="wide")
 
 # Inisialisasi Unique User ID per Session Streamlit
 if "user_id" not in st.session_state:
