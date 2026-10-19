@@ -344,14 +344,14 @@ else:
         st.session_state["agreed_terms"] = False
 
     menu_steps = [
-        "1️⃣ Penjelasan & Keamanan Data ➡️",
+        "1️⃣ Panduan Aplikasi ➡️",
         "2️⃣ Desain & Preview Undangan ➡️",
-        "3️⃣ Paket, Monetisasi & Broadcast ➡️",
+        "3️⃣ Buat Link Undangan ➡️",
         "4️⃣ Manajemen RSVP Tamu"
     ]
 
     active_step = st.radio(
-        "🧭 **Alur User Journey Aplikasi:**", 
+        "🧭 **Alur Aplikasi:**", 
         menu_steps, 
         horizontal=True,
         index=0
@@ -374,7 +374,7 @@ else:
 
     # TAHAP 1
     if active_step == menu_steps[0]:
-        st.subheader("📖 1. Panduan Aplikasi & Jaminan Keamanan Data")
+        st.subheader("📖 1. Panduan Aplikasi")
         
         col_info1, col_info2 = st.columns(2)
         with col_info1:
@@ -387,20 +387,20 @@ else:
             ### 🚀 Cara Penggunaan:
             1. **Pahami & Setujui** Syarat dan Ketentuan di halaman ini.
             2. Lanjut ke **Tahap 2**: Isi data mempelai, upload foto galeri, pilih tema AI, dan atur backsound musik. Generate undangan dan lihat preview-nya secara langsung.
-            3. Lanjut ke **Tahap 3**: Lakukan pembayaran transfer, konfirmasi pembayaran, masukkan kode aktivasi yang dikirim admin via email untuk membuka akses penuh selama 30 hari.
+            3. Lanjut ke **Tahap 3**: Lakukan pembayaran , konfirmasi pembayaran, masukkan kode aktivasi yang dikirim admin via email untuk membuka akses penuh selama 30 hari.
             4. Lanjut ke **Tahap 4**: Pantau kehadiran tamu (RSVP) dan ucapan doa yang masuk ke buku tamu digital Anda.
             """)
         
         with col_info2:
             st.markdown("""
             ### 🔒 Jaminan Keamanan & Privasi Data
-            * **Enkripsi Data:** Seluruh data pribadi dan foto dikelola secara aman dalam sesi pengguna.
-            * **Kerahasiaan Kontak Tamu:** Data nama tamu yang Anda unggah dapat anda hapus setelah selesai.
+            * **Enkripsi Data:** Seluruh data pribadi dan foto tidak disimpan di server.
+            * **Kerahasiaan Kontak Tamu:** Data nama tamu yang Anda Unggah dijamin aman.
             * **Kendali Penuh:** Anda memiliki kendali penuh untuk memperbarui data kapan saja.
             """)
         
         st.markdown("---")
-        agreement = st.checkbox("Saya telah membaca, memahami penjelasan aplikasi, dan menyetujui syarat serta kebijakan keamanan data.", value=st.session_state["agreed_terms"])
+        agreement = st.checkbox("Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data.", value=st.session_state["agreed_terms"])
         
         if agreement:
             st.session_state["agreed_terms"] = True
@@ -414,7 +414,7 @@ else:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
         else:
-            st.subheader("🎨 2. Data Pernikahan, Tema Visual, Musik & Preview Undangan")
+            st.subheader("🎨 2. Data Undangan, Tema Visual, Musik & Preview Undangan")
             
             col_form, col_preview = st.columns([1, 1])
 
@@ -424,16 +424,16 @@ else:
                 if is_session_active:
                     st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
 
-                groom_name = st.text_input("Nama Mempelai Pria", "Budi", disabled=is_session_active)
-                bride_name = st.text_input("Nama Mempelai Wanita", "Siti", disabled=is_session_active)
+                groom_name = st.text_input("Nama Mempelai Pria", "Nama Pria", disabled=is_session_active)
+                bride_name = st.text_input("Nama Mempelai Wanita", "Nama Wanita", disabled=is_session_active)
                 theme_choice = st.selectbox("Tema Visual AI", ["Rustic Elegance", "Modern Dark", "Gold Luxury", "Floral Romantic"], disabled=is_session_active)
                 
                 event_date = st.date_input("Tanggal Acara", disabled=is_session_active)
                 event_day = st.text_input("Hari Pernikahan", "Sabtu", disabled=is_session_active)
-                event_time = st.text_input("Waktu / Jam Pernikahan", "11.00 - 13.00 WIB", disabled=is_session_active)
-                event_location = st.text_input("Lokasi Acara", "Gedung Cendrawasih, Jakarta", disabled=is_session_active)
+                event_time = st.text_input("Waktu Pernikahan", "11.00 - 13.00 WIB", disabled=is_session_active)
+                event_location = st.text_input("Lokasi Acara", "Nama Gedung, Nama Kota", disabled=is_session_active)
                 maps_url = st.text_input("URL Google Maps Lokasi", "https://maps.google.com", disabled=is_session_active)
-                bank_info = st.text_input("Informasi Amplop Digital / Bank", "BCA 123456789 a.n Budi", disabled=is_session_active)
+                bank_info = st.text_input("Informasi Amplop Digital / Bank", "No Rekening a.n xxx", disabled=is_session_active)
 
                 st.markdown("---")
                 st.subheader("🖼️ Galeri Foto Pasangan")
