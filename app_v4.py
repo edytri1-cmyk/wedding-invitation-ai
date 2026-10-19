@@ -502,14 +502,25 @@ else:
                         # Jika semua file ukurannya aman, tampilkan kolom input caption
                         if not has_oversized_file:
                             st.markdown("### ✍️ Tulis Keterangan / Cerita Foto:")
+                            
+                            # Ganti nama list penampung menjadi gallery_photos agar sesuai dengan template.html
+                            gallery_photos = []
+                            
                             for i, photo in enumerate(uploaded_photos):
                                 caption = st.text_input(
                                     f"Cerita untuk Foto {i+1} ({photo.name})",
                                     placeholder="Contoh: Momen saat liburan pertama di luar negeri...",
                                     key=f"caption_{i}"
                                 )
-                                gallery_data.append({
-                                    "photo": photo,
+                                
+                                # Konversi file gambar Streamlit ke string Base64 agar bisa ditampilkan di HTML
+                                bytes_data = photo.getvalue()
+                                base64_encoded = base64.b64encode(bytes_data).decode("utf-8")
+                                img_src = f"data:image/{photo.type.split('/')[-1]};base64,{base64_encoded}"
+                                
+                                # Masukkan ke dictionary dengan key "photo" dan "caption"
+                                gallery_photos.append({
+                                    "photo": img_src,
                                     "caption": caption
                                 })
         
