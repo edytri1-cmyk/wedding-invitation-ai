@@ -194,11 +194,19 @@
             
             <!-- SECTION GALERI FOTO PREWEDDING -->
             {% if gallery_photos %}
-                {% for photo in gallery_photos %}
+                {% for item in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
                     <p class="text-xs uppercase tracking-widest opacity-70 mb-3">Momen Bahagia Kami</p>
-                    <div class="w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-black/20">
-                        <img src="{{ photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto">
+                    <div class="w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-black/20 p-3">
+                        <!-- Menampilkan foto -->
+                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-lg">
+                        
+                        <!-- Menampilkan caption/cerita foto jika diisi oleh user -->
+                        {% if item.caption %}
+                        <p class="text-sm text-center italic mt-3 opacity-90 px-2">
+                            "{{ item.caption }}"
+                        </p>
+                        {% endif %}
                     </div>
                 </section>
                 {% endfor %}
