@@ -777,7 +777,10 @@ else:
                     single_guest = st.text_input("Nama Tamu Satuan", "Bapak Budi & Keluarga")
                     if single_guest:
                         single_link = f"https://wedding-invitation-ai.streamlit.app/?to={urllib.parse.quote(single_guest)}&user_id={current_user}"
-                        st.text_input("Link Undangan Satuan:", value=single_link)
+                        
+                        st.markdown("Link Undangan Satuan:")
+                        # Menggunakan st.code agar otomatis ada tombol copy di pojok kanan atas
+                        st.code(single_link, language="markdown")
 
     # TAHAP 4
     elif active_step == menu_steps[3]:
