@@ -445,7 +445,9 @@ else:
                     "🌸 Cherry Blossom Japanese Spring",
                     "🌾 Rustic Wheat & Pampas Grass",
                     "❄️ Winter Ice Blue Serenity",
-                    "🍋 Mediterranean Lemon & Olive"
+                    "🍋 Mediterranean Lemon & Olive",
+                    "🌸 Cherry Blossom Japanese Spring",
+                    "🌺 Vibrant Colorful Spring Garden"
                 ]
                 theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
 
