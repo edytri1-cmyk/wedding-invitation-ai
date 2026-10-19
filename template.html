@@ -424,5 +424,60 @@
             }, 1000);
         }
     </script>
+
+    <script>
+        // FUNGSI MEMBUAT EFEK DAUN JATUH & BINTANG KELAP-KELIP
+        function initVisualEffects() {
+            const body = document.body;
+    
+            // 1. Generate Bintang Kelap-kelip (25 Bintang)
+            const totalStars = 25;
+            for (let i = 0; i < totalStars; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                
+                // Ukuran acak antara 2px - 5px
+                let size = Math.random() * 3 + 2;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Posisi acak di layar
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                
+                // Durasi & delay kelap-kelip acak
+                star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                star.style.animationDelay = (Math.random() * 3) + 's';
+                
+                body.appendChild(star);
+            }
+    
+            // 2. Generate Daun Jatuh (12 Daun)
+            const totalLeaves = 12;
+            const leafIcons = ['🍃', '🍂', '🌸']; // Kombinasi daun hijau, daun gugur, dan kelopak bunga
+            
+            for (let i = 0; i < totalLeaves; i++) {
+                let leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.innerText = leafIcons[Math.floor(Math.random() * leafIcons.length)];
+                
+                // Ukuran font acak
+                leaf.style.fontSize = (Math.random() * 12 + 12) + 'px';
+                
+                // Posisi awal acak secara horisontal
+                leaf.style.left = Math.random() * 100 + 'vw';
+                
+                // Durasi jatuh acak (6 - 12 detik) & delay
+                leaf.style.animationDuration = (Math.random() * 6 + 6) + 's';
+                leaf.style.animationDelay = (Math.random() * 5) + 's';
+                
+                body.appendChild(leaf);
+            }
+        }
+    
+        // Jalankan fungsi saat halaman selesai dimuat
+        window.addEventListener('DOMContentLoaded', initVisualEffects);
+    </script>
+    
 </body>
 </html>
