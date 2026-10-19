@@ -419,7 +419,7 @@ else:
             col_form, col_preview = st.columns([1, 1])
 
             with col_form:
-                st.subheader("📋 Informasi Pasangan & Acara")
+                st.subheader("📋 Informasi Mempelai")
                 
                 if is_session_active:
                     st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
@@ -452,7 +452,7 @@ else:
                 theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
 
                 st.markdown("---")
-                st.markdown("#### 💍 Detail Acara Akad Nikah")
+                st.markdown("#### 💍 Acara Akad Nikah")
                 akad_date = st.date_input("Tanggal Akad Nikah", disabled=is_session_active, key="akad_date")
                 akad_day = st.text_input("Hari Akad Nikah", "Sabtu", disabled=is_session_active, key="akad_day")
                 akad_time = st.text_input("Waktu / Jam Akad Nikah", "08.00 - 10.00 WIB", disabled=is_session_active, key="akad_time")
@@ -460,7 +460,7 @@ else:
                 akad_maps_url = st.text_input("URL Google Maps Akad", "https://maps.google.com", disabled=is_session_active, key="akad_maps")
 
                 st.markdown("---")
-                st.markdown("#### 🥳 Detail Acara Resepsi Pernikahan")
+                st.markdown("#### 🥳 Acara Resepsi")
                 resep_date = st.date_input("Tanggal Resepsi", disabled=is_session_active, key="resep_date")
                 resep_day = st.text_input("Hari Resepsi", "Sabtu", disabled=is_session_active, key="resep_day")
                 resep_time = st.text_input("Waktu / Jam Resepsi", "11.00 - 13.00 WIB", disabled=is_session_active, key="resep_time")
@@ -468,7 +468,7 @@ else:
                 resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
 
                 st.markdown("---")
-                st.markdown("#### 🤝 Turut Mengundang & Amplop Digital")
+                st.markdown("#### 🤝 Turut Mengundang")
                 turut_mengundang = st.text_area(
                     "Turut Mengundang (Gunakan koma atau baris baru)", 
                     "Keluarga Besar Pria:\n- Bp. Ahmad & Ibu Siti\nKeluarga Besar Wanita:\n- Bp. Dahlan & Ibu Aminah", 
@@ -479,7 +479,7 @@ else:
 
                 st.markdown("---")
                 
-                st.subheader("🖼️ Galeri Foto Pasangan")
+                st.subheader("🖼️ Galeri Foto")
                 uploaded_photos = st.file_uploader(
                     "Upload Foto Galeri (Maksimal 5 foto, @ maks 2MB)",
                     type=["jpg", "jpeg", "png"],
