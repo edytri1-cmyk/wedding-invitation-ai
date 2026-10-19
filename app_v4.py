@@ -705,33 +705,42 @@ else:
         if not is_session_active:
             st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
         else:
-            rsvp_data = load_json(RSVP_FILE, [])
+            # Masukkan URL CSV publik Google Sheet Anda di sini
+            GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsaN2n7MKVozzpZ-61okbgxjp8JE1CgA6HG2TUEn2AMqBDFOJ3vdtHeTlJDngnlIFa7P3zgf1ppzvX/pub?gid=0&single=true&output=csv"
             
-            # Filter data berdasarkan User_ID sesi aktif (Case-insensitive & support default_user lama)
-            user_rsvp = [
-                item for item in rsvp_data 
-                if str(item.get("User_ID", "")).lower() == str(current_user).lower() or 
-                   (current_user == "user_1" and item.get("User_ID") == "default_user")
-            ]
-            
-            if not user_rsvp:
-                st.info(f"Belum ada data RSVP masuk untuk ID Pengguna: `{current_user}`")
+            if "MASUKKAN_URL" in GOOGLE_SHEET_CSV_URL:
+                st.warning("⚠️ URL CSV Google Sheet belum dikonfigurasi di Tahap 4 app.py.")
             else:
-                df_rsvp = pd.DataFrame(user_rsvp)
-                total_respon = len(df_rsvp)
-                total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
-                total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
-                total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                try:
+                    # Baca langsung dari Google Sheet CSV
+                    df_all = pd.read_csv(GOOGLE_SHEET_CSV_URL)
+                    
+                    # Bersihkan spasi pada nama kolom
+                    df_all.columns = df_all.columns.str.strip()
+                    
+                    # Filter data berdasarkan User_ID sesi aktif secara Case-Insensitive
+                    df_rsvp = df_all[df_all['User_ID'].astype(str).str.lower() == str(current_user).lower()]
+                    
+                    if df_rsvp.empty:
+                        st.info(f"Belum ada data RSVP masuk untuk ID Pengguna: `{current_user}`")
+                    else:
+                        total_respon = len(df_rsvp)
+                        total_hadir = len(df_rsvp[df_rsvp['Kehadiran'] == 'Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
+                        total_ragu = len(df_rsvp[df_rsvp['Kehadiran'] == 'Ragu-ragu']) if 'Kehadiran' in df_rsvp.columns else 0
+                        total_absen = len(df_rsvp[df_rsvp['Kehadiran'] == 'Maaf, Tidak Bisa Hadir']) if 'Kehadiran' in df_rsvp.columns else 0
 
-                m1, m2, m3, m4 = st.columns(4)
-                m1.metric("Total Respon Tamu", total_respon)
-                m2.metric("Pasti Hadir", total_hadir)
-                m3.metric("Ragu-Ragu", total_ragu)
-                m4.metric("Tidak Hadir", total_absen)
+                        m1, m2, m3, m4 = st.columns(4)
+                        m1.metric("Total Respon Tamu", total_respon)
+                        m2.metric("Pasti Hadir", total_hadir)
+                        m3.metric("Ragu-Ragu", total_ragu)
+                        m4.metric("Tidak Hadir", total_absen)
 
-                st.markdown("---")
-                st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
-                st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
+                        st.markdown("---")
+                        st.markdown("**📋 Rekap Tabel Kehadiran & Ucapan Doa:**")
+                        st.dataframe(df_rsvp, use_container_width=True, hide_index=True)
 
-                csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
-                st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name=f"rekap_rsvp_{current_user}.csv", mime="text/csv")
+                        csv_rsvp = df_rsvp.to_csv(index=False).encode('utf-8')
+                        st.download_button("📥 Download Hasil Rekap RSVP (CSV)", data=csv_rsvp, file_name=f"rekap_rsvp_{current_user}.csv", mime="text/csv")
+
+                except Exception as e:
+                    st.error(f"Gagal memuat data dari Google Sheet: {e}")
