@@ -431,7 +431,11 @@ else:
                     "✨ Chic & Modern Gold", 
                     "⚡ Energetic Sunset Neon", 
                     "🌸 Boho Terracotta Earthy", 
-                    "🌿 Minimalist Emerald Organic", 
+                    "🌿 Minimalist Emerald Organic",
+                    "🌿 Sage Green Botanical",
+                    "☕ Mocha Latte Vintage",
+                    "💜 Lavender Dream Royalty",
+                    "🌅 Peach Blossom Sunset",
                     "🖤 Dark Luxury Elegance", 
                     "🏛️ Celestial Midnight Starlight",
                     "🌊 Royal Ocean Blue",           # Nuansa biru laut yang elegan & menenangkan
