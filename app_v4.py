@@ -430,7 +430,7 @@ else:
                 theme_options = [
                     "✨ Chic & Modern Gold", 
                     "⚡ Energetic Sunset Neon", 
-                    "🌸 Energetic Terracotta Neon", 
+                    "🌸 Energetic Sunrise Neon", 
                     "🌿 Minimalist Emerald Organic",
                     "🌿 Sage Green Botanical",
                     "☕ Mocha Latte Vintage",
