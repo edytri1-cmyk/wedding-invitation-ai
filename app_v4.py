@@ -433,7 +433,12 @@ else:
                     "🌸 Chic Pastel Romantic", 
                     "🌿 Minimalist Emerald Organic", 
                     "🖤 Dark Luxury Elegance", 
-                    "🏛️ Classic Rustic Wood"
+                    "🏛️ Classic Rustic Wood",
+                    # --- TAMBAHAN TEMA BARU ---
+                    "🌊 Royal Ocean Blue",           # Nuansa biru laut yang elegan & menenangkan
+                    "🍷 Burgundy Velvet Romance",     # Nuansa merah anggur yang mewah & hangat
+                    "🌻 Bohemian Sunset Vintage",     # Nuansa cokelat kayu dan kuning bunga matahari
+                    "💎 Diamond Silver Crystal"       # Nuansa putih perak yang futuristik & bersih
                 ]
                 theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
 
