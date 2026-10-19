@@ -482,15 +482,18 @@ else:
                     "Upload Foto Galeri (Maksimal 5 foto, @ maks 2MB)",
                     type=["jpg", "jpeg", "png"],
                     accept_multiple_files=True,
-                    max_entries=5 # Batasi jumlah file langsung di Streamlit
+                    disabled=is_session_active
                 )
-
-                # Validasi ukuran file di Python
-                for photo in uploaded_photos:
-                    if photo.size > 2 * 1024 * 1024: # Batasan 2MB dalam bytes
-                        st.error(f"File {photo.name} terlalu besar! Harap upload foto di bawah 2MB.")
+                
+                # Validasi jumlah dan ukuran file secara manual di Python
+                if uploaded_photos:
+                    if len(uploaded_photos) > 5:
+                        st.error("⚠️ Maksimal hanya boleh mengupload 5 foto!")
+                    else:
+                        for photo in uploaded_photos:
+                            if photo.size > 2 * 1024 * 1024: # Batasan 2MB dalam bytes
+                                st.error(f"⚠️ File {photo.name} terlalu besar! Harap upload foto di bawah 2MB.")
         
-                uploaded_photos = st.file_uploader("Upload Foto Pasangan (Multi-upload)", type=["jpg", "jpeg", "png", "webp"], accept_multiple_files=True, disabled=is_session_active)
                 default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
 
                 st.markdown("---")
