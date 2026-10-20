@@ -570,7 +570,7 @@ else:
                     final_music_url = st.text_input("Masukkan Direct URL File MP3", "", disabled=is_session_active)
 
                 st.markdown("---")
-                test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono")
+                test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono", disabled=True)
                 
                 btn_generate = st.button("🚀 Generate & Kunci Desain AI", type="primary", use_container_width=True, disabled=is_session_active)
 
