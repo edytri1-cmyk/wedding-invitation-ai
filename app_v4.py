@@ -570,9 +570,7 @@ else:
                     final_music_url = st.text_input("Masukkan Direct URL File MP3", "", disabled=is_session_active)
 
                 st.markdown("---")
-                # Tangkap parameter ?to dari URL, gunakan "Tamu Undangan" jika kosong
-                url_guest_to = st.query_params.get("to", "Bapak/Ibu/Saudara/i")
-                test_guest_name = st.text_input("Nama Tamu Uji Coba (Dari URL / Manual)", url_guest_to)
+                test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono")
                 
                 btn_generate = st.button("🚀 Generate & Kunci Desain AI", type="primary", use_container_width=True, disabled=is_session_active)
 
@@ -771,6 +769,7 @@ else:
 
                 uploaded_csv = st.file_uploader("Upload File Daftar Tamu (.csv)", type=["csv"])
                 
+                # Template narasi default
                 default_narration = "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{link_undangan}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."
                 
                 custom_narration = st.text_area("Modifikasi Narasi / Pesan WhatsApp:", value=default_narration, height=120)
@@ -789,6 +788,7 @@ else:
                             generated_links = []
                             for idx, row in df_guests.iterrows():
                                 guest_n = str(row['Nama'])
+                                # Link unik yang membawa parameter 'to' dan 'user_id'
                                 link_item = f"{base_app_url}?to={urllib.parse.quote(guest_n)}&user_id={current_user}"
                                 message_text = custom_narration.replace("{link_undangan}", link_item)
                                 wa_link = f"https://wa.me/?text={urllib.parse.quote(message_text)}"
@@ -803,6 +803,7 @@ else:
                             st.markdown("#### 📊 Hasil Generate Link Undangan Unik:")
                             st.dataframe(df_result, use_container_width=True, hide_index=True)
 
+                            # Tombol Download CSV Hasil Generate
                             csv_output = df_result.to_csv(index=False).encode('utf-8')
                             st.download_button(
                                 label="📥 Download Daftar Link Undangan (CSV)",
@@ -813,11 +814,14 @@ else:
                     except Exception as e:
                         st.error(f"Gagal memproses file CSV: {e}")
                 else:
+                    # Generator Manual Satuan (Opsional jika tidak upload CSV)
                     st.markdown("#### ✍️ Atau Generate Link untuk 1 Tamu:")
                     single_guest = st.text_input("Nama Tamu Satuan", "Bapak Budi & Keluarga")
                     if single_guest:
                         single_link = f"https://wedding-invitation-ai.streamlit.app/?to={urllib.parse.quote(single_guest)}&user_id={current_user}"
+                        
                         st.markdown("Link Undangan Satuan:")
+                        # Menggunakan st.code agar otomatis ada tombol copy di pojok kanan atas
                         st.code(single_link, language="markdown")
 
     # TAHAP 4
