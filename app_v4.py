@@ -570,7 +570,9 @@ else:
                     final_music_url = st.text_input("Masukkan Direct URL File MP3", "", disabled=is_session_active)
 
                 st.markdown("---")
-                test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono")
+                # Tangkap parameter ?to dari URL, gunakan "Tamu Undangan" jika kosong
+                url_guest_to = st.query_params.get("to", "Bapak/Ibu/Saudara/i")
+                test_guest_name = st.text_input("Nama Tamu Uji Coba (Dari URL / Manual)", url_guest_to)
                 
                 btn_generate = st.button("🚀 Generate & Kunci Desain AI", type="primary", use_container_width=True, disabled=is_session_active)
 
