@@ -127,6 +127,26 @@ if "user_id" not in st.session_state:
 
 current_user = st.session_state["user_id"]
 
+# ==========================================
+# SISIPKAN PENANGKAP TOKEN URL DI SINI
+# ==========================================
+query_params = st.query_params
+url_token = query_params.get("token", None)
+
+if url_token and "token_checked" not in st.session_state:
+    for order_id, data in orders_db.items():
+        if data.get("token") == url_token and data.get("status") == "ACTIVATED":
+            # Pulihkan identitas dan status aktif pengguna
+            st.session_state["user_id"] = order_id  # Mengganti user_id acak dengan order_id/userId asli mereka
+            current_user = order_id
+            st.session_state["activated_code_input"] = order_id
+            st.session_state["user_token"] = url_token
+                
+            # Tandai agar tidak looping, lalu arahkan langsung ke Tahap 3 (indeks ke-2)
+            st.session_state["active_step"] = menu_steps[2] 
+            st.success("✅ Sesi berhasil dipulihkan melalui Link Akses Cadangan!")
+            break
+    
 # =========================================================
 # DETEKSI PENGIRIMAN RSVP ATAU URL TAMU UNDANGAN
 # =========================================================
