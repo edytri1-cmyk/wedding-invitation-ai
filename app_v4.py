@@ -638,6 +638,9 @@ else:
 
 # TAHAP 3
     elif active_step == menu_steps[2]:
+        # Tentukan base URL aktif saat ini (bisa diubah ke undanganku.com nanti saat deploy ke VPS Rumahweb)
+        base_app_url = "https://wedding-invitation-ai.streamlit.app"
+
         if not st.session_state.get("design_ready", False):
             st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
         else:
@@ -649,11 +652,11 @@ else:
             if is_session_active:
                 st.success("🎉 **Layanan Aktif!** Lisensi Anda berlaku penuh (Maksimal 30 hari sejak aktivasi). Seluruh fitur tahap 3 dan 4 dapat digunakan.")
                 
-                # Menampilkan link token cadangan bagi yang sudah aktif agar mudah disalin
+                # Menampilkan link token cadangan sesuai domain aktif saat ini
                 active_token = st.session_state.get("user_token", "token-aktif-anda")
                 st.markdown("#### 🔗 Link Akses Cadangan (Anti-Putus Sesi)")
                 st.info("Simpan tautan berikut untuk membuka kembali Tahap 3 & 4 keesokan harinya jika *browser* tertutup atau laptop *sleep*:")
-                st.code(f"https://undanganku.com/?token={active_token}", language="markdown")
+                st.code(f"{base_app_url}/?token={active_token}", language="markdown")
                 
             else:
                 st.warning("⚠️ Akses unduh link dan rekap RSVP terkunci. Silakan lakukan pembayaran otomatis di bawah ini.")
@@ -731,7 +734,7 @@ else:
                         
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.info("🔑 **Link Akses Cadangan Anda:** Simpan tautan di bawah ini untuk melanjutkan pekerjaan keesokan harinya:")
-                        st.code(f"https://undanganku.com/?token={user_token}", language="markdown")
+                        st.code(f"{base_app_url}/?token={user_token}", language="markdown")
                         
                         if st.button("Masuk ke Fitur Tahap 3 & 4 Sekarang 🚀"):
                             st.rerun()
