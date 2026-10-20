@@ -636,7 +636,7 @@ else:
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
-    # TAHAP 3
+# TAHAP 3
     elif active_step == menu_steps[2]:
         if not st.session_state.get("design_ready", False):
             st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
@@ -648,6 +648,13 @@ else:
 
             if is_session_active:
                 st.success("🎉 **Layanan Aktif!** Lisensi Anda berlaku penuh (Maksimal 30 hari sejak aktivasi). Seluruh fitur tahap 3 dan 4 dapat digunakan.")
+                
+                # Menampilkan link token cadangan bagi yang sudah aktif agar mudah disalin
+                active_token = st.session_state.get("user_token", "token-aktif-anda")
+                st.markdown("#### 🔗 Link Akses Cadangan (Anti-Putus Sesi)")
+                st.info("Simpan tautan berikut untuk membuka kembali Tahap 3 & 4 keesokan harinya jika *browser* tertutup atau laptop *sleep*:")
+                st.code(f"https://undanganku.com/?token={active_token}", language="markdown")
+                
             else:
                 st.warning("⚠️ Akses unduh link dan rekap RSVP terkunci. Silakan lakukan pembayaran otomatis di bawah ini.")
                 
@@ -703,21 +710,31 @@ else:
                             st.error("Harap isi Nama dan Email Anda.")
 
                 st.markdown("---")
-                st.markdown("#### 🔑 Aktivasi Otomatis / Manual Kode Unik")
+                st.markdown("#### 🔑 Aktivasi Otomatis / Manual Kode Unik & Token Akses")
                 
                 code_input = st.text_input("Masukkan Kode Aktivasi / Order ID")
                 if st.button("Aktivasi Sekarang"):
                     if code_input.strip():
+                        # Generate token unik untuk pemulihan sesi (anti-putus)
+                        user_token = str(uuid.uuid4())
+                        
                         orders_db[code_input] = {
                             "name": "Simulasi Pembeli",
                             "status": "ACTIVATED",
+                            "token": user_token,
                             "activated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
                         save_json(ORDERS_FILE, orders_db)
                         
                         st.session_state["activated_code_input"] = code_input
+                        st.session_state["user_token"] = user_token
+                        
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
-                        st.rerun()
+                        st.info("🔑 **Link Akses Cadangan Anda:** Simpan tautan di bawah ini untuk melanjutkan pekerjaan keesokan harinya:")
+                        st.code(f"https://undanganku.com/?token={user_token}", language="markdown")
+                        
+                        if st.button("Masuk ke Fitur Tahap 3 & 4 Sekarang 🚀"):
+                            st.rerun()
 
             # =========================================================
             # FITUR TAMBAHAN: UPLOAD CSV DAFTAR TAMU & GENERATE LINK MASSAL
@@ -729,7 +746,6 @@ else:
 
                 uploaded_csv = st.file_uploader("Upload File Daftar Tamu (.csv)", type=["csv"])
                 
-                # Template narasi default
                 default_narration = "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{link_undangan}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."
                 
                 custom_narration = st.text_area("Modifikasi Narasi / Pesan WhatsApp:", value=default_narration, height=120)
@@ -748,7 +764,6 @@ else:
                             generated_links = []
                             for idx, row in df_guests.iterrows():
                                 guest_n = str(row['Nama'])
-                                # Link unik yang membawa parameter 'to' dan 'user_id'
                                 link_item = f"{base_app_url}?to={urllib.parse.quote(guest_n)}&user_id={current_user}"
                                 message_text = custom_narration.replace("{link_undangan}", link_item)
                                 wa_link = f"https://wa.me/?text={urllib.parse.quote(message_text)}"
@@ -763,7 +778,6 @@ else:
                             st.markdown("#### 📊 Hasil Generate Link Undangan Unik:")
                             st.dataframe(df_result, use_container_width=True, hide_index=True)
 
-                            # Tombol Download CSV Hasil Generate
                             csv_output = df_result.to_csv(index=False).encode('utf-8')
                             st.download_button(
                                 label="📥 Download Daftar Link Undangan (CSV)",
@@ -774,14 +788,11 @@ else:
                     except Exception as e:
                         st.error(f"Gagal memproses file CSV: {e}")
                 else:
-                    # Generator Manual Satuan (Opsional jika tidak upload CSV)
                     st.markdown("#### ✍️ Atau Generate Link untuk 1 Tamu:")
                     single_guest = st.text_input("Nama Tamu Satuan", "Bapak Budi & Keluarga")
                     if single_guest:
                         single_link = f"https://wedding-invitation-ai.streamlit.app/?to={urllib.parse.quote(single_guest)}&user_id={current_user}"
-                        
                         st.markdown("Link Undangan Satuan:")
-                        # Menggunakan st.code agar otomatis ada tombol copy di pojok kanan atas
                         st.code(single_link, language="markdown")
 
     # TAHAP 4
