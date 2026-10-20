@@ -791,12 +791,13 @@ else:
                                 # Link unik yang membawa parameter 'to' dan 'user_id'
                                 link_item = f"{base_app_url}?to={urllib.parse.quote(guest_n)}&user_id={current_user}"
                                 message_text = custom_narration.replace("{link_undangan}", link_item)
-                                wa_link = f"https://wa.me/?text={urllib.parse.quote(message_text)}"
+                                
+                                # Mengubah kolom ke-3 menjadi plain text narasi undangan
                                 
                                 generated_links.append({
                                     "Nama Tamu": guest_n,
                                     "Link Undangan": link_item,
-                                    "Link Kirim WhatsApp": wa_link
+                                    "Format Pesan WhatsApp": message_text
                                 })
                             
                             df_result = pd.DataFrame(generated_links)
