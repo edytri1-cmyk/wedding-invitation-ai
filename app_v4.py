@@ -135,30 +135,32 @@ url_token = query_params.get("token", None)
 
 if url_token and "token_checked" not in st.session_state:
     try:
-        # Panggil load_json sesuai dengan struktur aslinya (biasanya hanya menerima nama file)
         orders_db = load_json("orders_db.json")
-        
-        # Pastikan orders_db berformat dictionary/kamus yang valid
         if not isinstance(orders_db, dict):
             orders_db = {}
-            
     except Exception:
-        # Fallback aman jika file belum ada atau kosong
         orders_db = {}
     
     # Lakukan pencarian token
     for order_id, data in orders_db.items():
         if isinstance(data, dict) and data.get("token") == url_token and data.get("status") == "ACTIVATED":
-            # Pulihkan identitas dan status aktif pengguna
+            # 1. Pulihkan identitas pengguna
             st.session_state["user_id"] = order_id  
             current_user = order_id
             st.session_state["activated_code_input"] = order_id
             st.session_state["user_token"] = url_token
             
-            # Tandai agar tidak looping, lalu arahkan langsung ke Tahap 3 (indeks ke-2)
-            st.session_state["active_step"] = menu_steps[2]  
+            # 2. AKTIFKAN STATUS SESI & KUNCI DESAIN (PENTING!)
+            st.session_state["is_session_active"] = True  # Mengunci form di Tahap 2 & menandakan sudah bayar
+            st.session_state["agreed_terms"] = True       # Meloloskan syarat & ketentuan Tahap 1
+            st.session_state["design_ready"] = True       # Menandakan desain undangan sudah digenerate
+            
+            # 3. Arahkan langsung ke Tahap 3 (Buat Link Undangan)
+            if 'menu_steps' in locals() and len(menu_steps) > 2:
+                st.session_state["active_step"] = menu_steps[2]  
+                
             st.session_state["token_checked"] = True 
-            st.success("✅ Sesi berhasil dipulihkan melalui Link Akses Cadangan!")
+            st.success("✅ Sesi berhasil dipulihkan! Akses Tahap 3 & 4 dibuka.")
             break
     
 # =========================================================
