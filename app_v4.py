@@ -115,20 +115,8 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     }
     return default_data, "Default Static Fallback"
 
-
-# ---------------------------------------------------------
-# PENGATURAN UTAMA & PEMILIHAN MODE (CLIENT VS ADMIN)
-# ---------------------------------------------------------
-st.set_page_config(page_title="Wedding Invitation", layout="wide")
-
-# Inisialisasi Unique User ID per Session Streamlit
-if "user_id" not in st.session_state:
-    st.session_state["user_id"] = f"user_{str(uuid.uuid4())[:8]}"
-
-current_user = st.session_state["user_id"]
-
 # ==========================================
-# SISIPKAN PENANGKAP TOKEN URL DI SINI
+# 1. PENANGKAP TOKEN URL (HARUS DI PALING ATAS!)
 # ==========================================
 query_params = st.query_params
 url_token = query_params.get("token", None)
@@ -141,27 +129,36 @@ if url_token and "token_checked" not in st.session_state:
     except Exception:
         orders_db = {}
     
-    # Lakukan pencarian token
     for order_id, data in orders_db.items():
         if isinstance(data, dict) and data.get("token") == url_token and data.get("status") == "ACTIVATED":
-            # 1. Pulihkan identitas pengguna
+            # Pulihkan identitas dan status berbayar
             st.session_state["user_id"] = order_id  
-            current_user = order_id
             st.session_state["activated_code_input"] = order_id
             st.session_state["user_token"] = url_token
             
-            # 2. AKTIFKAN STATUS SESI & KUNCI DESAIN (PENTING!)
-            st.session_state["is_session_active"] = True  # Mengunci form di Tahap 2 & menandakan sudah bayar
-            st.session_state["agreed_terms"] = True       # Meloloskan syarat & ketentuan Tahap 1
-            st.session_state["design_ready"] = True       # Menandakan desain undangan sudah digenerate
+            # Kunci status sesi & desain agar langsung lolos ke Tahap 3
+            st.session_state["is_session_active"] = True  
+            st.session_state["agreed_terms"] = True       
+            st.session_state["design_ready"] = True       
             
-            # 3. Arahkan langsung ke Tahap 3 (Buat Link Undangan)
-            if 'menu_steps' in locals() and len(menu_steps) > 2:
-                st.session_state["active_step"] = menu_steps[2]  
-                
+            # Paksa langsung ke menu langkah ke-3 (Indeks 2: Buat Link Undangan)
+            # Pastikan 'menu_steps' didefinisikan setelah ini atau gunakan langsung string menunya
+            st.session_state["active_step"] = "3️⃣ Buat Link Undangan" # Sesuaikan dengan nama teks menu Tahap 3 Anda
+            
             st.session_state["token_checked"] = True 
-            st.success("✅ Sesi berhasil dipulihkan! Akses Tahap 3 & 4 dibuka.")
             break
+
+
+# ---------------------------------------------------------
+# PENGATURAN UTAMA & PEMILIHAN MODE (CLIENT VS ADMIN)
+# ---------------------------------------------------------
+st.set_page_config(page_title="Wedding Invitation", layout="wide")
+
+# Inisialisasi Unique User ID per Session Streamlit
+if "user_id" not in st.session_state:
+    st.session_state["user_id"] = f"user_{str(uuid.uuid4())[:8]}"
+
+current_user = st.session_state["user_id"]
     
 # =========================================================
 # DETEKSI PENGIRIMAN RSVP ATAU URL TAMU UNDANGAN
