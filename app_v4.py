@@ -123,6 +123,7 @@ url_token = query_params.get("token", None)
 
 # Cek apakah token ada dan belum diproses dalam sesi ini
 if url_token and st.session_state.get("user_token") != url_token:
+    
     orders_db = {}
     if os.path.exists("orders_db.json"):
         try:
