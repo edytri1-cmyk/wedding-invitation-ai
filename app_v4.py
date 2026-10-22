@@ -116,14 +116,12 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     return default_data, "Default Static Fallback"
 
 # ==========================================
-# 1. PENANGKAP TOKEN URL (PALING ATAS)
+# 1. PENANGKAP TOKEN URL YANG LEBIH FLEKSIBEL
 # ==========================================
 query_params = st.query_params
 url_token = query_params.get("token", None)
 
-# Cek apakah token ada dan belum diproses dalam sesi ini
 if url_token and st.session_state.get("user_token") != url_token:
-    
     orders_db = {}
     if os.path.exists("orders_db.json"):
         try:
@@ -131,30 +129,39 @@ if url_token and st.session_state.get("user_token") != url_token:
                 content = f.read()
                 if content.strip():
                     orders_db = json.loads(content)
-        except Exception as e:
+        except Exception:
             orders_db = {}
     
     token_found = False
+    clean_url_token = str(url_token).strip()
+    
     for order_id, data in orders_db.items():
-        if isinstance(data, dict) and data.get("token") == url_token and data.get("status") == "ACTIVATED":
-            # Set session state secara permanen untuk sesi ini
-            st.session_state["user_id"] = order_id  
-            st.session_state["activated_code_input"] = order_id
-            st.session_state["user_token"] = url_token
+        if isinstance(data, dict):
+            stored_token = str(data.get("token", "")).strip()
+            stored_status = str(data.get("status", "")).strip().upper()
             
-            st.session_state["is_session_active"] = True  
-            st.session_state["agreed_terms"] = True       
-            st.session_state["design_ready"] = True       
-            
-            # Paksa arahkan ke Tahap 3
-            st.session_state["active_step"] = "3️⃣ Buat Link Undangan"
-            token_found = True
-            break
-            
+            # Mencocokkan token & toleransi berbagai status aktif
+            if stored_token == clean_url_token and stored_status in ["ACTIVATED", "ACTIVE", "PAID"]:
+                # Pulihkan sesi user
+                st.session_state["user_id"] = order_id  
+                st.session_state["activated_code_input"] = order_id
+                st.session_state["user_token"] = url_token
+                
+                st.session_state["is_session_active"] = True  
+                st.session_state["agreed_terms"] = True       
+                st.session_state["design_ready"] = True       
+                
+                # Arahkan langsung ke Tahap 3
+                st.session_state["active_step"] = "3️⃣ Buat Link Undangan"
+                token_found = True
+                break
+                
     if token_found:
-        st.toast("✅ Sesi berhasil dipulihkan via Token!", icon="🎉")
+        st.success("✅ Sesi berhasil dipulihkan via Token!")
+        st.rerun() # Refresh instan agar langsung masuk ke Tahap 3
     else:
-        st.warning("⚠️ Token URL tidak valid atau kedaluwarsa.")
+        # Debugging ringan: Tampilkan info jika token tidak ketemu di JSON
+        st.warning(f"⚠️ Token URL tidak valid atau kedaluwarsa. (Token dibaca: {clean_url_token[:8]}...)")
 
 
 # ---------------------------------------------------------
