@@ -116,37 +116,36 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     return default_data, "Default Static Fallback"
 
 # ==========================================
-# 1. PENANGKAP TOKEN URL (HARUS DI PALING ATAS!)
+# 1. PENANGKAP TOKEN URL (PALING ATAS)
 # ==========================================
 query_params = st.query_params
 url_token = query_params.get("token", None)
 
-if url_token and "token_checked" not in st.session_state:
-    try:
-        orders_db = load_json("orders_db.json")
-        if not isinstance(orders_db, dict):
-            orders_db = {}
-    except Exception:
-        orders_db = {}
+# Cek apakah token ada dan belum diproses dalam sesi ini
+if url_token and st.session_state.get("user_token") != url_token:
+    orders_db = load_json("orders_db.json")
     
+    token_found = False
     for order_id, data in orders_db.items():
         if isinstance(data, dict) and data.get("token") == url_token and data.get("status") == "ACTIVATED":
-            # Pulihkan identitas dan status berbayar
+            # Set session state secara permanen untuk sesi ini
             st.session_state["user_id"] = order_id  
             st.session_state["activated_code_input"] = order_id
             st.session_state["user_token"] = url_token
             
-            # Kunci status sesi & desain agar langsung lolos ke Tahap 3
             st.session_state["is_session_active"] = True  
             st.session_state["agreed_terms"] = True       
             st.session_state["design_ready"] = True       
             
-            # Paksa langsung ke menu langkah ke-3 (Indeks 2: Buat Link Undangan)
-            # Pastikan 'menu_steps' didefinisikan setelah ini atau gunakan langsung string menunya
-            st.session_state["active_step"] = "3️⃣ Buat Link Undangan" # Sesuaikan dengan nama teks menu Tahap 3 Anda
-            
-            st.session_state["token_checked"] = True 
+            # Paksa arahkan ke Tahap 3
+            st.session_state["active_step"] = "3️⃣ Buat Link Undangan"
+            token_found = True
             break
+            
+    if token_found:
+        st.toast("✅ Sesi berhasil dipulihkan via Token!", icon="🎉")
+    else:
+        st.warning("⚠️ Token URL tidak valid atau kedaluwarsa.")
 
 
 # ---------------------------------------------------------
