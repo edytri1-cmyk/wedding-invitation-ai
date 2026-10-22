@@ -131,6 +131,10 @@ if url_token and st.session_state.get("user_token") != url_token:
                     orders_db = json.loads(content)
         except Exception:
             orders_db = {}
+
+    # 🔍 SISIPKAN BARIS DEBUG DI SINI
+    st.write("🔍 DEBUG - Isi orders_db:", orders_db)
+    st.write("🔍 DEBUG - Token dari URL:", url_token)
     
     token_found = False
     clean_url_token = str(url_token).strip()
