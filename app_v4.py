@@ -123,7 +123,15 @@ url_token = query_params.get("token", None)
 
 # Cek apakah token ada dan belum diproses dalam sesi ini
 if url_token and st.session_state.get("user_token") != url_token:
-    orders_db = load_json("orders_db.json")
+    orders_db = {}
+    if os.path.exists("orders_db.json"):
+        try:
+            with open("orders_db.json", "r", encoding="utf-8") as f:
+                content = f.read()
+                if content.strip():
+                    orders_db = json.loads(content)
+        except Exception as e:
+            orders_db = {}
     
     token_found = False
     for order_id, data in orders_db.items():
