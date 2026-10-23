@@ -557,7 +557,7 @@ else:
                 bride_name = st.text_input("Nama Mempelai Wanita", "Siti", disabled=is_session_active)
                 
                 theme_options = [
-                    "✨ Chic & Modern Gold", 
+                    "✨ Chic & Modern Green", 
                     "⚡ Energetic Sunset Neon", 
                     "🌸 Boho Sunrise Neon", 
                     "🌿 Minimalist Emerald Organic",
