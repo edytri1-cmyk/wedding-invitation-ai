@@ -733,7 +733,7 @@ else:
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
-# TAHAP 3
+#Tahap 3
     elif active_step == menu_steps[2]:
         # Tentukan base URL aktif saat ini (bisa diubah ke undanganku.com nanti saat deploy ke VPS Rumahweb)
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
@@ -779,6 +779,7 @@ else:
                                 )
 
                                 order_id_trx = f"WAI-INV-{int(time.time())}"
+                                user_token = str(uuid.uuid4())
                                 
                                 transaction_params = {
                                     "transaction_details": {
@@ -801,6 +802,14 @@ else:
                                 charge_response = snap.create_transaction(transaction_params)
                                 redirect_url = charge_response['redirect_url']
                                 
+                                # Simpan data transaksi awal ke Google Sheets dengan status PENDING
+                                save_order_to_gsheets(
+                                    order_id=order_id_trx,
+                                    token=user_token,
+                                    status="PENDING",
+                                    user_id=buyer_name
+                                )
+                                
                                 st.success("✅ Link Pembayaran Berhasil Dibuat!")
                                 st.markdown(f"👉 **[Klik Di Sini untuk Menyelesaikan Pembayaran]({redirect_url})**", unsafe_allow_html=True)
                                 
@@ -818,15 +827,15 @@ else:
                         # Generate token unik untuk pemulihan sesi (anti-putus)
                         user_token = str(uuid.uuid4())
                         
-                        orders_db[code_input] = {
-                            "name": "Simulasi Pembeli",
-                            "status": "ACTIVATED",
-                            "token": user_token,
-                            "activated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        }
-                        save_json(ORDERS_FILE, orders_db)
+                        # Simpan/Perbarui status ke Google Sheets menjadi ACTIVATED
+                        save_order_to_gsheets(
+                            order_id=code_input.strip(),
+                            token=user_token,
+                            status="ACTIVATED",
+                            user_id=buyer_name if 'buyer_name' in locals() and buyer_name else "Manual User"
+                        )
                         
-                        st.session_state["activated_code_input"] = code_input
+                        st.session_state["activated_code_input"] = code_input.strip()
                         st.session_state["user_token"] = user_token
                         
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
