@@ -440,34 +440,38 @@ else:
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
 
-    menu_steps = [
-        "1️⃣ Panduan Aplikasi ➡️",
-        "2️⃣ Desain & Preview Undangan ➡️",
-        "3️⃣ Buat Link Undangan ➡️",
-        "4️⃣ Manajemen RSVP Tamu"
-    ]
+    # 1. Pengecekan status sesi aktif (dari Google Sheets atau Session State)
+    is_session_active = st.session_state.get("is_session_active", False)
+
+    # 2. Penentuan menu navigasi dinamis berdasarkan status sesi
+    if is_session_active:
+        # Jika masuk via token URL yang sah, hanya tampilkan Tahap 3 & 4
+        menu_steps = [
+            "3️⃣ Buat Link Undangan ➡️",
+            "4️⃣ Manajemen RSVP Tamu"
+        ]
+    else:
+        # Jika belum aktif, tampilkan alur lengkap dari awal
+        menu_steps = [
+            "1️⃣ Panduan Aplikasi ➡️",
+            "2️⃣ Desain & Preview Undangan ➡️",
+            "3️⃣ Buat Link Undangan ➡️",
+            "4️⃣ Manajemen RSVP Tamu"
+        ]
 
     active_step = st.radio(
         "🧭 **Alur Aplikasi:**", 
         menu_steps, 
         horizontal=True,
-        index=0
+        index=0  # Selalu aman karena indeks 0 pasti ada di dalam menu_steps
     )
 
     st.markdown("---")
 
-    orders_db = load_json(ORDERS_FILE, {})
-    activated_code = st.session_state.get("activated_code_input", "")
-    is_session_active = False
-
-    if activated_code in orders_db:
-        order_info = orders_db[activated_code]
-        if order_info.get("status") == "ACTIVATED":
-            activated_date = datetime.strptime(order_info["activated_at"], "%Y-%m-%d %H:%M:%S")
-            if datetime.now() - activated_date <= timedelta(days=30):
-                is_session_active = True
-            else:
-                st.sidebar.error("⚠️ Masa aktif kode aktivasi Anda telah melebihi 30 hari dan telah kedaluwarsa.")
+    # (Opsional jika masih ingin memvalidasi database lokal/lainnya)
+    # orders_db = load_json(ORDERS_FILE, {})
+    # activated_code = st.session_state.get("activated_code_input", "")
+    # ...
 
     # TAHAP 1
     if active_step == menu_steps[0]:
