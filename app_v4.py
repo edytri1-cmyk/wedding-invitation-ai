@@ -467,14 +467,10 @@ else:
     st.markdown("---")
 
     # =========================================================
-    # 2. PENCocokan KONTEN BERDASARKAN KATA KUNCI YANG TEPAT
+    # 2. PENCOCOKAN KONTEN BERDASARKAN KATA KUNCI (Tanpa Indeks)
     # =========================================================
     
     if "Panduan Aplikasi" in active_step:
-        # --- KONTEN TAHAP 1 ---
-        # (Letakkan kode isi Tahap 1 Anda di sini)
-            # TAHAP 1
-    if active_step == menu_steps[0]:
         st.subheader("📖 1. Panduan Aplikasi")
         
         col_info1, col_info2 = st.columns(2)
@@ -510,12 +506,7 @@ else:
             st.session_state["agreed_terms"] = False
             st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
 
-        pass
-        
     elif "Desain & Preview Undangan" in active_step:
-        # --- KONTEN TAHAP 2 ---
-    # TAHAP 2
-    elif active_step == menu_steps[1]:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
         else:
@@ -592,21 +583,18 @@ else:
                     disabled=is_session_active
                 )
                 
-                # List untuk menyimpan data foto beserta caption-nya
                 gallery_data = []
                 
-                # Validasi jumlah dan ukuran file secara manual di Python
                 if uploaded_photos:
                     if len(uploaded_photos) > 5:
                         st.error("⚠️ Maksimal hanya boleh mengupload 5 foto!")
                     else:
                         has_oversized_file = False
                         for photo in uploaded_photos:
-                            if photo.size > 2 * 1024 * 1024: # Batasan 2MB dalam bytes
+                            if photo.size > 2 * 1024 * 1024:
                                 st.error(f"⚠️ File {photo.name} terlalu besar! Harap upload foto di bawah 2MB.")
                                 has_oversized_file = True
                         
-                        # Jika semua file ukurannya aman, tampilkan kolom input caption
                         if not has_oversized_file:
                             st.markdown("### ✍️ Tulis Keterangan / Cerita Foto:")
                             
@@ -618,7 +606,6 @@ else:
                                     key=f"caption_{i}"
                                 )
                                 
-                                # Konversi ke Base64
                                 bytes_data = photo.getvalue()
                                 base64_encoded = base64.b64encode(bytes_data).decode("utf-8")
                                 img_src = f"data:image/{photo.type.split('/')[-1]};base64,{base64_encoded}"
@@ -627,8 +614,7 @@ else:
                                     "photo": img_src,
                                     "caption": caption
                                 })
-    
-                            # Simpan ke session_state agar terbawa saat tombol Generate diklik
+                            
                             st.session_state['gallery_photos'] = temp_gallery
         
                 default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
@@ -663,14 +649,12 @@ else:
                     with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
                         prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text yang mencerminkan gaya {theme_choice}. Format JSON."
 
-                        # Ambil data gallery yang berisi foto dan caption dari session_state
                         gallery_photos = []
                         raw_gallery = st.session_state.get('gallery_photos', [])
                         
                         if raw_gallery and len(raw_gallery) > 0:
                             gallery_photos = raw_gallery
                         else:
-                            # Fallback jika tidak ada foto yang di-upload
                             gallery_photos = [{"photo": default_photo_url, "caption": "Momen Bahagia Kami"}]
 
                         ai_data, provider_used = generate_ai_content(prompt, theme_choice, groom_name, bride_name)
@@ -694,22 +678,18 @@ else:
                                 groom_name=groom_name,
                                 bride_name=bride_name,
                                 quote_text=ai_data.get("quote"),
-                                # Data Akad
                                 akad_date=akad_date.strftime("%d %B %Y"),
                                 raw_event_date=akad_date.strftime("%Y-%m-%d"),
                                 akad_day=akad_day,
                                 akad_time=akad_time,
                                 akad_location=akad_location,
                                 akad_maps_url=akad_maps_url,
-                                # Data Resepsi
                                 resep_date=resep_date.strftime("%d %B %Y"),
                                 resep_day=resep_day,
                                 resep_time=resep_time,
                                 resep_location=resep_location,
                                 resep_maps_url=resep_maps_url,
-                                # Turut Mengundang
                                 turut_mengundang=turut_mengundang,
-                                # Lainnya (Mengirim list dictionary yang berisi foto & caption)
                                 photo_url=gallery_photos[0]["photo"] if gallery_photos else default_photo_url,
                                 gallery_photos=gallery_photos,
                                 bank_info=bank_info,
@@ -740,16 +720,11 @@ else:
                     st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
-        pass
-        
+
     elif "Buat Link Undangan" in active_step:
-        # --- KONTEN TAHAP 3 ---
-        # (Letakkan seluruh kode isi Tahap 3, Form Midtrans, & Link Akses Cadangan di sini)
-    elif active_step == menu_steps[2]:
-        # Tentukan base URL aktif saat ini (bisa diubah ke undanganku.com nanti saat deploy ke VPS Rumahweb)
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
 
-        if not st.session_state.get("design_ready", False):
+        if not st.session_state.get("design_ready", False) and not is_session_active:
             st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
         else:
             st.subheader("🚀 3. Redaksi WhatsApp, Link Tamu, & Pembayaran Otomatis")
@@ -760,7 +735,6 @@ else:
             if is_session_active:
                 st.success("🎉 **Layanan Aktif!** Lisensi Anda berlaku penuh (Maksimal 30 hari sejak aktivasi). Seluruh fitur tahap 3 dan 4 dapat digunakan.")
                 
-                # Menampilkan link token cadangan sesuai domain aktif saat ini
                 active_token = st.session_state.get("user_token", "token-aktif-anda")
                 st.markdown("#### 🔗 Link Akses Cadangan (Anti-Putus Sesi)")
                 st.info("Simpan tautan berikut untuk membuka kembali Tahap 3 & 4 keesokan harinya jika *browser* tertutup atau laptop *sleep*:")
@@ -813,7 +787,6 @@ else:
                                 charge_response = snap.create_transaction(transaction_params)
                                 redirect_url = charge_response['redirect_url']
                                 
-                                # Simpan data transaksi awal ke Google Sheets dengan status PENDING
                                 save_order_to_gsheets(
                                     order_id=order_id_trx,
                                     token=user_token,
@@ -835,10 +808,8 @@ else:
                 code_input = st.text_input("Masukkan Kode Aktivasi / Order ID")
                 if st.button("Aktivasi Sekarang"):
                     if code_input.strip():
-                        # Generate token unik untuk pemulihan sesi (anti-putus)
                         user_token = str(uuid.uuid4())
                         
-                        # Simpan/Perbarui status ke Google Sheets menjadi ACTIVATED
                         save_order_to_gsheets(
                             order_id=code_input.strip(),
                             token=user_token,
@@ -848,6 +819,7 @@ else:
                         
                         st.session_state["activated_code_input"] = code_input.strip()
                         st.session_state["user_token"] = user_token
+                        st.session_state["is_session_active"] = True  # FIX: Set Sesi Aktif Permanen saat aktivasi
                         
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.info("🔑 **Link Akses Cadangan Anda:** Simpan tautan di bawah ini untuk melanjutkan pekerjaan keesokan harinya:")
@@ -866,7 +838,6 @@ else:
 
                 uploaded_csv = st.file_uploader("Upload File Daftar Tamu (.csv)", type=["csv"])
                 
-                # Template narasi default
                 default_narration = "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami. Berikut link undangan digital:\n{link_undangan}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."
                 
                 custom_narration = st.text_area("Modifikasi Narasi / Pesan WhatsApp:", value=default_narration, height=120)
@@ -885,11 +856,8 @@ else:
                             generated_links = []
                             for idx, row in df_guests.iterrows():
                                 guest_n = str(row['Nama'])
-                                # Link unik yang membawa parameter 'to' dan 'user_id'
                                 link_item = f"{base_app_url}?to={urllib.parse.quote(guest_n)}&user_id={current_user}"
                                 message_text = custom_narration.replace("{link_undangan}", link_item)
-                                
-                                # Mengubah kolom ke-3 menjadi plain text narasi undangan
                                 
                                 generated_links.append({
                                     "Nama Tamu": guest_n,
@@ -901,7 +869,6 @@ else:
                             st.markdown("#### 📊 Hasil Generate Link Undangan Unik:")
                             st.dataframe(df_result, use_container_width=True, hide_index=True)
 
-                            # Tombol Download CSV Hasil Generate
                             csv_output = df_result.to_csv(index=False).encode('utf-8')
                             st.download_button(
                                 label="📥 Download Daftar Link Undangan (CSV)",
@@ -912,41 +879,28 @@ else:
                     except Exception as e:
                         st.error(f"Gagal memproses file CSV: {e}")
                 else:
-                    # Generator Manual Satuan (Opsional jika tidak upload CSV)
                     st.markdown("#### ✍️ Atau Generate Link untuk 1 Tamu:")
                     single_guest = st.text_input("Nama Tamu Satuan", "Bapak Budi & Keluarga")
                     if single_guest:
                         single_link = f"https://wedding-invitation-ai.streamlit.app/?to={urllib.parse.quote(single_guest)}&user_id={current_user}"
-                        
                         st.markdown("Link Undangan Satuan:")
-                        # Menggunakan st.code agar otomatis ada tombol copy di pojok kanan atas
                         st.code(single_link, language="markdown")
-        
-        pass
-        
+
     elif "Manajemen RSVP Tamu" in active_step:
-        # --- KONTEN TAHAP 4 ---
-    # TAHAP 4
-    elif active_step == menu_steps[3]:
         st.subheader("📊 4. Manajemen RSVP & Buku Tamu Digital")
         
         if not is_session_active:
             st.error("🔒 **Menu Terkunci!** Manajemen RSVP dan pemantauan tamu digital hanya aktif jika Anda telah memasukkan kode aktivasi layanan pada **Tahap 3**.")
         else:
-            # Masukkan URL CSV publik Google Sheet Anda di sini
             GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSsaN2n7MKVozzpZ-61okbgxjp8JE1CgA6HG2TUEn2AMqBDFOJ3vdtHeTlJDngnlIFa7P3zgf1ppzvX/pub?gid=0&single=true&output=csv"
             
             if "MASUKKAN_URL" in GOOGLE_SHEET_CSV_URL:
                 st.warning("⚠️ URL CSV Google Sheet belum dikonfigurasi di Tahap 4 app.py.")
             else:
                 try:
-                    # Baca langsung dari Google Sheet CSV
                     df_all = pd.read_csv(GOOGLE_SHEET_CSV_URL)
-                    
-                    # Bersihkan spasi pada nama kolom
                     df_all.columns = df_all.columns.str.strip()
                     
-                    # Filter data berdasarkan User_ID sesi aktif secara Case-Insensitive
                     df_rsvp = df_all[df_all['User_ID'].astype(str).str.lower() == str(current_user).lower()]
                     
                     if df_rsvp.empty:
@@ -972,4 +926,3 @@ else:
 
                 except Exception as e:
                     st.error(f"Gagal memuat data dari Google Sheet: {e}")
-        pass
