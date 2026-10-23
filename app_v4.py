@@ -440,18 +440,16 @@ else:
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
 
-    # Pastikan status sesi aktif dibaca konsisten dari session_state
+    # Pastikan status sesi aktif terjaga dari session_state
     is_session_active = st.session_state.get("is_session_active", False)
 
     # 1. Tentukan menu steps berdasarkan status sesi
     if is_session_active:
-        # Jika aktif (via token URL), HANYA tampilkan Tahap 3 & 4
         menu_steps = [
             "3️⃣ Buat Link Undangan ➡️",
             "4️⃣ Manajemen RSVP Tamu"
         ]
     else:
-        # Jika belum aktif, tampilkan alur lengkap
         menu_steps = [
             "1️⃣ Panduan Aplikasi ➡️",
             "2️⃣ Desain & Preview Undangan ➡️",
@@ -459,7 +457,6 @@ else:
             "4️⃣ Manajemen RSVP Tamu"
         ]
 
-    # 2. Tampilkan komponen radio navigasi
     active_step = st.radio(
         "🧭 **Alur Aplikasi:**", 
         menu_steps, 
@@ -470,29 +467,13 @@ else:
     st.markdown("---")
 
     # =========================================================
-    # 3. PENCocokan KONTEN BERDASARKAN NAMA STRING (Mencegah Tertukar)
+    # 2. PENCocokan KONTEN BERDASARKAN KATA KUNCI YANG TEPAT
     # =========================================================
     
     if "Panduan Aplikasi" in active_step:
         # --- KONTEN TAHAP 1 ---
-        st.subheader("📖 1. Panduan Aplikasi")
-        pass # Ganti atau tambahkan kode tahap 1 di sini
-        
-    elif "Desain & Preview Undangan" in active_step:
-        # --- KONTEN TAHAP 2 ---
-        st.subheader("🎨 2. Desain & Preview Undangan")
-        pass # Ganti atau tambahkan kode tahap 2 di sini
-        
-    elif "Buat Link Undangan" in active_step:
-        # --- KONTEN TAHAP 3 ---
-        pass # Ganti atau tambahkan kode tahap 3 di sini
-        
-    elif "Manajemen RSVP Tamu" in active_step:
-        # --- KONTEN TAHAP 4 ---
-        st.subheader("📊 4. Manajemen RSVP Tamu")
-        pass # Tambahkan pass ini agar Python tidak error
-
-    # TAHAP 1
+        # (Letakkan kode isi Tahap 1 Anda di sini)
+            # TAHAP 1
     if active_step == menu_steps[0]:
         st.subheader("📖 1. Panduan Aplikasi")
         
@@ -529,7 +510,11 @@ else:
             st.session_state["agreed_terms"] = False
             st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
 
-# TAHAP 2
+        pass
+        
+    elif "Desain & Preview Undangan" in active_step:
+        # --- KONTEN TAHAP 2 ---
+    # TAHAP 2
     elif active_step == menu_steps[1]:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
@@ -755,8 +740,11 @@ else:
                     st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
-
-#Tahap 3
+        pass
+        
+    elif "Buat Link Undangan" in active_step:
+        # --- KONTEN TAHAP 3 ---
+        # (Letakkan seluruh kode isi Tahap 3, Form Midtrans, & Link Akses Cadangan di sini)
     elif active_step == menu_steps[2]:
         # Tentukan base URL aktif saat ini (bisa diubah ke undanganku.com nanti saat deploy ke VPS Rumahweb)
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
@@ -933,7 +921,11 @@ else:
                         st.markdown("Link Undangan Satuan:")
                         # Menggunakan st.code agar otomatis ada tombol copy di pojok kanan atas
                         st.code(single_link, language="markdown")
-
+        
+        pass
+        
+    elif "Manajemen RSVP Tamu" in active_step:
+        # --- KONTEN TAHAP 4 ---
     # TAHAP 4
     elif active_step == menu_steps[3]:
         st.subheader("📊 4. Manajemen RSVP & Buku Tamu Digital")
@@ -980,3 +972,4 @@ else:
 
                 except Exception as e:
                     st.error(f"Gagal memuat data dari Google Sheet: {e}")
+        pass
