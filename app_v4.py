@@ -476,21 +476,21 @@ else:
     if "Panduan Aplikasi" in active_step:
         # --- KONTEN TAHAP 1 ---
         st.subheader("📖 1. Panduan Aplikasi")
-        # (Letakkan kode isi Tahap 1 Anda di sini)
+        pass # Ganti atau tambahkan kode tahap 1 di sini
         
     elif "Desain & Preview Undangan" in active_step:
         # --- KONTEN TAHAP 2 ---
         st.subheader("🎨 2. Desain & Preview Undangan")
-        # (Letakkan kode isi Tahap 2 Anda di sini)
+        pass # Ganti atau tambahkan kode tahap 2 di sini
         
     elif "Buat Link Undangan" in active_step:
         # --- KONTEN TAHAP 3 ---
-        # (Letakkan kode isi Tahap 3, Form Midtrans, & Google Sheets save/load Anda di sini)
+        pass # Ganti atau tambahkan kode tahap 3 di sini
         
     elif "Manajemen RSVP Tamu" in active_step:
         # --- KONTEN TAHAP 4 ---
         st.subheader("📊 4. Manajemen RSVP Tamu")
-        # (Letakkan kode isi Tahap 4 Anda di sini)
+        pass # Tambahkan pass ini agar Python tidak error
 
     # TAHAP 1
     if active_step == menu_steps[0]:
