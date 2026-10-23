@@ -158,13 +158,19 @@
                 </div>
 
                 <!-- Foto Utama dengan Bingkai Mewah -->
-                <div class="w-full max-w-xs p-2 luxury-card mb-6">
+                <div class="w-full max-w-xs p-2 luxury-card mb-4">
                     <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl border border-amber-400/20">
                 </div>
 
-                <div class="space-y-2">
-                    <p class="text-xs opacity-90 italic px-4 font-serif-custom text-amber-100/90">"{{ quote_text }}"</p>
-                    <div class="animate-bounce pt-4 text-xs text-amber-300/70">👇 Gulir ke bawah untuk melihat undangan</div>
+                <!-- BUNGKUSAN LUXURY CARD UNTUK QUOTE / KATA-KATA INDAH -->
+                <div class="w-full max-w-xs p-4 luxury-card my-2 space-y-2 text-center">
+                    <p class="text-xs italic font-serif-custom text-amber-100/90 leading-relaxed">
+                        "{{ quote_text }}"
+                    </p>
+                </div>
+
+                <div class="space-y-2 mt-2">
+                    <div class="animate-bounce pt-2 text-xs text-amber-300/70">👇 Gulir ke bawah untuk melihat undangan</div>
                 </div>
 
                 <!-- Countdown Timer -->
