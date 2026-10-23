@@ -14,6 +14,8 @@ import streamlit as st
 from jinja2 import Template
 from google import genai
 from groq import Groq
+import gspread
+from google.oauth2.service_account import Credentials
 
 # File JSON Database Lokal
 RSVP_FILE = "rsvp_data.json"
@@ -116,25 +118,69 @@ def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     return default_data, "Default Static Fallback"
 
 # ==========================================
-# 1. PENANGKAP TOKEN URL YANG LEBIH FLEKSIBEL
+# INISIALISASI KONEKSI GOOGLE SHEETS
+# ==========================================
+@st.cache_resource
+def init_google_sheet():
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    # Memuat kredensial dari Streamlit Secrets
+    creds_dict = dict(st.secrets["gcp_service_account"])
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+    client = gspread.authorize(creds)
+    
+    # Menghubungkan ke file Google Sheets 'WeddingInvitationOrders'
+    sheet = client.open("WeddingInvitationOrders").sheet1
+    return sheet
+
+def load_orders_from_gsheets():
+    try:
+        sheet = init_google_sheet()
+        records = sheet.get_all_records()
+        orders_db = {}
+        for row in records:
+            order_id = str(row.get("order_id", ""))
+            if order_id:
+                orders_db[order_id] = {
+                    "token": str(row.get("token", "")),
+                    "status": str(row.get("status", "")),
+                    "user_id": str(row.get("user_id", ""))
+                }
+        return orders_db
+    except Exception as e:
+        st.error(f"Gagal terhubung ke Google Sheets: {e}")
+        return {}
+
+def save_order_to_gsheets(order_id, token, status, user_id):
+    """Fungsi untuk menyimpan atau memperbarui data pesanan ke Google Sheets"""
+    try:
+        sheet = init_google_sheet()
+        # Cari apakah order_id sudah ada di sheet
+        cell = sheet.find(str(order_id))
+        if cell:
+            # Update baris yang sudah ada
+            row_num = cell.row
+            sheet.update_cell(row_num, 2, str(token))   # Kolom B: token
+            sheet.update_cell(row_num, 3, str(status))  # Kolom C: status
+            sheet.update_cell(row_num, 4, str(user_id)) # Kolom D: user_id
+        else:
+            # Tambah baris baru di paling bawah
+            sheet.append_row([str(order_id), str(token), str(status), str(user_id)])
+        return True
+    except Exception as e:
+        st.error(f"Gagal menyimpan ke Google Sheets: {e}")
+        return False
+
+# ==========================================
+# 1. PENANGKAP TOKEN URL VIA GOOGLE SHEETS
 # ==========================================
 query_params = st.query_params
 url_token = query_params.get("token", None)
 
 if url_token and st.session_state.get("user_token") != url_token:
-    orders_db = {}
-    if os.path.exists("orders_db.json"):
-        try:
-            with open("orders_db.json", "r", encoding="utf-8") as f:
-                content = f.read()
-                if content.strip():
-                    orders_db = json.loads(content)
-        except Exception:
-            orders_db = {}
-
-    # 🔍 SISIPKAN BARIS DEBUG DI SINI
-    st.write("🔍 DEBUG - Isi orders_db:", orders_db)
-    st.write("🔍 DEBUG - Token dari URL:", url_token)
+    orders_db = load_orders_from_gsheets()
     
     token_found = False
     clean_url_token = str(url_token).strip()
@@ -144,9 +190,9 @@ if url_token and st.session_state.get("user_token") != url_token:
             stored_token = str(data.get("token", "")).strip()
             stored_status = str(data.get("status", "")).strip().upper()
             
-            # Mencocokkan token & toleransi berbagai status aktif
+            # Cocokkan token dengan database Google Sheets
             if stored_token == clean_url_token and stored_status in ["ACTIVATED", "ACTIVE", "PAID"]:
-                # Pulihkan sesi user
+                # Pulihkan sesi pengguna
                 st.session_state["user_id"] = order_id  
                 st.session_state["activated_code_input"] = order_id
                 st.session_state["user_token"] = url_token
@@ -161,10 +207,9 @@ if url_token and st.session_state.get("user_token") != url_token:
                 break
                 
     if token_found:
-        st.success("✅ Sesi berhasil dipulihkan via Token!")
-        st.rerun() # Refresh instan agar langsung masuk ke Tahap 3
+        st.success("✅ Sesi berhasil dipulihkan melalui Google Sheets!")
+        st.rerun()
     else:
-        # Debugging ringan: Tampilkan info jika token tidak ketemu di JSON
         st.warning(f"⚠️ Token URL tidak valid atau kedaluwarsa. (Token dibaca: {clean_url_token[:8]}...)")
 
 
