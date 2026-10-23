@@ -373,31 +373,58 @@ if app_mode == "🔑 Admin":
                     st.success(f"Akses untuk {selected_code_to_delete} berhasil dicabut.")
                     st.rerun()
 
-    # 3. Statistik & Tren Kunjungan
+# 3. Statistik & Tren Kunjungan
     elif admin_menu == "📊 Statistik & Tren Kunjungan":
-        st.subheader("📊 Statistik Pengunjung & Tren Harian")
-        st.info("Memantau jumlah kunjungan harian ke aplikasi utama undangan digital.")
+        st.subheader("📊 Statistik Pengunjung & Tren Kunjungan")
+        st.info("Memantau jumlah kunjungan ke aplikasi undangan digital secara harian, mingguan, bulanan, dan kumulatif.")
         
         stats_data = load_json(STATS_FILE, {})
         if not stats_data:
             st.info("Belum ada data kunjungan tercatat.")
         else:
+            # Konversi data JSON (format: {"YYYY-MM-DD": count}) ke DataFrame Pandas
             df_stats = pd.DataFrame(list(stats_data.items()), columns=["Tanggal", "Jumlah Pengunjung"])
+            df_stats["Tanggal"] = pd.to_datetime(df_stats["Tanggal"])
             df_stats = df_stats.sort_values(by="Tanggal", ascending=False)
             
+            # 1. Total Akumulasi Keseluruhan
             total_visitors = df_stats["Jumlah Pengunjung"].sum()
+            
+            # 2. Kunjungan Hari Ini
             today_str = datetime.now().strftime("%Y-%m-%d")
             today_visitors = stats_data.get(today_str, 0)
             
-            col_s1, col_s2 = st.columns(2)
-            col_s1.metric("Total Kunjungan Kumulatif", total_visitors)
-            col_s2.metric("Kunjungan Hari Ini", today_visitors)
+            # 3. Kunjungan Minggu Ini (7 hari terakhir dari hari ini)
+            now_dt = datetime.now()
+            start_of_week = now_dt - pd.Timedelta(days=7)
+            mask_weekly = (df_stats["Tanggal"] >= pd.to_datetime(start_of_week.strftime("%Y-%m-%d"))) & (df_stats["Tanggal"] <= pd.to_datetime(today_str))
+            weekly_visitors = df_stats.loc[mask_weekly, "Jumlah Pengunjung"].sum()
+            
+            # 4. Kunjungan Bulan Ini (Bulan & Tahun berjalan)
+            current_month_str = now_dt.strftime("%Y-%m")
+            mask_monthly = df_stats["Tanggal"].dt.strftime("%Y-%m") == current_month_str
+            monthly_visitors = df_stats.loc[mask_monthly, "Jumlah Pengunjung"].sum()
+            
+            # Tampilkan dalam 4 kolom Metrik
+            col_s1, col_s2, col_s3, col_s4 = st.columns(4)
+            col_s1.metric("Hari Ini", f"{today_visitors} Orang")
+            col_s2.metric("Minggu Ini", f"{weekly_visitors} Orang")
+            col_s3.metric("Bulan Ini", f"{monthly_visitors} Orang")
+            col_s4.metric("Akumulasi Total", f"{total_visitors} Orang")
             
             st.markdown("---")
-            st.dataframe(df_stats, use_container_width=True, hide_index=True)
             
+            # Tampilkan Grafik Tren (diurutkan kembali secara kronologis untuk grafik)
             st.markdown("### 📈 Grafik Tren Pengunjung Harian")
-            st.bar_chart(df_stats.set_index("Tanggal"))
+            df_chart = df_stats.sort_values(by="Tanggal", ascending=True).copy()
+            df_chart["Tanggal"] = df_chart["Tanggal"].dt.strftime("%Y-%m-%d")
+            st.bar_chart(df_chart.set_index("Tanggal"))
+            
+            st.markdown("---")
+            st.markdown("### 📋 Rincian Data Harian")
+            # Ubah format tanggal kembali ke string untuk ditampilkan di tabel
+            df_stats["Tanggal"] = df_stats["Tanggal"].dt.strftime("%Y-%m-%d")
+            st.dataframe(df_stats, use_container_width=True, hide_index=True)
 
     # 4. Live Helpdesk Chat (Admin Reply)
     elif admin_menu == "💬 Live Helpdesk Chat":
