@@ -192,8 +192,14 @@ if url_token and st.session_state.get("user_token") != url_token:
             
             # Cocokkan token dengan database Google Sheets
             if stored_token == clean_url_token and stored_status in ["ACTIVATED", "ACTIVE", "PAID"]:
-                # Pulihkan sesi pengguna
-                st.session_state["user_id"] = order_id  
+                # 1. Ambil user_id asli pembuat undangan dari Google Sheets (Kolom D)
+                stored_user_id = str(data.get("user_id", "")).strip()
+                real_user_id = stored_user_id if stored_user_id else order_id
+                
+                # 2. Pulihkan sesi pengguna menggunakan user_id asli dari sessionId
+                st.session_state["user_id"] = real_user_id
+                st.session_state["current_user"] = real_user_id
+                
                 st.session_state["activated_code_input"] = order_id
                 st.session_state["user_token"] = url_token
                 
@@ -202,7 +208,7 @@ if url_token and st.session_state.get("user_token") != url_token:
                 st.session_state["design_ready"] = True       
                 
                 # Arahkan langsung ke Tahap 3
-                st.session_state["active_step"] = "3️⃣ Buat Link Undangan"
+                st.session_state["active_step"] = "3️⃣ Buat Link Undangan ➡️"
                 token_found = True
                 break
                 
