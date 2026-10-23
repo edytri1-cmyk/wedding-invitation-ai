@@ -11,6 +11,7 @@
     <meta property="og:image" content="{{ og_image_url }}" />
     <meta property="og:type" content="website" />
     
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
@@ -22,7 +23,6 @@
         }
         .font-serif-custom { font-family: 'Playfair Display', serif; }
         
-        /* MENGHAPUS SNAP SCROLL DAN MEMBUATNYA MENGALIR NATURAL */
         .scroll-container {
             overflow-y: auto;
             height: 100%;
@@ -34,7 +34,9 @@
             position: relative;
         }
 
-        /* DYNAMIC SPARKLING & FLOATING ANIMATION */
+        /* ---------------------------------------------------------
+         * AREA RUANG ESTETIKA & ANIMASI (Custom Styles & Glow)
+         * --------------------------------------------------------- */
         .sparkle {
             position: absolute;
             border-radius: 50%;
@@ -81,7 +83,7 @@
             100% { opacity: 0.8; transform: scale(1.05); }
         }
 
-        /* ANIMASI EFEK DAUN JATUH */
+        /* Efek Daun Jatuh */
         .leaf {
             position: fixed;
             top: -10%;
@@ -92,24 +94,15 @@
         }
         
         @keyframes fall {
-            0% {
-                transform: translateY(0) rotate(0deg) translateX(0);
-                opacity: 0.9;
-            }
-            50% {
-                transform: translateY(50vh) rotate(180deg) translateX(20px);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(110vh) rotate(360deg) translateX(-20px);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(20px); opacity: 0.7; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
         }
         
-        /* ANIMASI EFEK BINTANG KELAP-KELIP */
+        /* Efek Bintang Kelap-Kelip */
         .star {
             position: fixed;
-            background-color: #fef08a; /* Warna emas/kuning lembut */
+            background-color: #fef08a;
             border-radius: 50%;
             z-index: 1;
             pointer-events: none;
@@ -117,31 +110,19 @@
         }
         
         @keyframes twinkle {
-            0% {
-                opacity: 0.2;
-                transform: scale(0.6);
-                box-shadow: 0 0 2px rgba(254, 240, 138, 0.3);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.3);
-                box-shadow: 0 0 8px rgba(254, 240, 138, 0.9);
-            }
+            0% { opacity: 0.2; transform: scale(0.6); box-shadow: 0 0 2px rgba(254, 240, 138, 0.3); }
+            100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 8px rgba(254, 240, 138, 0.9); }
         }
-        
     </style>
-    
 </head>
     
 <body class="{{ theme_bg }} {{ theme_text }} min-h-screen flex justify-center bg-gray-950">
 
-    <!-- Container HP Fullscreen dengan Scroll Alami -->
+    <!-- Container HP Fullscreen -->
     <div class="w-full max-w-md min-h-screen shadow-2xl relative {{ theme_card_bg }} motion-bg flex flex-col">
         
-        <!-- Ambient Glow Overlay -->
+        <!-- Ambient Glow & Sparkling Effects -->
         <div class="ambient-glow"></div>
-
-        <!-- Dynamic Sparkling Particles Layer -->
         <div class="sparkle w-6 h-6 bottom-10 left-6" style="animation-duration: 5s; animation-delay: 0s;"></div>
         <div class="sparkle w-10 h-10 bottom-20 left-1/4" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
         <div class="sparkle w-8 h-8 bottom-12 right-8" style="animation-duration: 6s; animation-delay: 0.8s;"></div>
@@ -150,7 +131,7 @@
         <!-- Scrollable Main Wrapper -->
         <div class="scroll-container relative z-10 flex flex-col space-y-8 p-6">
             
-            <!-- SECTION 1: HALAMAN UTAMA / COVER -->
+            <!-- SECTION 1: COVER UTAMA -->
             <section class="content-section flex flex-col items-center justify-center text-center py-10 min-h-[85vh]">
                 <div class="space-y-3 mb-6 text-center">
                     <p class="text-xs tracking-widest uppercase opacity-80">The Wedding Of</p>
@@ -165,7 +146,7 @@
                     {% endif %}
                 </div>
 
-                <!-- FOTO UTAMA TIDAK TERPOTONG -->
+                <!-- Foto Utama -->
                 <div class="w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/30 bg-black/20 mb-6">
                     <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto">
                 </div>
@@ -175,40 +156,37 @@
                     <div class="animate-bounce pt-4 text-xs opacity-60">👇 Gulir ke bawah untuk melihat undangan</div>
                 </div>
 
-            <!-- COUNTDOWN TIMER MENUJU WEDDING DAY -->
+                <!-- Countdown Timer -->
                 <div class="w-full my-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl text-center">
                     <p class="text-xs uppercase tracking-widest opacity-80 mb-3 font-semibold">⏳ Menghitung Hari Menjelang Acara</p>
                     <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
                         <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-days" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span id="cd-days" class="block text-xl font-bold text-amber-300">00</span>
                             <span class="text-[10px] opacity-75 uppercase">Hari</span>
                         </div>
                         <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-hours" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span id="cd-hours" class="block text-xl font-bold text-amber-300">00</span>
                             <span class="text-[10px] opacity-75 uppercase">Jam</span>
                         </div>
                         <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-minutes" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span id="cd-minutes" class="block text-xl font-bold text-amber-300">00</span>
                             <span class="text-[10px] opacity-75 uppercase">Menit</span>
                         </div>
                         <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-seconds" class="block text-xl font-bold font-sans-bold text-amber-300">00</span>
+                            <span id="cd-seconds" class="block text-xl font-bold text-amber-300">00</span>
                             <span class="text-[10px] opacity-75 uppercase">Detik</span>
                         </div>
                     </div>
                 </div>
             </section>
             
-            <!-- SECTION GALERI FOTO PREWEDDING -->
+            <!-- SECTION 2: GALERI FOTO -->
             {% if gallery_photos %}
                 {% for item in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
                     <p class="text-xs uppercase tracking-widest opacity-70 mb-3">Momen Bahagia Kami</p>
                     <div class="w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-black/20 p-3">
-                        <!-- Menampilkan foto -->
                         <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-lg">
-                        
-                        <!-- Menampilkan caption/cerita foto jika diisi oleh user -->
                         {% if item.caption %}
                         <p class="text-sm text-center italic mt-3 opacity-90 px-2">
                             "{{ item.caption }}"
@@ -219,53 +197,41 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- SECTION DETAIL ACARA, LOKASI & RSVP -->
+            <!-- SECTION 3: DETAIL ACARA & RSVP -->
             <section class="content-section flex flex-col justify-center py-6 space-y-4">
                 <h2 class="text-xl font-serif-custom font-semibold text-center text-amber-300">Rangkaian Acara & RSVP</h2>
                 
-                <!-- CARD 1: AKAD NIKAH -->
-                <div class="detail-acara-box p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
+                <!-- Akad Nikah -->
+                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
                     <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
                         💍 Akad Nikah
                     </span>
-                    <p class="text-sm font-semibold pt-1">
-                        📅 {{ akad_day }}, {{ akad_date }}
-                    </p>
-                    <p class="text-xs opacity-90">
-                        ⏰ Pukul {{ akad_time }}
-                    </p>
-                    <p class="text-xs opacity-80 px-2">
-                        📍 {{ akad_location }}
-                    </p>
+                    <p class="text-sm font-semibold pt-1">📅 {{ akad_day }}, {{ akad_date }}</p>
+                    <p class="text-xs opacity-90">⏰ Pukul {{ akad_time }}</p>
+                    <p class="text-xs opacity-80 px-2">📍 {{ akad_location }}</p>
                     {% if akad_maps_url %}
-                    <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                    <a href="{{ akad_maps_url }}" target="_blank" class="inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
                         🗺️ Google Maps Akad
                     </a>
                     {% endif %}
                 </div>
 
-                <!-- CARD 2: RESEPSI PERNIKAHAN -->
-                <div class="detail-acara-box p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
+                <!-- Resepsi Pernikahan -->
+                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
                     <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
                         🥳 Resepsi Pernikahan
                     </span>
-                    <p class="text-sm font-semibold pt-1">
-                        📅 {{ resep_day }}, {{ resep_date }}
-                    </p>
-                    <p class="text-xs opacity-90">
-                        ⏰ Pukul {{ resep_time }}
-                    </p>
-                    <p class="text-xs opacity-80 px-2">
-                        📍 {{ resep_location }}
-                    </p>
+                    <p class="text-sm font-semibold pt-1">📅 {{ resep_day }}, {{ resep_date }}</p>
+                    <p class="text-xs opacity-90">⏰ Pukul {{ resep_time }}</p>
+                    <p class="text-xs opacity-80 px-2">📍 {{ resep_location }}</p>
                     {% if resep_maps_url %}
-                    <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                    <a href="{{ resep_maps_url }}" target="_blank" class="inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
                         🗺️ Google Maps Resepsi
                     </a>
                     {% endif %}
                 </div>
 
-                <!-- CARD 3: TURUT MENGUNDANG & AMPLOP DIGITAL -->
+                <!-- Turut Mengundang & Amplop Digital -->
                 {% if turut_mengundang or bank_info %}
                 <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center space-y-3">
                     {% if turut_mengundang %}
@@ -288,7 +254,7 @@
                 </div>
                 {% endif %}
 
-                <!-- CARD 4: FORM RSVP & UCAPAN -->
+                <!-- Form RSVP -->
                 <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 space-y-3 shadow-lg" id="rsvp-card">
                     <p class="text-xs font-semibold text-center text-amber-200">Konfirmasi Kehadiran</p>
                     <div>
@@ -312,51 +278,8 @@
                     </button>
                 </div>
             </section>
-
-            <!-- JAVASCRIPT RSVP DILETAKKAN terpisah DENGAN BENAR -->
-            <script>
-                function submitRSVP() {
-                    var nama = document.getElementById('rsvp-nama').value;
-                    var status = document.getElementById('rsvp-status').value;
-                    var ucapan = document.getElementById('rsvp-ucapan').value;
             
-                    if (!nama || nama.trim() === "") {
-                        alert("Mohon isi nama Anda terlebih dahulu.");
-                        return;
-                    }
-            
-                    // Ubah tampilan card menjadi pesan sukses langsung di layar HP
-                    var card = document.getElementById('rsvp-card');
-                    card.innerHTML = `
-                        <div class="text-center py-6 space-y-2">
-                            <p class="text-3xl">✅</p>
-                            <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                            <p class="text-xs opacity-80">Konfirmasi kehadiran Anda berhasil dikirim.</p>
-                        </div>
-                    `;
-            
-                    var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-                    
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
-                    
-                    var payload = {
-                        user_id: currentUserId,
-                        nama: nama,
-                        status: status,
-                        ucapan: ucapan
-                    };
-            
-                    fetch(scriptUrl, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-                }
-            </script>
-            
-            <!-- SECTION QR CODE CHECK-IN TAMU -->
+            <!-- SECTION 4: QR CODE CHECK-IN -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
                 <h2 class="text-2xl font-serif-custom font-semibold mb-2 text-amber-300">QR Code Check-In</h2>
                 <p class="text-xs opacity-75 mb-6 px-4">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
@@ -382,40 +305,70 @@
             🎵 <span id="audio-status" class="ml-1 text-xs">Play</span>
         </button>
     </div>
+    {% endif %}
+
+    <!-- ---------------------------------------------------------
+     * SCRIPTS UTAMA (Digabung & Dibersihkan Tanpa Duplikasi)
+     * --------------------------------------------------------- -->
     <script>
+        // 1. Audio Toggle Player
         function toggleAudio() {
             var audio = document.getElementById('bg-audio');
             var status = document.getElementById('audio-status');
             if (audio.paused) { audio.play(); status.innerText = "Pause"; } 
             else { audio.pause(); status.innerText = "Play"; }
         }
-    </script>
-    {% endif %}
 
-    <!-- Generate QR Code JS -->
-    <script>
-        window.onload = function() {
-            var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
-            new QRCode(document.getElementById("qrcode"), {
-                text: "CHECKIN-" + encodeURIComponent(guest),
-                width: 160,
-                height: 160
+        // 2. Fungsi Kirim RSVP
+        function submitRSVP() {
+            var nama = document.getElementById('rsvp-nama').value;
+            var status = document.getElementById('rsvp-status').value;
+            var ucapan = document.getElementById('rsvp-ucapan').value;
+    
+            if (!nama || nama.trim() === "") {
+                alert("Mohon isi nama Anda terlebih dahulu.");
+                return;
+            }
+    
+            var card = document.getElementById('rsvp-card');
+            card.innerHTML = `
+                <div class="text-center py-6 space-y-2">
+                    <p class="text-3xl">✅</p>
+                    <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
+                    <p class="text-xs opacity-80">Konfirmasi kehadiran Anda berhasil dikirim.</p>
+                </div>
+            `;
+    
+            var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
+            
+            var payload = {
+                user_id: currentUserId,
+                nama: nama,
+                status: status,
+                ucapan: ucapan
+            };
+    
+            fetch(scriptUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             });
         }
-    </script>
 
-    <script>
-        window.onload = function() {
-            // 1. Inisialisasi QR Code
+        // 3. Inisialisasi Saat Halaman Dimuat (QR Code, Countdown, & Efek Visual)
+        window.addEventListener('DOMContentLoaded', function() {
+            // A. Generate QR Code
             var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
             new QRCode(document.getElementById("qrcode"), {
                 text: "CHECKIN-" + encodeURIComponent(guest),
                 width: 160,
                 height: 160
             });
-    
-            // 2. Logika Countdown Timer Real-Time
-            // Mengambil tanggal ISO dari Jinja2 (contoh: "2026-12-31")
+
+            // B. Countdown Timer Real-Time
             var rawDate = "{{ raw_event_date if raw_event_date else '2026-12-31' }}";
             var eventTargetDate = new Date(rawDate + "T09:00:00").getTime();
     
@@ -439,62 +392,37 @@
                 document.getElementById("cd-minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
                 document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
             }, 1000);
-        }
-    </script>
 
-    <script>
-        // FUNGSI MEMBUAT EFEK DAUN JATUH & BINTANG KELAP-KELIP
-        function initVisualEffects() {
+            // C. Efek Visual Daun Jatuh & Bintang Kelap-Kelip
             const body = document.body;
-    
-            // 1. Generate Bintang Kelap-kelip (25 Bintang)
-            const totalStars = 25;
-            for (let i = 0; i < totalStars; i++) {
+            
+            // Bintang Kelap-kelip
+            for (let i = 0; i < 25; i++) {
                 let star = document.createElement('div');
                 star.className = 'star';
-                
-                // Ukuran acak antara 2px - 5px
                 let size = Math.random() * 3 + 2;
                 star.style.width = size + 'px';
                 star.style.height = size + 'px';
-                
-                // Posisi acak di layar
                 star.style.top = Math.random() * 100 + 'vh';
                 star.style.left = Math.random() * 100 + 'vw';
-                
-                // Durasi & delay kelap-kelip acak
                 star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
                 star.style.animationDelay = (Math.random() * 3) + 's';
-                
                 body.appendChild(star);
             }
     
-            // 2. Generate Daun Jatuh (12 Daun)
-            const totalLeaves = 12;
-            const leafIcons = ['🍃', '🍂', '🌸']; // Kombinasi daun hijau, daun gugur, dan kelopak bunga
-            
-            for (let i = 0; i < totalLeaves; i++) {
+            // Daun/Kelopak Jatuh
+            const leafIcons = ['🍃', '🍂', '🌸'];
+            for (let i = 0; i < 12; i++) {
                 let leaf = document.createElement('div');
                 leaf.className = 'leaf';
                 leaf.innerText = leafIcons[Math.floor(Math.random() * leafIcons.length)];
-                
-                // Ukuran font acak
                 leaf.style.fontSize = (Math.random() * 12 + 12) + 'px';
-                
-                // Posisi awal acak secara horisontal
                 leaf.style.left = Math.random() * 100 + 'vw';
-                
-                // Durasi jatuh acak (6 - 12 detik) & delay
                 leaf.style.animationDuration = (Math.random() * 6 + 6) + 's';
                 leaf.style.animationDelay = (Math.random() * 5) + 's';
-                
                 body.appendChild(leaf);
             }
-        }
-    
-        // Jalankan fungsi saat halaman selesai dimuat
-        window.addEventListener('DOMContentLoaded', initVisualEffects);
+        });
     </script>
-    
 </body>
 </html>
