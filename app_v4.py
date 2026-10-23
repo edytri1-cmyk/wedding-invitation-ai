@@ -440,18 +440,18 @@ else:
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
 
-    # 1. Pengecekan status sesi aktif (dari Google Sheets atau Session State)
+    # Pastikan status sesi aktif dibaca konsisten dari session_state
     is_session_active = st.session_state.get("is_session_active", False)
 
-    # 2. Penentuan menu navigasi dinamis berdasarkan status sesi
+    # 1. Tentukan menu steps berdasarkan status sesi
     if is_session_active:
-        # Jika masuk via token URL yang sah, hanya tampilkan Tahap 3 & 4
+        # Jika aktif (via token URL), HANYA tampilkan Tahap 3 & 4
         menu_steps = [
             "3️⃣ Buat Link Undangan ➡️",
             "4️⃣ Manajemen RSVP Tamu"
         ]
     else:
-        # Jika belum aktif, tampilkan alur lengkap dari awal
+        # Jika belum aktif, tampilkan alur lengkap
         menu_steps = [
             "1️⃣ Panduan Aplikasi ➡️",
             "2️⃣ Desain & Preview Undangan ➡️",
@@ -459,19 +459,38 @@ else:
             "4️⃣ Manajemen RSVP Tamu"
         ]
 
+    # 2. Tampilkan komponen radio navigasi
     active_step = st.radio(
         "🧭 **Alur Aplikasi:**", 
         menu_steps, 
         horizontal=True,
-        index=0  # Selalu aman karena indeks 0 pasti ada di dalam menu_steps
+        index=0
     )
 
     st.markdown("---")
 
-    # (Opsional jika masih ingin memvalidasi database lokal/lainnya)
-    # orders_db = load_json(ORDERS_FILE, {})
-    # activated_code = st.session_state.get("activated_code_input", "")
-    # ...
+    # =========================================================
+    # 3. PENCocokan KONTEN BERDASARKAN NAMA STRING (Mencegah Tertukar)
+    # =========================================================
+    
+    if "Panduan Aplikasi" in active_step:
+        # --- KONTEN TAHAP 1 ---
+        st.subheader("📖 1. Panduan Aplikasi")
+        # (Letakkan kode isi Tahap 1 Anda di sini)
+        
+    elif "Desain & Preview Undangan" in active_step:
+        # --- KONTEN TAHAP 2 ---
+        st.subheader("🎨 2. Desain & Preview Undangan")
+        # (Letakkan kode isi Tahap 2 Anda di sini)
+        
+    elif "Buat Link Undangan" in active_step:
+        # --- KONTEN TAHAP 3 ---
+        # (Letakkan kode isi Tahap 3, Form Midtrans, & Google Sheets save/load Anda di sini)
+        
+    elif "Manajemen RSVP Tamu" in active_step:
+        # --- KONTEN TAHAP 4 ---
+        st.subheader("📊 4. Manajemen RSVP Tamu")
+        # (Letakkan kode isi Tahap 4 Anda di sini)
 
     # TAHAP 1
     if active_step == menu_steps[0]:
