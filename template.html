@@ -35,28 +35,59 @@
         }
 
         /* ---------------------------------------------------------
-         * AREA RUANG ESTETIKA & ANIMASI (Custom Styles & Glow)
+         * ESTETIKA LUXURY & ORNAMEN BUNGA (GOLD ACCENTS & FLORALS)
          * --------------------------------------------------------- */
-        .sparkle {
+        
+        /* Bingkai Kartu Undangan Klasik Mewah */
+        .luxury-card {
+            background: rgba(20, 20, 25, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.08), 0 10px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            border-radius: 1rem;
+        }
+        
+        .luxury-card::before {
+            content: '';
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 223, 128, 0.95) 0%, rgba(255, 180, 50, 0.5) 40%, rgba(255, 255, 255, 0) 70%);
-            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px dashed rgba(251, 191, 36, 0.2);
             pointer-events: none;
-            animation: floatSparkle 6s infinite ease-in-out, colorShift 8s infinite alternate ease-in-out;
+            border-radius: 0.75rem;
         }
 
-        @keyframes floatSparkle {
-            0% { transform: translateY(10px) translateX(0px) scale(0.4); opacity: 0.1; }
-            30% { opacity: 0.9; transform: translateY(-40px) translateX(15px) scale(1.1); }
-            60% { opacity: 0.6; transform: translateY(-80px) translateX(-10px) scale(0.8); }
-            100% { transform: translateY(-120px) translateX(5px) scale(0.3); opacity: 0; }
+        /* Efek Teks Kilau Emas (Gold Shimmer Text) */
+        .gold-shimmer {
+            background: linear-gradient(135deg, #fef08a 0%, #d97706 50%, #fef08a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
         }
 
-        @keyframes colorShift {
-            0% { filter: hue-rotate(0deg) drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)); }
-            50% { filter: hue-rotate(45deg) drop-shadow(0 0 12px rgba(255, 105, 180, 0.9)); }
-            100% { filter: hue-rotate(-30deg) drop-shadow(0 0 10px rgba(255, 192, 203, 0.8)); }
+        /* Ornamen Kelopak Bunga & Daun Melayang (Floating Floral Accents) */
+        .floral-floating {
+            position: fixed;
+            z-index: 2;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.75;
+            animation: floatFloral linear infinite;
+        }
+
+        @keyframes floatFloral {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) translateX(0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) translateX(15px);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) translateX(-15px);
+                opacity: 0;
+            }
         }
 
         .motion-bg {
@@ -82,22 +113,6 @@
             0% { opacity: 0.3; transform: scale(0.95); }
             100% { opacity: 0.8; transform: scale(1.05); }
         }
-
-        /* Efek Daun Jatuh */
-        .leaf {
-            position: fixed;
-            top: -10%;
-            z-index: 1;
-            pointer-events: none;
-            user-select: none;
-            animation: fall linear infinite;
-        }
-        
-        @keyframes fall {
-            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
-            50% { transform: translateY(50vh) rotate(180deg) translateX(20px); opacity: 0.7; }
-            100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
-        }
         
         /* Efek Bintang Kelap-Kelip */
         .star {
@@ -121,12 +136,8 @@
     <!-- Container HP Fullscreen -->
     <div class="w-full max-w-md min-h-screen shadow-2xl relative {{ theme_card_bg }} motion-bg flex flex-col">
         
-        <!-- Ambient Glow & Sparkling Effects -->
+        <!-- Ambient Glow Effects -->
         <div class="ambient-glow"></div>
-        <div class="sparkle w-6 h-6 bottom-10 left-6" style="animation-duration: 5s; animation-delay: 0s;"></div>
-        <div class="sparkle w-10 h-10 bottom-20 left-1/4" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
-        <div class="sparkle w-8 h-8 bottom-12 right-8" style="animation-duration: 6s; animation-delay: 0.8s;"></div>
-        <div class="sparkle w-12 h-12 bottom-32 right-1/4" style="animation-duration: 8s; animation-delay: 2.2s;"></div>
 
         <!-- Scrollable Main Wrapper -->
         <div class="scroll-container relative z-10 flex flex-col space-y-8 p-6">
@@ -134,47 +145,47 @@
             <!-- SECTION 1: COVER UTAMA -->
             <section class="content-section flex flex-col items-center justify-center text-center py-10 min-h-[85vh]">
                 <div class="space-y-3 mb-6 text-center">
-                    <p class="text-xs tracking-widest uppercase opacity-80">The Wedding Of</p>
-                    <h1 class="text-4xl font-serif-custom font-semibold tracking-wide">
-                        {{ groom_name }} <span class="text-2xl text-amber-400">&</span> {{ bride_name }}
+                    <p class="text-xs tracking-[0.25em] uppercase text-amber-300/80 font-medium">The Wedding Of</p>
+                    <h1 class="text-4xl font-serif-custom font-semibold tracking-wide gold-shimmer">
+                        {{ groom_name }} <span class="text-2xl text-amber-400 font-normal">&</span> {{ bride_name }}
                     </h1>
                     {% if guest_name %}
-                    <div class="mt-4 p-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg inline-block">
-                        <p class="text-[10px] uppercase tracking-widest opacity-75">Kepada Yth.</p>
+                    <div class="mt-4 p-3 luxury-card inline-block">
+                        <p class="text-[10px] uppercase tracking-widest text-amber-200/70">Kepada Yth.</p>
                         <p class="text-base font-semibold font-serif-custom text-amber-300">{{ guest_name }}</p>
                     </div>
                     {% endif %}
                 </div>
 
-                <!-- Foto Utama -->
-                <div class="w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl border-4 border-amber-400/30 bg-black/20 mb-6">
-                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto">
+                <!-- Foto Utama dengan Bingkai Mewah -->
+                <div class="w-full max-w-xs p-2 luxury-card mb-6">
+                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl border border-amber-400/20">
                 </div>
 
                 <div class="space-y-2">
-                    <p class="text-xs opacity-80 italic px-4">"{{ quote_text }}"</p>
-                    <div class="animate-bounce pt-4 text-xs opacity-60">👇 Gulir ke bawah untuk melihat undangan</div>
+                    <p class="text-xs opacity-90 italic px-4 font-serif-custom text-amber-100/90">"{{ quote_text }}"</p>
+                    <div class="animate-bounce pt-4 text-xs text-amber-300/70">👇 Gulir ke bawah untuk melihat undangan</div>
                 </div>
 
                 <!-- Countdown Timer -->
-                <div class="w-full my-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl text-center">
-                    <p class="text-xs uppercase tracking-widest opacity-80 mb-3 font-semibold">⏳ Menghitung Hari Menjelang Acara</p>
+                <div class="w-full my-4 p-4 luxury-card text-center">
+                    <p class="text-xs uppercase tracking-widest text-amber-300 mb-3 font-semibold">⏳ Menghitung Hari Menjelang Acara</p>
                     <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
-                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-days" class="block text-xl font-bold text-amber-300">00</span>
-                            <span class="text-[10px] opacity-75 uppercase">Hari</span>
+                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
+                            <span id="cd-days" class="block text-xl font-bold gold-shimmer">00</span>
+                            <span class="text-[10px] text-amber-200/70 uppercase">Hari</span>
                         </div>
-                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-hours" class="block text-xl font-bold text-amber-300">00</span>
-                            <span class="text-[10px] opacity-75 uppercase">Jam</span>
+                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
+                            <span id="cd-hours" class="block text-xl font-bold gold-shimmer">00</span>
+                            <span class="text-[10px] text-amber-200/70 uppercase">Jam</span>
                         </div>
-                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-minutes" class="block text-xl font-bold text-amber-300">00</span>
-                            <span class="text-[10px] opacity-75 uppercase">Menit</span>
+                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
+                            <span id="cd-minutes" class="block text-xl font-bold gold-shimmer">00</span>
+                            <span class="text-[10px] text-amber-200/70 uppercase">Menit</span>
                         </div>
-                        <div class="p-2 bg-black/30 rounded-xl border border-white/10">
-                            <span id="cd-seconds" class="block text-xl font-bold text-amber-300">00</span>
-                            <span class="text-[10px] opacity-75 uppercase">Detik</span>
+                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
+                            <span id="cd-seconds" class="block text-xl font-bold gold-shimmer">00</span>
+                            <span class="text-[10px] text-amber-200/70 uppercase">Detik</span>
                         </div>
                     </div>
                 </div>
@@ -184,11 +195,11 @@
             {% if gallery_photos %}
                 {% for item in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
-                    <p class="text-xs uppercase tracking-widest opacity-70 mb-3">Momen Bahagia Kami</p>
-                    <div class="w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 bg-black/20 p-3">
-                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-lg">
+                    <p class="text-xs uppercase tracking-[0.2em] text-amber-300/80 mb-3">Momen Bahagia Kami</p>
+                    <div class="w-full luxury-card p-3">
+                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl border border-amber-400/20">
                         {% if item.caption %}
-                        <p class="text-sm text-center italic mt-3 opacity-90 px-2">
+                        <p class="text-sm text-center font-serif-custom italic mt-3 text-amber-100/90 px-2">
                             "{{ item.caption }}"
                         </p>
                         {% endif %}
@@ -199,33 +210,33 @@
 
             <!-- SECTION 3: DETAIL ACARA & RSVP -->
             <section class="content-section flex flex-col justify-center py-6 space-y-4">
-                <h2 class="text-xl font-serif-custom font-semibold text-center text-amber-300">Rangkaian Acara & RSVP</h2>
+                <h2 class="text-xl font-serif-custom font-semibold text-center gold-shimmer">Rangkaian Acara & RSVP</h2>
                 
                 <!-- Akad Nikah -->
-                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
-                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
+                <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
+                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/40">
                         💍 Akad Nikah
                     </span>
-                    <p class="text-sm font-semibold pt-1">📅 {{ akad_day }}, {{ akad_date }}</p>
-                    <p class="text-xs opacity-90">⏰ Pukul {{ akad_time }}</p>
-                    <p class="text-xs opacity-80 px-2">📍 {{ akad_location }}</p>
+                    <p class="text-sm font-semibold pt-1 text-amber-100">📅 {{ akad_day }}, {{ akad_date }}</p>
+                    <p class="text-xs text-amber-200/90">⏰ Pukul {{ akad_time }}</p>
+                    <p class="text-xs text-amber-100/80 px-2">📍 {{ akad_location }}</p>
                     {% if akad_maps_url %}
-                    <a href="{{ akad_maps_url }}" target="_blank" class="inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                    <a href="{{ akad_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
                         🗺️ Google Maps Akad
                     </a>
                     {% endif %}
                 </div>
 
                 <!-- Resepsi Pernikahan -->
-                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center flex flex-col items-center space-y-2">
-                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/30">
+                <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
+                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/40">
                         🥳 Resepsi Pernikahan
                     </span>
-                    <p class="text-sm font-semibold pt-1">📅 {{ resep_day }}, {{ resep_date }}</p>
-                    <p class="text-xs opacity-90">⏰ Pukul {{ resep_time }}</p>
-                    <p class="text-xs opacity-80 px-2">📍 {{ resep_location }}</p>
+                    <p class="text-sm font-semibold pt-1 text-amber-100">📅 {{ resep_day }}, {{ resep_date }}</p>
+                    <p class="text-xs text-amber-200/90">⏰ Pukul {{ resep_time }}</p>
+                    <p class="text-xs text-amber-100/80 px-2">📍 {{ resep_location }}</p>
                     {% if resep_maps_url %}
-                    <a href="{{ resep_maps_url }}" target="_blank" class="inline-block bg-amber-500 text-slate-900 px-4 py-1.5 rounded-lg text-xs font-semibold shadow-md mt-1 hover:bg-amber-400 transition">
+                    <a href="{{ resep_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
                         🗺️ Google Maps Resepsi
                     </a>
                     {% endif %}
@@ -233,47 +244,47 @@
 
                 <!-- Turut Mengundang & Amplop Digital -->
                 {% if turut_mengundang or bank_info %}
-                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg text-center space-y-3">
+                <div class="luxury-card p-5 text-center space-y-3">
                     {% if turut_mengundang %}
                     <div>
                         <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🤝 Turut Mengundang</p>
-                        <p class="text-xs opacity-90 whitespace-pre-line leading-relaxed">{{ turut_mengundang }}</p>
+                        <p class="text-xs text-amber-100/90 whitespace-pre-line leading-relaxed">{{ turut_mengundang }}</p>
                     </div>
                     {% endif %}
 
                     {% if turut_mengundang and bank_info %}
-                    <hr class="border-white/10 my-2">
+                    <hr class="border-amber-400/20 my-2">
                     {% endif %}
 
                     {% if bank_info %}
                     <div>
                         <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🎁 Amplop Digital</p>
-                        <p class="text-xs opacity-90">{{ bank_info }}</p>
+                        <p class="text-xs text-amber-100/90">{{ bank_info }}</p>
                     </div>
                     {% endif %}
                 </div>
                 {% endif %}
 
                 <!-- Form RSVP -->
-                <div class="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 space-y-3 shadow-lg" id="rsvp-card">
-                    <p class="text-xs font-semibold text-center text-amber-200">Konfirmasi Kehadiran</p>
+                <div class="luxury-card p-5 space-y-3" id="rsvp-card">
+                    <p class="text-xs font-semibold text-center text-amber-300 uppercase tracking-widest">Konfirmasi Kehadiran</p>
                     <div>
-                        <label class="text-[10px] opacity-80">Nama Anda:</label>
-                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-2 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white">
+                        <label class="text-[10px] text-amber-200/80">Nama Anda:</label>
+                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 focus:outline-none focus:border-amber-400">
                     </div>
                     <div>
-                        <label class="text-[10px] opacity-80">Kehadiran:</label>
-                        <select id="rsvp-status" class="w-full p-2 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white">
-                            <option>Hadir</option>
-                            <option>Ragu-ragu</option>
-                            <option>Maaf, Tidak Bisa Hadir</option>
+                        <label class="text-[10px] text-amber-200/80">Kehadiran:</label>
+                        <select id="rsvp-status" class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 focus:outline-none focus:border-amber-400">
+                            <option class="bg-slate-900">Hadir</option>
+                            <option class="bg-slate-900">Ragu-ragu</option>
+                            <option class="bg-slate-900">Maaf, Tidak Bisa Hadir</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] opacity-80">Ucapan & Doa:</label>
-                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-2 mt-0.5 rounded bg-black/30 border border-white/20 text-xs text-white h-16"></textarea>
+                        <label class="text-[10px] text-amber-200/80">Ucapan & Doa:</label>
+                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 h-16 focus:outline-none focus:border-amber-400"></textarea>
                     </div>
-                    <button type="button" onclick="submitRSVP()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs shadow-md transition">
+                    <button type="button" onclick="submitRSVP()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-2.5 rounded-lg text-xs shadow-lg transition">
                         Kirim RSVP
                     </button>
                 </div>
@@ -281,15 +292,15 @@
             
             <!-- SECTION 4: QR CODE CHECK-IN -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
-                <h2 class="text-2xl font-serif-custom font-semibold mb-2 text-amber-300">QR Code Check-In</h2>
-                <p class="text-xs opacity-75 mb-6 px-4">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
+                <h2 class="text-2xl font-serif-custom font-semibold mb-2 gold-shimmer">QR Code Check-In</h2>
+                <p class="text-xs text-amber-200/80 mb-6 px-4">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
                 
-                <div class="p-4 bg-white rounded-2xl shadow-2xl">
+                <div class="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-400/40">
                     <div id="qrcode"></div>
                 </div>
-                <p class="text-xs font-semibold mt-4 text-amber-200">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
+                <p class="text-xs font-semibold mt-4 text-amber-300">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
 
-                <div class="text-[10px] opacity-50 pt-8 pb-4">
+                <div class="text-[10px] text-amber-200/50 pt-8 pb-4">
                     Generated with AI Invitation Agent
                 </div>
             </section>
@@ -301,15 +312,13 @@
     {% if music_url %}
     <div class="fixed bottom-4 right-4 z-50">
         <audio id="bg-audio" loop src="{{ music_url }}"></audio>
-        <button onclick="toggleAudio()" class="bg-amber-500 text-slate-900 p-3 rounded-full shadow-2xl font-bold flex items-center justify-center">
+        <button onclick="toggleAudio()" class="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 p-3 rounded-full shadow-2xl font-bold flex items-center justify-center border border-amber-300">
             🎵 <span id="audio-status" class="ml-1 text-xs">Play</span>
         </button>
     </div>
     {% endif %}
 
-    <!-- ---------------------------------------------------------
-     * SCRIPTS UTAMA (Digabung & Dibersihkan Tanpa Duplikasi)
-     * --------------------------------------------------------- -->
+    <!-- SCRIPTS UTAMA -->
     <script>
         // 1. Audio Toggle Player
         function toggleAudio() {
@@ -335,7 +344,7 @@
                 <div class="text-center py-6 space-y-2">
                     <p class="text-3xl">✅</p>
                     <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                    <p class="text-xs opacity-80">Konfirmasi kehadiran Anda berhasil dikirim.</p>
+                    <p class="text-xs text-amber-100/80">Konfirmasi kehadiran Anda berhasil dikirim.</p>
                 </div>
             `;
     
@@ -358,7 +367,7 @@
             });
         }
 
-        // 3. Inisialisasi Saat Halaman Dimuat (QR Code, Countdown, & Efek Visual)
+        // 3. Inisialisasi Saat Halaman Dimuat (QR Code, Countdown, & Efek Visual Bunga/Floral)
         window.addEventListener('DOMContentLoaded', function() {
             // A. Generate QR Code
             var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
@@ -393,7 +402,7 @@
                 document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
             }, 1000);
 
-            // C. Efek Visual Daun Jatuh & Bintang Kelap-Kelip
+            // C. Efek Visual Bintang Kelap-Kelip & Ornamen Bunga Melayang (Floral Animation)
             const body = document.body;
             
             // Bintang Kelap-kelip
@@ -410,17 +419,17 @@
                 body.appendChild(star);
             }
     
-            // Daun/Kelopak Jatuh
-            const leafIcons = ['🍃', '🍂', '🌸'];
-            for (let i = 0; i < 12; i++) {
-                let leaf = document.createElement('div');
-                leaf.className = 'leaf';
-                leaf.innerText = leafIcons[Math.floor(Math.random() * leafIcons.length)];
-                leaf.style.fontSize = (Math.random() * 12 + 12) + 'px';
-                leaf.style.left = Math.random() * 100 + 'vw';
-                leaf.style.animationDuration = (Math.random() * 6 + 6) + 's';
-                leaf.style.animationDelay = (Math.random() * 5) + 's';
-                body.appendChild(leaf);
+            // Ornamen Bunga & Daun Jatuh/Melayang
+            const floralIcons = ['🌸', '💮', '🌿', '✨', '💐', '🍂'];
+            for (let i = 0; i < 15; i++) {
+                let floral = document.createElement('div');
+                floral.className = 'floral-floating';
+                floral.innerText = floralIcons[Math.floor(Math.random() * floralIcons.length)];
+                floral.style.fontSize = (Math.random() * 14 + 14) + 'px';
+                floral.style.left = Math.random() * 100 + 'vw';
+                floral.style.animationDuration = (Math.random() * 7 + 6) + 's';
+                floral.style.animationDelay = (Math.random() * 5) + 's';
+                body.appendChild(floral);
             }
         });
     </script>
