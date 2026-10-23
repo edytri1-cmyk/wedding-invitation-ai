@@ -727,8 +727,12 @@ else:
                 else:
                     st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
 
-    elif "Buat Link Undangan" in active_step:
+elif "Buat Link Undangan" in active_step:
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
+
+        # KUNCI PERBAIKAN: Selalu ambil user_id yang konsisten dari session_state
+        # Baik dari alur normal maupun hasil pemulihan Google Sheets via token URL
+        current_user = st.session_state.get("user_id") or st.session_state.get("current_user", "default_user")
 
         if not st.session_state.get("design_ready", False) and not is_session_active:
             st.warning("⚠️ Silakan selesaikan desain undangan di **Tahap 2** terlebih dahulu.")
@@ -797,7 +801,7 @@ else:
                                     order_id=order_id_trx,
                                     token=user_token,
                                     status="PENDING",
-                                    user_id=buyer_name
+                                    user_id=current_user  # Menggunakan current_user yang konsisten
                                 )
                                 
                                 st.success("✅ Link Pembayaran Berhasil Dibuat!")
@@ -820,12 +824,12 @@ else:
                             order_id=code_input.strip(),
                             token=user_token,
                             status="ACTIVATED",
-                            user_id=buyer_name if 'buyer_name' in locals() and buyer_name else "Manual User"
+                            user_id=current_user  # Menggunakan current_user yang konsisten
                         )
                         
                         st.session_state["activated_code_input"] = code_input.strip()
                         st.session_state["user_token"] = user_token
-                        st.session_state["is_session_active"] = True  # FIX: Set Sesi Aktif Permanen saat aktivasi
+                        st.session_state["is_session_active"] = True  
                         
                         st.success("✅ Aktivasi berhasil! Silakan nikmati akses penuh.")
                         st.info("🔑 **Link Akses Cadangan Anda:** Simpan tautan di bawah ini untuk melanjutkan pekerjaan keesokan harinya:")
