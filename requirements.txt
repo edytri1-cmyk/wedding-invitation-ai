@@ -5,3 +5,5 @@ jinja2
 google-genai
 groq
 python-dotenv
+gspread
+google-auth
