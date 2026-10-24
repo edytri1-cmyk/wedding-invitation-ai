@@ -677,7 +677,8 @@ else:
                     </h1>
                     <p class="hero-desc">
                         Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. 
-                        Inspirasi Jepang dengan nuansa bunga sakura yang lembut & mewah untuk hari spesial Anda.
+                        kami membantu anda menciptakan undangan pernikahan digital yang indah, modern, 
+                        dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada cinta kalian.
                     </p>
                 </div>
             """, unsafe_allow_html=True)
@@ -700,17 +701,7 @@ else:
     
         st.markdown("<br>", unsafe_allow_html=True)
     
-        # 2. TENTANG APLIKASI
-        st.markdown('<h2 class="section-heading">🌸 Tentang Aplikasi</h2>', unsafe_allow_html=True)
-        st.markdown("""
-            <p style="text-align: center; color: #9f1239; font-size: 14.5px; line-height: 1.7; max-width: 780px; margin: 0 auto 10px auto;">
-                EternalVow membantu pasangan menciptakan undangan pernikahan digital yang indah, modern, 
-                dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada cinta kalian. 
-                Desain terinspirasi keindahan sakura Jepang yang lembut dan elegan.
-            </p>
-        """, unsafe_allow_html=True)
-    
-        # 3. FITUR UTAMA
+        # 2. FITUR UTAMA
         st.markdown('<h2 class="section-heading">✨ Fitur Aplikasi</h2>', unsafe_allow_html=True)
         
         f_col1, f_col2, f_col3 = st.columns(3)
@@ -761,44 +752,7 @@ else:
                 </div>
             """, unsafe_allow_html=True)
     
-        # 4. CARA PENGGUNAAN
-        st.markdown('<h2 class="section-heading">📖 Cara Penggunaan</h2>', unsafe_allow_html=True)
-        
-        s_col1, s_col2, s_col3, s_col4 = st.columns(4)
-        with s_col1:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">1</div>
-                    <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Pilih Template</h5>
-                    <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Pilih desain sakura yang paling kalian sukai.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col2:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">2</div>
-                    <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Isi Data</h5>
-                    <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Masukkan data pengantin, acara & detail penting.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col3:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">3</div>
-                    <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Personalisasi</h5>
-                    <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Sesuaikan musik, foto, dan animasi sakura.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col4:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">4</div>
-                    <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Bagikan Link</h5>
-                    <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Sebar via WhatsApp, Instagram, atau email.</p>
-                </div>
-            """, unsafe_allow_html=True)
-    
-        # 5. JAMINAN KEAMANAN
+        # 3. JAMINAN KEAMANAN
         st.markdown("""
             <div class="security-box">
                 <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Data Privacy</h4>
