@@ -173,6 +173,17 @@ def save_order_to_gsheets(order_id, token, status, user_id):
         st.error(f"Gagal menyimpan ke Google Sheets: {e}")
         return False
 
+# Fungsi pendukung untuk mengubah gambar lokal menjadi base64
+def get_base64_of_image(image_path):
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    return ""
+
+# Ambil string base64 dari file gambar latar belakang Anda
+img_base64 = get_base64_of_image("mempelai pink bunga sakura.jpg")
+
 # ==========================================
 # 1. PENANGKAP TOKEN URL VIA GOOGLE SHEETS
 # ==========================================
@@ -463,20 +474,6 @@ if app_mode == "🔑 Admin":
                     save_json(CHAT_FILE, chat_history)
                     st.success("Balasan terkirim ke user!")
                     st.rerun()
-
-import base64
-import os
-
-# Fungsi pendukung untuk mengubah gambar lokal menjadi base64
-def get_base64_of_image(image_path):
-    if os.path.exists(image_path):
-        with open(image_path, "rb") as f:
-            data = f.read()
-        return base64.b64encode(data).decode()
-    return ""
-
-# Ambil string base64 dari file gambar latar belakang Anda
-img_base64 = get_base64_of_image("mempelai pink bunga sakura.jpg")
 
 # =========================================================
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
