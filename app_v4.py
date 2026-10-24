@@ -503,7 +503,7 @@ else:
     # 2. PENCOCOKAN KONTEN BERDASARKAN KATA KUNCI (Tanpa Indeks)
     # =========================================================
     
-if "Panduan Aplikasi" in active_step:
+    if "Panduan Aplikasi" in active_step:
     # Style CSS Kustom - Soft Pink Sakura Japanese Theme
     st.markdown("""
         <style>
