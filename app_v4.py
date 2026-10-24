@@ -504,15 +504,15 @@ else:
     # =========================================================
     
     if "Panduan Aplikasi" in active_step:
-        # Style CSS Kustom untuk Landing Page Nuansa Sakura Light Theme Eksklusif
+        # Style CSS Kustom untuk Landing Page Gradasi Pink & Kotak Pink Lebih Tua
         st.markdown("""
             <style>
             .landing-wrapper {
-                background: linear-gradient(135deg, #fff0f3 0%, #fff5f7 50%, #ffe4e6 100%);
+                background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 50%, #fda4af 100%);
                 padding: 30px;
                 border-radius: 24px;
-                border: 1px solid #ffccd5;
-                color: #4a2c2a;
+                border: 1px solid #fb7185;
+                color: #500724;
                 font-family: 'Plus Jakarta Sans', sans-serif;
             }
             .hero-title {
@@ -524,30 +524,32 @@ else:
                 margin-bottom: 15px;
             }
             .hero-desc {
-                color: #6b4c4a;
+                color: #701a75;
                 font-size: 15px;
                 line-height: 1.6;
                 margin-bottom: 25px;
             }
-            .feature-box-light {
-                background: rgba(255, 255, 255, 0.85);
-                backdrop-filter: blur(10px);
+            .feature-box-pink {
+                background: #f43f5e;
+                color: #ffffff;
                 padding: 20px;
                 border-radius: 16px;
-                border: 1px solid #ffccd5;
-                box-shadow: 0 8px 20px rgba(244, 63, 94, 0.08);
+                border: 1px solid #e11d48;
+                box-shadow: 0 8px 20px rgba(136, 19, 55, 0.2);
                 height: 100%;
                 transition: transform 0.3s ease;
             }
-            .feature-box-light:hover {
+            .feature-box-pink:hover {
                 transform: translateY(-4px);
             }
-            .step-card-light {
-                background: rgba(255, 255, 255, 0.9);
+            .step-card-pink {
+                background: #f43f5e;
+                color: #ffffff;
                 padding: 18px;
                 border-radius: 14px;
-                border: 1px solid #ffd1dc;
+                border: 1px solid #e11d48;
                 text-align: center;
+                box-shadow: 0 6px 15px rgba(136, 19, 55, 0.15);
             }
             .section-heading {
                 text-align: center;
@@ -563,13 +565,13 @@ else:
         # Buka wrapper utama landing page
         st.markdown('<div class="landing-wrapper">', unsafe_allow_html=True)
 
-        # 1. HERO SECTION (2 Kolom: Teks Kiri & Banner/Foto Kanan ala Referensi)
+        # 1. HERO SECTION (2 Kolom: Teks Kiri & Banner/Foto Kanan)
         hero_col1, hero_col2 = st.columns([1.3, 1])
         
         with hero_col1:
             st.markdown("""
                 <div style="padding-top: 15px;">
-                    <span style="background: #ffe4e6; color: #be123c; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">
+                    <span style="background: #ffe4e6; color: #9f1239; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">
                         🌸 Wedding Invitation Online Platform
                     </span>
                     <h1 class="hero-title" style="margin-top: 15px;">
@@ -590,49 +592,48 @@ else:
                 st.button("🔍 Lihat Demo", use_container_width=True)
 
         with hero_col2:
-            # Menampilkan ilustrasi atau foto pengantin bernuansa romantis
             st.markdown("""
-                <div style="border-radius: 20px; overflow: hidden; border: 3px solid #ffccd5; box-shadow: 0 12px 30px rgba(136, 19, 55, 0.15);">
+                <div style="border-radius: 20px; overflow: hidden; border: 3px solid #fb7185; box-shadow: 0 12px 30px rgba(136, 19, 55, 0.2);">
                     <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" style="width: 100%; height: 320px; object-fit: cover;">
                 </div>
             """, unsafe_allow_html=True)
 
-        st.markdown("<br><hr style='border-color: #ffccd5;'><br>", unsafe_allow_html=True)
+        st.markdown("<br><hr style='border-color: #fb7185;'><br>", unsafe_allow_html=True)
 
-        # 2. FITUR UTAMA PLATFORM
+        # 2. FITUR UTAMA PLATFORM (Kotak Pink Lebih Tua)
         st.markdown('<h2 class="section-heading">✨ Fitur Unggulan Platform</h2>', unsafe_allow_html=True)
         
         f_col1, f_col2, f_col3, f_col4 = st.columns(4)
         with f_col1:
             st.markdown("""
-                <div class="feature-box-light">
-                    <h4 style="color: #9f1239; font-size: 15px; margin-bottom: 6px;">🎨 Custom Templates</h4>
-                    <p style="font-size: 11px; color: #78716c;">Pilihan tema eksklusif bernuansa sakura & klasik mewah.</p>
+                <div class="feature-box-pink">
+                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎨 Custom Templates</h4>
+                    <p style="font-size: 11px; color: #ffe4e6;">Pilihan tema eksklusif bernuansa sakura & klasik mewah.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col2:
             st.markdown("""
-                <div class="feature-box-light">
-                    <h4 style="color: #9f1239; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
-                    <p style="font-size: 11px; color: #78716c;">Pantau konfirmasi kehadiran dan doa tamu secara otomatis.</p>
+                <div class="feature-box-pink">
+                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
+                    <p style="font-size: 11px; color: #ffe4e6;">Pantau konfirmasi kehadiran dan doa tamu secara otomatis.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col3:
             st.markdown("""
-                <div class="feature-box-light">
-                    <h4 style="color: #9f1239; font-size: 15px; margin-bottom: 6px;">🎵 Music & Effects</h4>
-                    <p style="font-size: 11px; color: #78716c;">Dilengkapi backsound romantis & kelopak bunga melayang.</p>
+                <div class="feature-box-pink">
+                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎵 Music & Effects</h4>
+                    <p style="font-size: 11px; color: #ffe4e6;">Dilengkapi backsound romantis & kelopak bunga melayang.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col4:
             st.markdown("""
-                <div class="feature-box-light">
-                    <h4 style="color: #9f1239; font-size: 15px; margin-bottom: 6px;">🌐 Multi-Device</h4>
-                    <p style="font-size: 11px; color: #78716c;">Responsif sempurna dibuka di HP, tablet, maupun laptop.</p>
+                <div class="feature-box-pink">
+                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🌐 Multi-Device</h4>
+                    <p style="font-size: 11px; color: #ffe4e6;">Responsif sempurna dibuka di HP, tablet, maupun laptop.</p>
                 </div>
             """, unsafe_allow_html=True)
 
-        st.markdown("<br><hr style='border-color: #ffccd5;'><br>", unsafe_allow_html=True)
+        st.markdown("<br><hr style='border-color: #fb7185;'><br>", unsafe_allow_html=True)
 
         # 3. CARA PENGGUNAAN (STEP-BY-STEP)
         st.markdown('<h2 class="section-heading">📖 Panduan & Cara Penggunaan</h2>', unsafe_allow_html=True)
@@ -640,44 +641,44 @@ else:
         s_col1, s_col2, s_col3, s_col4 = st.columns(4)
         with s_col1:
             st.markdown("""
-                <div class="step-card-light">
-                    <span style="background: #e11d48; color: white; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">1</span>
-                    <h5 style="color: #881337; font-size: 14px; margin-top: 10px;">Pilih Template</h5>
-                    <p style="font-size: 11px; color: #6b7280;">Setujui ketentuan & tentukan konsep.</p>
+                <div class="step-card-pink">
+                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">1</span>
+                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Pilih Template</h5>
+                    <p style="font-size: 11px; color: #ffe4e6;">Setujui ketentuan & tentukan konsep.</p>
                 </div>
             """, unsafe_allow_html=True)
         with s_col2:
             st.markdown("""
-                <div class="step-card-light">
-                    <span style="background: #e11d48; color: white; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">2</span>
-                    <h5 style="color: #881337; font-size: 14px; margin-top: 10px;">Personalisasi</h5>
-                    <p style="font-size: 11px; color: #6b7280;">Isi data mempelai, galeri, & musik.</p>
+                <div class="step-card-pink">
+                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">2</span>
+                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Personalisasi</h5>
+                    <p style="font-size: 11px; color: #ffe4e6;">Isi data mempelai, galeri, & musik.</p>
                 </div>
             """, unsafe_allow_html=True)
         with s_col3:
             st.markdown("""
-                <div class="step-card-light">
-                    <span style="background: #e11d48; color: white; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">3</span>
-                    <h5 style="color: #881337; font-size: 14px; margin-top: 10px;">Aktivasi Link</h5>
-                    <p style="font-size: 11px; color: #6b7280;">Lakukan pembayaran & aktivasi akun.</p>
+                <div class="step-card-pink">
+                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">3</span>
+                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Aktivasi Link</h5>
+                    <p style="font-size: 11px; color: #ffe4e6;">Lakukan pembayaran & aktivasi akun.</p>
                 </div>
             """, unsafe_allow_html=True)
         with s_col4:
             st.markdown("""
-                <div class="step-card-light">
-                    <span style="background: #e11d48; color: white; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">4</span>
-                    <h5 style="color: #881337; font-size: 14px; margin-top: 10px;">Sebar Undangan</h5>
-                    <p style="font-size: 11px; color: #6b7280;">Kirim via WhatsApp & pantau RSVP.</p>
+                <div class="step-card-pink">
+                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">4</span>
+                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Sebar Undangan</h5>
+                    <p style="font-size: 11px; color: #ffe4e6;">Kirim via WhatsApp & pantau RSVP.</p>
                 </div>
             """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # 4. KOTAK PERSETUJUAN & KEAMANAN
+        # 4. KOTAK KEAMANAN DATA (Nuansa Pink Tua)
         st.markdown("""
-            <div style="background: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 14px; border: 1px solid #ffccd5; margin-top: 20px;">
-                <h4 style="color: #881337; font-size: 15px; margin-bottom: 8px;">🔒 Jaminan Keamanan & Privasi Data</h4>
-                <p style="font-size: 12px; color: #555; margin-bottom: 0;">
+            <div style="background: #be123c; color: #ffffff; padding: 20px; border-radius: 14px; border: 1px solid #e11d48; margin-top: 20px; box-shadow: 0 6px 15px rgba(136, 19, 55, 0.15);">
+                <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 8px;">🔒 Jaminan Keamanan & Privasi Data</h4>
+                <p style="font-size: 12px; color: #ffe4e6; margin-bottom: 0; line-height: 1.5;">
                     Seluruh data pribadi, informasi acara, dan daftar kontak tamu Anda dilindungi dengan enkripsi tingkat tinggi. Kami menjamin kerahasiaan data dan Anda memiliki kendali penuh untuk memperbarui kapan saja.
                 </p>
             </div>
