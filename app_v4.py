@@ -504,200 +504,258 @@ else:
     # =========================================================
     
     if "Panduan Aplikasi" in active_step:
-        # Style CSS Kustom untuk Landing Page Gradasi Pink & Kotak Pink Lebih Tua
+    # Style CSS Kustom - Soft Pink Sakura Japanese Theme
+    st.markdown("""
+        <style>
+        .landing-wrapper {
+            background: linear-gradient(160deg, #fff1f2 0%, #ffe4e6 40%, #fecdd3 100%);
+            padding: 32px 28px;
+            border-radius: 24px;
+            border: 1px solid #fda4af;
+            color: #4c0519;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            box-shadow: 0 10px 30px rgba(190, 18, 60, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .landing-wrapper::before {
+            content: "🌸";
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.06;
+            top: -20px;
+            right: 20px;
+            transform: rotate(15deg);
+        }
+        .hero-title {
+            color: #9f1239;
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 14px;
+        }
+        .hero-desc {
+            color: #9f1239;
+            font-size: 15px;
+            line-height: 1.65;
+            margin-bottom: 22px;
+            opacity: 0.9;
+        }
+        .feature-box-pink {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            color: #4c0519;
+            padding: 18px 16px;
+            border-radius: 16px;
+            border: 1px solid #fda4af;
+            box-shadow: 0 6px 18px rgba(190, 18, 60, 0.08);
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        .feature-box-pink:hover {
+            transform: translateY(-5px);
+            background: #fff;
+            box-shadow: 0 12px 24px rgba(190, 18, 60, 0.12);
+        }
+        .step-card-pink {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(6px);
+            color: #4c0519;
+            padding: 20px 14px;
+            border-radius: 16px;
+            border: 1px solid #fda4af;
+            text-align: center;
+            box-shadow: 0 6px 16px rgba(190, 18, 60, 0.07);
+            height: 100%;
+        }
+        .section-heading {
+            text-align: center;
+            color: #9f1239;
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 32px 0 18px 0;
+            letter-spacing: 0.3px;
+        }
+        .security-box {
+            background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
+            color: #fff;
+            padding: 22px 24px;
+            border-radius: 16px;
+            border: 1px solid #e11d48;
+            margin-top: 24px;
+            box-shadow: 0 8px 20px rgba(136, 19, 55, 0.18);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Buka wrapper utama landing page
+    st.markdown('<div class="landing-wrapper">', unsafe_allow_html=True)
+
+    # 1. HERO SECTION
+    hero_col1, hero_col2 = st.columns([1.35, 1])
+    
+    with hero_col1:
         st.markdown("""
-            <style>
-            .landing-wrapper {
-                background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 50%, #fda4af 100%);
-                padding: 30px;
-                border-radius: 24px;
-                border: 1px solid #fb7185;
-                color: #500724;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-            }
-            .hero-title {
-                color: #881337;
-                font-family: 'Playfair Display', serif;
-                font-size: 38px;
-                font-weight: 700;
-                line-height: 1.2;
-                margin-bottom: 15px;
-            }
-            .hero-desc {
-                color: #701a75;
-                font-size: 15px;
-                line-height: 1.6;
-                margin-bottom: 25px;
-            }
-            .feature-box-pink {
-                background: #f43f5e;
-                color: #ffffff;
-                padding: 20px;
-                border-radius: 16px;
-                border: 1px solid #e11d48;
-                box-shadow: 0 8px 20px rgba(136, 19, 55, 0.2);
-                height: 100%;
-                transition: transform 0.3s ease;
-            }
-            .feature-box-pink:hover {
-                transform: translateY(-4px);
-            }
-            .step-card-pink {
-                background: #f43f5e;
-                color: #ffffff;
-                padding: 18px;
-                border-radius: 14px;
-                border: 1px solid #e11d48;
-                text-align: center;
-                box-shadow: 0 6px 15px rgba(136, 19, 55, 0.15);
-            }
-            .section-heading {
-                text-align: center;
-                color: #881337;
-                font-family: 'Playfair Display', serif;
-                font-size: 26px;
-                font-weight: 600;
-                margin: 35px 0 20px 0;
-            }
-            </style>
-        """, unsafe_allow_html=True)
-
-        # Buka wrapper utama landing page
-        st.markdown('<div class="landing-wrapper">', unsafe_allow_html=True)
-
-        # 1. HERO SECTION (2 Kolom: Teks Kiri & Banner/Foto Kanan)
-        hero_col1, hero_col2 = st.columns([1.3, 1])
-        
-        with hero_col1:
-            st.markdown("""
-                <div style="padding-top: 15px;">
-                    <span style="background: #ffe4e6; color: #9f1239; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">
-                        🌸 Wedding Invitation Online Platform
-                    </span>
-                    <h1 class="hero-title" style="margin-top: 15px;">
-                        Undang Tamu Anda dengan Keindahan & Kemudahan
-                    </h1>
-                    <p class="hero-desc">
-                        Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. Inspirasi estetika Jepang, sentuhan mewah berbalut emas, untuk hari spesial yang tak terlupakan.
-                    </p>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            btn_c1, btn_c2 = st.columns(2)
-            with btn_c1:
-                if st.button("🌸 Buat Undangan", type="primary", use_container_width=True):
-                    st.session_state["agreed_terms"] = True
-                    st.rerun()
-            with btn_c2:
-                st.button("🔍 Lihat Demo", use_container_width=True)
-
-        with hero_col2:
-            st.markdown("""
-                <div style="border-radius: 20px; overflow: hidden; border: 3px solid #fb7185; box-shadow: 0 12px 30px rgba(136, 19, 55, 0.2);">
-                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" style="width: 100%; height: 320px; object-fit: cover;">
-                </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<br><hr style='border-color: #fb7185;'><br>", unsafe_allow_html=True)
-
-        # 2. FITUR UTAMA PLATFORM (Kotak Pink Lebih Tua)
-        st.markdown('<h2 class="section-heading">✨ Fitur Unggulan Platform</h2>', unsafe_allow_html=True)
-        
-        f_col1, f_col2, f_col3, f_col4 = st.columns(4)
-        with f_col1:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎨 Custom Templates</h4>
-                    <p style="font-size: 11px; color: #ffe4e6;">Pilihan tema eksklusif bernuansa sakura & klasik mewah.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with f_col2:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
-                    <p style="font-size: 11px; color: #ffe4e6;">Pantau konfirmasi kehadiran dan doa tamu secara otomatis.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with f_col3:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎵 Music & Effects</h4>
-                    <p style="font-size: 11px; color: #ffe4e6;">Dilengkapi backsound romantis & kelopak bunga melayang.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with f_col4:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🌐 Multi-Device</h4>
-                    <p style="font-size: 11px; color: #ffe4e6;">Responsif sempurna dibuka di HP, tablet, maupun laptop.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<br><hr style='border-color: #fb7185;'><br>", unsafe_allow_html=True)
-
-        # 3. CARA PENGGUNAAN (STEP-BY-STEP)
-        st.markdown('<h2 class="section-heading">📖 Panduan & Cara Penggunaan</h2>', unsafe_allow_html=True)
-        
-        s_col1, s_col2, s_col3, s_col4 = st.columns(4)
-        with s_col1:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">1</span>
-                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Pilih Template</h5>
-                    <p style="font-size: 11px; color: #ffe4e6;">Setujui ketentuan & tentukan konsep.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col2:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">2</span>
-                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Personalisasi</h5>
-                    <p style="font-size: 11px; color: #ffe4e6;">Isi data mempelai, galeri, & musik.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col3:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">3</span>
-                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Aktivasi Link</h5>
-                    <p style="font-size: 11px; color: #ffe4e6;">Lakukan pembayaran & aktivasi akun.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with s_col4:
-            st.markdown("""
-                <div class="step-card-pink">
-                    <span style="background: #ffffff; color: #e11d48; padding: 4px 10px; border-radius: 50%; font-size: 12px; font-weight: bold;">4</span>
-                    <h5 style="color: #fef08a; font-size: 14px; margin-top: 10px;">Sebar Undangan</h5>
-                    <p style="font-size: 11px; color: #ffe4e6;">Kirim via WhatsApp & pantau RSVP.</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # 4. KOTAK KEAMANAN DATA (Nuansa Pink Tua)
-        st.markdown("""
-            <div style="background: #be123c; color: #ffffff; padding: 20px; border-radius: 14px; border: 1px solid #e11d48; margin-top: 20px; box-shadow: 0 6px 15px rgba(136, 19, 55, 0.15);">
-                <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 8px;">🔒 Jaminan Keamanan & Privasi Data</h4>
-                <p style="font-size: 12px; color: #ffe4e6; margin-bottom: 0; line-height: 1.5;">
-                    Seluruh data pribadi, informasi acara, dan daftar kontak tamu Anda dilindungi dengan enkripsi tingkat tinggi. Kami menjamin kerahasiaan data dan Anda memiliki kendali penuh untuk memperbarui kapan saja.
+            <div style="padding-top: 10px;">
+                <span style="background: #ffe4e6; color: #9f1239; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px;">
+                    🌸 Wedding Invitation Online • Nuansa Sakura
+                </span>
+                <h1 class="hero-title" style="margin-top: 18px;">
+                    Undang Tamu Anda dengan Keindahan & Kemudahan
+                </h1>
+                <p class="hero-desc">
+                    Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. 
+                    Inspirasi Jepang dengan nuansa bunga sakura yang lembut & mewah untuk hari spesial Anda.
                 </p>
             </div>
         """, unsafe_allow_html=True)
-
-        # Tutup wrapper utama landing page
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown("---")
         
-        # Checkbox Persetujuan Akhir Tahap 1
-        agreement = st.checkbox("Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", value=st.session_state.get("agreed_terms", False))
-        
-        if agreement:
-            st.session_state["agreed_terms"] = True
-            st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** di atas untuk mulai merancang!")
-        else:
-            st.session_state["agreed_terms"] = False
-            st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
+        btn_c1, btn_c2 = st.columns(2)
+        with btn_c1:
+            if st.button("🌸 Buat Undangan Sekarang", type="primary", use_container_width=True):
+                st.session_state["agreed_terms"] = True
+                st.rerun()
+        with btn_c2:
+            st.button("▶ Lihat Demo", use_container_width=True)
+
+    with hero_col2:
+        st.markdown("""
+            <div style="border-radius: 20px; overflow: hidden; border: 3px solid #fda4af; box-shadow: 0 14px 32px rgba(190, 18, 60, 0.15);">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" 
+                     style="width: 100%; height: 310px; object-fit: cover;">
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br><hr style='border: none; border-top: 1px solid #fda4af; opacity: 0.6; margin: 10px 0 5px 0;'>", unsafe_allow_html=True)
+
+    # 2. TENTANG APLIKASI
+    st.markdown('<h2 class="section-heading">🌸 Tentang Aplikasi</h2>', unsafe_allow_html=True)
+    st.markdown("""
+        <p style="text-align: center; color: #9f1239; font-size: 14.5px; line-height: 1.7; max-width: 780px; margin: 0 auto 10px auto;">
+            EternalVow membantu pasangan menciptakan undangan pernikahan digital yang indah, modern, 
+            dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada cinta kalian. 
+            Desain terinspirasi keindahan sakura Jepang yang lembut dan elegan.
+        </p>
+    """, unsafe_allow_html=True)
+
+    # 3. FITUR UTAMA
+    st.markdown('<h2 class="section-heading">✨ Fitur Aplikasi</h2>', unsafe_allow_html=True)
+    
+    f_col1, f_col2, f_col3 = st.columns(3)
+    with f_col1:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🎨 Custom Design Templates</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Pilihan tema eksklusif bernuansa sakura, blush gold & klasik mewah yang bisa dikustomisasi.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with f_col2:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Konfirmasi kehadiran tamu secara real-time dengan dashboard yang mudah dipantau.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with f_col3:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🎵 Music & Animation</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Tambahkan musik romantis dan animasi kelopak sakura yang lembut.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<div style='height: 12px'></div>", unsafe_allow_html=True)
+
+    f_col4, f_col5, f_col6 = st.columns(3)
+    with f_col4:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">📖 Guest Book</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Tamu dapat meninggalkan ucapan & doa terbaik untuk kalian berdua.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with f_col5:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🖼️ Photo Gallery</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Galeri foto interaktif untuk kenangan spesial hari bahagia kalian.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with f_col6:
+        st.markdown("""
+            <div class="feature-box-pink">
+                <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🌐 Multi-language</h4>
+                <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Dukungan Bahasa Indonesia & English untuk tamu internasional.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # 4. CARA PENGGUNAAN
+    st.markdown('<h2 class="section-heading">📖 Cara Penggunaan</h2>', unsafe_allow_html=True)
+    
+    s_col1, s_col2, s_col3, s_col4 = st.columns(4)
+    with s_col1:
+        st.markdown("""
+            <div class="step-card-pink">
+                <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">1</div>
+                <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Pilih Template</h5>
+                <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Pilih desain sakura yang paling kalian sukai.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with s_col2:
+        st.markdown("""
+            <div class="step-card-pink">
+                <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">2</div>
+                <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Isi Data</h5>
+                <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Masukkan data pengantin, acara & detail penting.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with s_col3:
+        st.markdown("""
+            <div class="step-card-pink">
+                <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">3</div>
+                <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Personalisasi</h5>
+                <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Sesuaikan musik, foto, dan animasi sakura.</p>
+            </div>
+        """, unsafe_allow_html=True)
+    with s_col4:
+        st.markdown("""
+            <div class="step-card-pink">
+                <div style="background: #be123c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 13px; font-weight: bold;">4</div>
+                <h5 style="color: #9f1239; font-size: 14px; margin: 0 0 6px 0;">Bagikan Link</h5>
+                <p style="font-size: 12px; color: #be123c; margin: 0; opacity: 0.9;">Sebar via WhatsApp, Instagram, atau email.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # 5. JAMINAN KEAMANAN
+    st.markdown("""
+        <div class="security-box">
+            <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Data Privacy</h4>
+            <p style="font-size: 13px; color: #ffe4e6; margin-bottom: 0; line-height: 1.6;">
+                Seluruh data pribadi, informasi acara, dan daftar kontak tamu Anda dilindungi dengan enkripsi tingkat tinggi (SSL). 
+                Kami menjamin kerahasiaan data sesuai standar internasional. Anda memiliki kendali penuh untuk memperbarui atau menghapus data kapan saja.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Tutup wrapper
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown("---")
+    
+    # Checkbox Persetujuan
+    agreement = st.checkbox(
+        "Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", 
+        value=st.session_state.get("agreed_terms", False)
+    )
+    
+    if agreement:
+        st.session_state["agreed_terms"] = True
+        st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** di atas untuk mulai merancang!")
+    else:
+        st.session_state["agreed_terms"] = False
+        st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
 
     elif "Desain & Preview Undangan" in active_step:
         if not st.session_state.get("agreed_terms", False):
