@@ -523,7 +523,7 @@ else:
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("🧭 **Alur Pembuatan Undangan Digital:**")
+    st.markdown("🧭 **Alur Pembuatan Undangan Digital:**" , color: #9f1239)
 
 # Daftar tahapan alur beserta deskripsinya
     steps_info = [
