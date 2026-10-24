@@ -747,8 +747,8 @@ else:
         with f_col6:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🌐 Multi-language</h4>
-                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Dukungan Bahasa Indonesia & English untuk tamu internasional.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🌐 Multi Create Link Undangan</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Buat Undangan Digital tanpa batasan jumlah undangan.</p>
                 </div>
             """, unsafe_allow_html=True)
     
