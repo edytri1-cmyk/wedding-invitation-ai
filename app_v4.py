@@ -468,11 +468,11 @@ if app_mode == "🔑 Admin":
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
 # =========================================================
 else:
-    st.markdown("""
-    <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
-        💍 Wedding AI Invitation Generator
-    </h3>
-""", unsafe_allow_html=True)
+#    st.markdown("""
+#    <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
+#        💍 Wedding AI Invitation Generator
+#    </h3>
+#""", unsafe_allow_html=True)
 
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
