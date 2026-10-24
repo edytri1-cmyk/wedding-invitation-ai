@@ -483,85 +483,56 @@ else:
     <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
         💍 Wedding AI Invitation Generator
     </h3>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
 
     # Inisialisasi state untuk alur navigasi aktif jika belum ada
-    if "Panduan Aplikasi" in active_step:
-        # Menggunakan URL langsung gambar latar belakang sakura agar terbaca di Streamlit Cloud
-        sakura_bg_url = "https://images.unsplash.com/photo-1522364723953-452d3431c267?auto=format&fit=crop&w=1920&q=80"
+    if "active_step_idx" not in st.session_state:
+        st.session_state["active_step_idx"] = 0
 
-        st.markdown(f"""
-            <style>
-            /* Memasang background penuh layar dengan overlay gelap transparan */
-            .stApp {{
-                background-image: linear-gradient(rgba(40, 15, 25, 0.65), rgba(40, 15, 25, 0.65)), url("{sakura_bg_url}");
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-            }}
-            
-            /* Efek Glassmorphism untuk Kotak Utama */
-            .landing-wrapper {{
-                background: rgba(25, 15, 20, 0.70);
-                backdrop-filter: blur(14px);
-                -webkit-backdrop-filter: blur(14px);
-                padding: 35px;
-                border-radius: 24px;
-                border: 1px solid rgba(251, 191, 36, 0.35);
-                color: #ffffff;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            }}
-            .hero-title {{
-                color: #fef08a;
-                font-family: 'Playfair Display', serif;
-                font-size: 36px;
-                font-weight: 700;
-                line-height: 1.25;
-                margin-bottom: 14px;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-            }}
-            .hero-desc {{
-                color: #f3f4f6;
-                font-size: 15px;
-                line-height: 1.65;
-                margin-bottom: 22px;
-                text-shadow: 0 1px 3px rgba(0,0,0,0.7);
-            }}
-            .feature-box-pink {{
-                background: rgba(45, 20, 30, 0.75);
-                backdrop-filter: blur(10px);
-                color: #ffffff;
-                padding: 18px 16px;
-                border-radius: 16px;
-                border: 1px solid rgba(251, 191, 36, 0.3);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-                height: 100%;
-            }}
-            .section-heading {{
-                text-align: center;
-                color: #fef08a;
-                font-family: 'Playfair Display', serif;
-                font-size: 24px;
-                font-weight: 600;
-                margin: 32px 0 18px 0;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.7);
-            }}
-            .security-box {{
-                background: rgba(30, 10, 20, 0.85);
-                backdrop-filter: blur(10px);
-                color: #ffffff;
-                padding: 22px 24px;
-                border-radius: 16px;
-                border: 1px solid rgba(251, 191, 36, 0.4);
-                margin-top: 24px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-            }}
-            </style>
-        """, unsafe_allow_html=True)
+    is_session_active = st.session_state.get("is_session_active", False)
+
+    # Styling CSS Kustom untuk Kartu Alur Navigasi
+    st.markdown("""
+        <style>
+        .step-nav-card {
+            background: #ffffff;
+            border: 2px solid #fda4af;
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.08);
+            margin-bottom: 10px;
+        }
+        .step-circle {
+            background: #be123c;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(190, 18, 60, 0.3);
+        }
+        .step-title {
+            color: #881337;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        .step-desc {
+            color: #78716c;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
     st.markdown("🧭 **Alur Aplikasi:**")
 
@@ -602,23 +573,25 @@ else:
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
-# =========================================================
-    # PENENTUAN MENU AKTIF (ACTIVE STEP)
-    # =========================================================
+    # Definisikan mapping menu aktif
     full_menu_list = [
         "1️⃣ Panduan Aplikasi ➡️",
         "2️⃣ Desain & Preview Undangan ➡️",
         "3️⃣ Buat Link Undangan ➡️",
         "4️⃣ Manajemen RSVP Tamu"
     ]
-    
     if is_session_active:
         menu_steps_mapping = full_menu_list[2:]
     else:
         menu_steps_mapping = full_menu_list
 
-    # Pastikan baris ini ada agar variabel active_step tidak kosong/undefined
+    # Inisialisasi variabel active_step secara aman
     active_step = menu_steps_mapping[st.session_state["active_step_idx"] if not is_session_active else (st.session_state["active_step_idx"] - 2)]
+
+    # Pengecekan tahap aktif untuk Panduan Aplikasi
+    if "Panduan Aplikasi" in active_step:
+        # Menggunakan URL langsung gambar latar belakang sakura agar terbaca di Streamlit Cloud
+        sakura_bg_url = "https://images.unsplash.com/photo-1522364723953-452d3431c267?auto=format&fit=crop&w=1920&q=80"
 
     # =========================================================
     # KONTEN BERDASARKAN ACTIVE STEP
