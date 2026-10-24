@@ -507,17 +507,6 @@ else:
         # Style CSS Kustom - Soft Pink Sakura Japanese Theme
         st.markdown("""
             <style>
-            .landing-wrapper {
-                background: linear-gradient(160deg, #fff1f2 0%, #ffe4e6 40%, #fecdd3 100%);
-                padding: 32px 28px;
-                border-radius: 24px;
-                border: 1px solid #fda4af;
-                color: #4c0519;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                box-shadow: 0 10px 30px rgba(190, 18, 60, 0.08);
-                position: relative;
-                overflow: hidden;
-            }
             .landing-wrapper::before {
                 content: "🌸";
                 position: absolute;
