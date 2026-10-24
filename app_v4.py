@@ -602,24 +602,29 @@ else:
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
+# =========================================================
+    # PENENTUAN MENU AKTIF (ACTIVE STEP)
+    # =========================================================
     full_menu_list = [
         "1️⃣ Panduan Aplikasi ➡️",
         "2️⃣ Desain & Preview Undangan ➡️",
         "3️⃣ Buat Link Undangan ➡️",
         "4️⃣ Manajemen RSVP Tamu"
     ]
+    
     if is_session_active:
         menu_steps_mapping = full_menu_list[2:]
     else:
         menu_steps_mapping = full_menu_list
 
+    # Pastikan baris ini ada agar variabel active_step tidak kosong/undefined
     active_step = menu_steps_mapping[st.session_state["active_step_idx"] if not is_session_active else (st.session_state["active_step_idx"] - 2)]
 
     # =========================================================
-    # 2. HALAMAN TAHAP 1 DENGAN BACKGROUND FULL LAYAR & KOTAK TRANSPARAN
+    # KONTEN BERDASARKAN ACTIVE STEP
     # =========================================================
-    
     if "Panduan Aplikasi" in active_step:
+        # Kode styling CSS & tampilan Tahap 1 Anda di sini...
         # Style CSS Kustom dengan Background Penuh Gambar & Efek Kaca Transparan (Glassmorphism)
         st.markdown(f"""
             <style>
