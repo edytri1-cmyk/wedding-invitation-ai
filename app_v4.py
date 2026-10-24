@@ -504,40 +504,111 @@ else:
     # =========================================================
     
     if "Panduan Aplikasi" in active_step:
-        st.subheader("📖 1. Panduan Aplikasi")
+        # Style CSS Kustom untuk Tampilan Landing Page Mewah & Sakura Soft
+        st.markdown("""
+            <style>
+            .hero-container {
+                background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+                padding: 35px;
+                border-radius: 20px;
+                border: 1px solid #ffb6c1;
+                box-shadow: 0 10px 25px rgba(255, 182, 193, 0.2);
+                margin-bottom: 25px;
+            }
+            .feature-card {
+                background: #1e1e24;
+                padding: 20px;
+                border-radius: 15px;
+                border: 1px solid rgba(251, 191, 36, 0.3);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                height: 100%;
+            }
+            .security-box {
+                background: rgba(20, 20, 25, 0.7);
+                padding: 20px;
+                border-radius: 15px;
+                border: 1px solid rgba(251, 191, 36, 0.2);
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        # 1. HERO SECTION (BANNER UTAMA)
+        st.markdown("""
+            <div class="hero-container">
+                <h1 style="color: #9b111e; font-family: 'Playfair Display', serif; font-size: 34px; font-weight: bold; margin-bottom: 10px;">
+                    🌸 Undang Tamu Anda dengan Keindahan & Kemudahan
+                </h1>
+                <p style="color: #444; font-size: 15px; line-height: 1.6;">
+                    Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. Inspirasi estetika Jepang, sentuhan mewah berbalut emas, untuk hari spesial yang tak terlupakan.
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # 2. FITUR UTAMA DALAM KOTAK ELEGAN
+        st.markdown("### ✨ Fitur Unggulan Platform")
+        col_f1, col_f2, col_f3 = st.columns(3)
         
+        with col_f1:
+            st.markdown("""
+                <div class="feature-card">
+                    <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 8px;">🎨 Custom Templates</h4>
+                    <p style="font-size: 12px; color: #d1d5db;">Pilihan tema eksklusif bernuansa sakura dan klasik mewah yang dapat dikustomisasi.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col_f2:
+            st.markdown("""
+                <div class="feature-card">
+                    <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 8px;">💌 RSVP Real-time</h4>
+                    <p style="font-size: 12px; color: #d1d5db;">Konfirmasi kehadiran tamu, ucapan, dan doa terekam secara otomatis dan akurat.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col_f3:
+            st.markdown("""
+                <div class="feature-card">
+                    <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 8px;">🎵 Music & Animation</h4>
+                    <p style="font-size: 12px; color: #d1d5db;">Dilengkapi pemutar musik latar belakang romantis serta ornamen kelopak bunga melayang.</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # 3. CARA PENGGUNAAN & KEAMANAN DATA (2 KOLOM)
         col_info1, col_info2 = st.columns(2)
+        
         with col_info1:
             st.markdown("""
-            ### 🌟 Tentang Aplikasi
-            **Wedding AI Generator** adalah platform pembuatan undangan pernikahan digital cerdas berbasis AI. 
-            Anda dapat mendesain undangan impian, mengatur musik latar belakang, menyebar undangan secara massal ke WhatsApp, 
-            serta memantau kehadiran tamu (RSVP) secara real-time.
-            
-            ### 🚀 Cara Penggunaan:
-            1. **Pahami & Setujui** Syarat dan Ketentuan di halaman ini.
-            2. Lanjut ke **Tahap 2**: Isi data mempelai, upload foto galeri, pilih tema AI, dan atur backsound musik. Generate undangan dan lihat preview-nya secara langsung.
-            3. Lanjut ke **Tahap 3**: Lakukan pembayaran , konfirmasi pembayaran, masukkan kode aktivasi yang dikirim admin via email untuk membuka akses penuh selama 30 hari.
-            4. Lanjut ke **Tahap 4**: Pantau kehadiran tamu (RSVP) dan ucapan doa yang masuk ke buku tamu digital Anda.
+                ### 🚀 Panduan & Cara Penggunaan:
+                1. **Setujui Ketentuan** - Centang kotak persetujuan di bawah halaman ini.
+                2. **Desain & Preview** - Masuk ke **Tahap 2**: Isi data mempelai, unggah foto galeri, pilih tema AI, dan atur musik.
+                3. **Aktivasi & Pembayaran** - Masuk ke **Tahap 3**: Lakukan pembayaran untuk mengaktifkan akses penuh undangan digital Anda.
+                4. **Manajemen RSVP** - Masuk ke **Tahap 4**: Pantau kehadiran tamu dan daftar ucapan yang masuk secara *real-time*.
             """)
-        
+            
         with col_info2:
             st.markdown("""
-            ### 🔒 Jaminan Keamanan & Privasi Data
-            * **Enkripsi Data:** Seluruh data pribadi dan foto tidak disimpan di server.
-            * **Kerahasiaan Kontak Tamu:** Data nama tamu yang Anda Unggah dijamin aman.
-            * **Kendali Penuh:** Anda memiliki kendali penuh untuk memperbarui data kapan saja.
-            """)
-        
+                <div class="security-box">
+                    <h3 style="color: #fef08a; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Privasi Data</h3>
+                    <ul style="font-size: 13px; color: #e5e7eb; padding-left: 18px; line-height: 1.6;">
+                        <li><b>Enkripsi Data:</b> Seluruh data pribadi dan informasi acara dilindungi dengan sistem keamanan terbaik.</li>
+                        <li><b>Kerahasiaan Tamu:</b> Daftar nama dan nomor kontak tamu yang diunggah dijamin aman.</li>
+                        <li><b>Kendali Penuh:</b> Anda memiliki hak penuh untuk memperbarui atau mengubah data kapan saja.</li>
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
+
         st.markdown("---")
-        agreement = st.checkbox("Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data.", value=st.session_state["agreed_terms"])
+        
+        # 4. KOTAK PERSETUJUAN (AGREEMENT CHECKBOX)
+        agreement = st.checkbox("Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", value=st.session_state.get("agreed_terms", False))
         
         if agreement:
             st.session_state["agreed_terms"] = True
-            st.success("✅ Anda telah menyetujui ketentuan. Silakan klik menu **'2️⃣ Desain & Preview Undangan'** di atas untuk melanjutkan.")
+            st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** untuk mulai merancang undangan!")
         else:
             st.session_state["agreed_terms"] = False
-            st.warning("⚠️ Harap centang kotak persetujuan di atas untuk melanjutkan ke tahap berikutnya.")
+            st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
 
     elif "Desain & Preview Undangan" in active_step:
         if not st.session_state.get("agreed_terms", False):
