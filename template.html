@@ -38,7 +38,7 @@
          * ESTETIKA LUXURY & ORNAMEN BUNGA (GOLD ACCENTS & FLORALS)
          * --------------------------------------------------------- */
         
-        /* Bingkai Kartu Undangan Klasik Mewah (Transparan 55%, Garis Tipis Gold) */
+        /* Bingkai Kartu Undangan Klasik Mewah (Untuk Teks & Konten) */
         .luxury-card {
             background: rgba(255, 245, 247, 0.55);
             backdrop-filter: blur(12px);
@@ -56,6 +56,16 @@
             border: 0.5px dashed rgba(212, 175, 55, 0.4);
             pointer-events: none;
             border-radius: 0.75rem;
+        }
+
+        /* Khusus Wrapper Foto Tanpa Garis Bingkai */
+        .photo-wrapper {
+            background: rgba(255, 245, 247, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         /* Efek Teks Kilau Emas (Gold Shimmer Text) */
@@ -158,9 +168,9 @@
                     {% endif %}
                 </div>
 
-                <!-- Foto Utama dengan Bingkai Mewah -->
-                <div class="w-full max-w-xs p-2 luxury-card mb-4">
-                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl border border-amber-400/30">
+                <!-- Foto Utama Tanpa Garis Bingkai Kotak -->
+                <div class="w-full max-w-xs photo-wrapper mb-4">
+                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl">
                 </div>
 
                 <!-- BUNGKUSAN LUXURY CARD UNTUK QUOTE / KATA-KATA INDAH -->
@@ -198,13 +208,13 @@
                 </div>
             </section>
             
-            <!-- SECTION 2: GALERI FOTO -->
+            <!-- SECTION 2: GALERI FOTO TANPA LIS/BINGKAI KOTAK -->
             {% if gallery_photos %}
                 {% for item in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
                     <p class="text-xs uppercase tracking-[0.2em] text-amber-700 mb-3 font-bold">Momen Bahagia Kami</p>
-                    <div class="w-full luxury-card p-3">
-                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl border border-amber-400/30">
+                    <div class="w-full photo-wrapper p-3">
+                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl">
                         {% if item.caption %}
                         <p class="text-sm text-center font-serif-custom italic mt-3 text-slate-800 px-2 font-medium">
                             "{{ item.caption }}"
