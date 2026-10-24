@@ -688,11 +688,11 @@ else:
             
             btn_c1, btn_c2 = st.columns(2)
             with btn_c1:
-                if st.button("🌸 Buat Undangan Sekarang", type="primary", use_container_width=True):
+                if st.button("🌸 Lihat Demo", type="primary", use_container_width=True):
                     st.session_state["agreed_terms"] = True
                     st.rerun()
-            with btn_c2:
-                st.button("▶ Lihat Demo", use_container_width=True)
+            #with btn_c2:
+            #    st.button("▶ Lihat Demo", use_container_width=True)
     
         with hero_col2:
             st.markdown("""
