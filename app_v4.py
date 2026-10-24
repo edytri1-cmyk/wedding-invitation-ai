@@ -529,8 +529,8 @@ else:
     steps_info = [
         {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & tekan centang (v) untuk setujui syarat."},
         {"num": "2", "title": "Desain & Preview", "desc": "Isi data mempelai, tanggal pernikahan, tema, upload foto & pilihan music latar."},
-        {"num": "3", "title": "Buat Link Undangan", "desc": "Aktivasi Layanan."},
-        {"num": "4", "title": "Manajemen RSVP", "desc": "Pantau kehadiran & cek ucapan dari tamu."}
+        {"num": "3", "title": "Buat Link Undangan", "desc": "Aktivasi Layanan, Desain Narasi Undangan, Upload data CSV Undangan, Download Link Undangan."},
+        {"num": "4", "title": "Manajemen RSVP", "desc": "Pantau kehadiran Undangan & cek ucapan dari para tamu."}
     ]
 
     # Jika sesi aktif, batasi hanya 2 tahap terakhir
