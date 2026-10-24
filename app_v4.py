@@ -173,17 +173,6 @@ def save_order_to_gsheets(order_id, token, status, user_id):
         st.error(f"Gagal menyimpan ke Google Sheets: {e}")
         return False
 
-# Fungsi pendukung untuk mengubah gambar lokal menjadi base64
-def get_base64_of_image(image_path):
-    if os.path.exists(image_path):
-        with open(image_path, "rb") as f:
-            data = f.read()
-        return base64.b64encode(data).decode()
-    return ""
-
-# Ambil string base64 dari file gambar latar belakang Anda
-img_base64 = get_base64_of_image("mempelai pink bunga sakura.jpg")
-
 # ==========================================
 # 1. PENANGKAP TOKEN URL VIA GOOGLE SHEETS
 # ==========================================
@@ -483,7 +472,7 @@ else:
     <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
         💍 Wedding AI Invitation Generator
     </h3>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
@@ -494,7 +483,7 @@ else:
 
     is_session_active = st.session_state.get("is_session_active", False)
 
-    # Styling CSS Kustom untuk Kartu Alur Navigasi
+    # Styling CSS Kustom untuk Kartu Alur Navigasi ala Gambar 2
     st.markdown("""
         <style>
         .step-nav-card {
@@ -560,6 +549,7 @@ else:
         info = subset_steps[idx]
         
         with col:
+            # Tampilan visual kartu
             st.markdown(f"""
                 <div class="step-nav-card" style="border-color: {'#be123c' if st.session_state['active_step_idx'] == real_idx else '#fda4af'};">
                     <div class="step-circle">{info['num']}</div>
@@ -568,12 +558,15 @@ else:
                 </div>
             """, unsafe_allow_html=True)
             
+            # Tombol pilih menu
             btn_label = f"Pilih Tahap {info['num']}"
             if st.button(btn_label, key=f"nav_btn_{real_idx}", use_container_width=True):
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
-    # Definisikan mapping menu aktif
+    #st.markdown("---")
+
+    # Tentukan string active_step agar kompatibel dengan logika kode di bawahnya
     full_menu_list = [
         "1️⃣ Panduan Aplikasi ➡️",
         "2️⃣ Desain & Preview Undangan ➡️",
@@ -585,93 +578,85 @@ else:
     else:
         menu_steps_mapping = full_menu_list
 
-    # Inisialisasi variabel active_step secara aman
     active_step = menu_steps_mapping[st.session_state["active_step_idx"] if not is_session_active else (st.session_state["active_step_idx"] - 2)]
 
-    # Pengecekan tahap aktif untuk Panduan Aplikasi
-    if "Panduan Aplikasi" in active_step:
-        # Menggunakan URL langsung gambar latar belakang sakura agar terbaca di Streamlit Cloud
-        sakura_bg_url = "https://images.unsplash.com/photo-1522364723953-452d3431c267?auto=format&fit=crop&w=1920&q=80"
-
     # =========================================================
-    # KONTEN BERDASARKAN ACTIVE STEP
+    # 2. PENCOCOKAN KONTEN BERDASARKAN KATA KUNCI (Tanpa Indeks)
     # =========================================================
+    
     if "Panduan Aplikasi" in active_step:
-        # Kode styling CSS & tampilan Tahap 1 Anda di sini...
-        # Style CSS Kustom dengan Background Penuh Gambar & Efek Kaca Transparan (Glassmorphism)
-        st.markdown(f"""
+        # Style CSS Kustom - Soft Pink Sakura Japanese Theme
+        st.markdown("""
             <style>
-            /* Mengatur background gambar penuh layar pada aplikasi */
-            .stApp {{
-                background-image: linear-gradient(rgba(30, 10, 20, 0.6), rgba(30, 10, 20, 0.6)), url("data:image/jpeg;base64,{img_base64}");
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-            }}
-            
-            .landing-wrapper {{
-                background: rgba(20, 20, 25, 0.65);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                padding: 35px;
-                border-radius: 24px;
-                border: 1px solid rgba(251, 191, 36, 0.3);
-                color: #ffffff;
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            }}
-            .hero-title {{
-                color: #fef08a;
+            .landing-wrapper::before {
+                content: "🌸";
+                position: absolute;
+                font-size: 120px;
+                opacity: 0.06;
+                top: -20px;
+                right: 20px;
+                transform: rotate(15deg);
+            }
+            .hero-title {
+                color: #9f1239;
                 font-family: 'Playfair Display', serif;
                 font-size: 36px;
                 font-weight: 700;
                 line-height: 1.25;
                 margin-bottom: 14px;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-            }}
-            .hero-desc {{
-                color: #f3f4f6;
+            }
+            .hero-desc {
+                color: #9f1239;
                 font-size: 15px;
                 line-height: 1.65;
                 margin-bottom: 22px;
-                text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-            }}
-            .feature-box-pink {{
-                background: rgba(30, 20, 25, 0.75);
+                opacity: 0.9;
+            }
+            .feature-box-pink {
+                background: rgba(255, 255, 255, 0.75);
                 backdrop-filter: blur(8px);
-                color: #ffffff;
+                color: #4c0519;
                 padding: 18px 16px;
                 border-radius: 16px;
-                border: 1px solid rgba(251, 191, 36, 0.3);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+                border: 1px solid #fda4af;
+                box-shadow: 0 6px 18px rgba(190, 18, 60, 0.08);
                 height: 100%;
                 transition: all 0.3s ease;
-            }}
-            .feature-box-pink:hover {{
+            }
+            .feature-box-pink:hover {
                 transform: translateY(-5px);
-                border-color: rgba(251, 191, 36, 0.7);
-                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
-            }}
-            .section-heading {{
+                background: #fff;
+                box-shadow: 0 12px 24px rgba(190, 18, 60, 0.12);
+            }
+            .step-card-pink {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(6px);
+                color: #4c0519;
+                padding: 20px 14px;
+                border-radius: 16px;
+                border: 1px solid #fda4af;
                 text-align: center;
-                color: #fef08a;
+                box-shadow: 0 6px 16px rgba(190, 18, 60, 0.07);
+                height: 100%;
+            }
+            .section-heading {
+                text-align: center;
+                color: #9f1239;
                 font-family: 'Playfair Display', serif;
                 font-size: 24px;
                 font-weight: 600;
                 margin: 32px 0 18px 0;
                 letter-spacing: 0.3px;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-            }}
-            .security-box {{
-                background: rgba(20, 10, 15, 0.85);
-                backdrop-filter: blur(10px);
-                color: #ffffff;
+            }
+            .security-box {
+                background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
+                color: #fff;
                 padding: 22px 24px;
                 border-radius: 16px;
-                border: 1px solid rgba(251, 191, 36, 0.4);
+                border: 1px solid #e11d48;
                 margin-top: 24px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            }}
+                box-shadow: 0 8px 20px rgba(136, 19, 55, 0.18);
+            }
             </style>
         """, unsafe_allow_html=True)
     
@@ -684,7 +669,7 @@ else:
         with hero_col1:
             st.markdown("""
                 <div style="padding-top: 10px;">
-                    <span style="background: rgba(255, 182, 193, 0.25); color: #fef08a; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; border: 1px solid rgba(251, 191, 36, 0.3);">
+                    <span style="background: #ffe4e6; color: #9f1239; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px;">
                         🌸 Wedding Invitation Online • Nuansa Sakura
                     </span>
                     <h1 class="hero-title" style="margin-top: 18px;">
@@ -692,7 +677,7 @@ else:
                     </h1>
                     <p class="hero-desc">
                         Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. 
-                        Kami membantu anda menciptakan undangan pernikahan digital yang indah, modern, 
+                        kami membantu anda menciptakan undangan pernikahan digital yang indah, modern, 
                         dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada cinta kalian.
                     </p>
                 </div>
@@ -708,7 +693,7 @@ else:
     
         with hero_col2:
             st.markdown("""
-                <div style="border-radius: 20px; overflow: hidden; border: 3px solid rgba(251, 191, 36, 0.4); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);">
+                <div style="border-radius: 20px; overflow: hidden; border: 3px solid #fda4af; box-shadow: 0 14px 32px rgba(190, 18, 60, 0.15);">
                     <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" 
                          style="width: 100%; height: 310px; object-fit: cover;">
                 </div>
@@ -723,22 +708,22 @@ else:
         with f_col1:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎨 Custom Design Templates</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Pilihan tema eksklusif bernuansa sakura, blush gold & klasik mewah yang bisa dikustomisasi.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🎨 Custom Design Templates</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Pilihan tema eksklusif bernuansa sakura, blush gold & klasik mewah yang bisa dikustomisasi.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col2:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Konfirmasi kehadiran tamu secara real-time dengan dashboard yang mudah dipantau.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">💌 RSVP Real-time</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Konfirmasi kehadiran tamu secara real-time dengan dashboard yang mudah dipantau.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col3:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🎵 Music & Animation</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Tambahkan musik romantis dan animasi kelopak sakura yang lembut.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🎵 Music & Animation</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Tambahkan musik romantis dan animasi kelopak sakura yang lembut.</p>
                 </div>
             """, unsafe_allow_html=True)
     
@@ -748,22 +733,22 @@ else:
         with f_col4:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">📖 Guest Book</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Tamu dapat meninggalkan ucapan & doa terbaik untuk kalian berdua.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">📖 Guest Book</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Tamu dapat meninggalkan ucapan & doa terbaik untuk kalian berdua.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col5:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🖼️ Photo Gallery</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Galeri foto interaktif untuk kenangan spesial hari bahagia kalian.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🖼️ Photo Gallery</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Galeri foto interaktif untuk kenangan spesial hari bahagia kalian.</p>
                 </div>
             """, unsafe_allow_html=True)
         with f_col6:
             st.markdown("""
                 <div class="feature-box-pink">
-                    <h4 style="color: #fef08a; font-size: 15px; margin-bottom: 6px;">🌐 Multi Create Link Undangan</h4>
-                    <p style="font-size: 12.5px; color: #e5e7eb; margin: 0;">Buat Undangan Digital tanpa batasan jumlah undangan.</p>
+                    <h4 style="color: #be123c; font-size: 15px; margin-bottom: 6px;">🌐 Multi Create Link Undangan</h4>
+                    <p style="font-size: 12.5px; color: #9f1239; margin: 0;">Buat Undangan Digital tanpa batasan jumlah undangan.</p>
                 </div>
             """, unsafe_allow_html=True)
     
@@ -771,7 +756,7 @@ else:
         st.markdown("""
             <div class="security-box">
                 <h4 style="color: #fef08a; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Data Privacy</h4>
-                <p style="font-size: 13px; color: #f3f4f6; margin-bottom: 0; line-height: 1.6;">
+                <p style="font-size: 13px; color: #ffe4e6; margin-bottom: 0; line-height: 1.6;">
                     Seluruh data pribadi, informasi acara, dan daftar kontak tamu Anda dilindungi dengan enkripsi tingkat tinggi (SSL). 
                     Kami menjamin kerahasiaan data sesuai standar internasional. Anda memiliki kendali penuh untuk memperbarui atau menghapus data kapan saja.
                 </p>
