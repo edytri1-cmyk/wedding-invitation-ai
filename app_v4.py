@@ -559,7 +559,7 @@ else:
             """, unsafe_allow_html=True)
             
             # Tombol pilih menu dengan warna dinamis (Primary jika aktif, Secondary jika tidak)
-            btn_label = f"Pilih Tahap {info['num']}"
+            btn_label = f"Tahap {info['num']}"
             is_active = (st.session_state["active_step_idx"] == real_idx)
             btn_type = "primary" if is_active else "secondary"
             
