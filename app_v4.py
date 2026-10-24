@@ -698,7 +698,7 @@ else:
                 </div>
             """, unsafe_allow_html=True)
     
-        st.markdown("<br><hr style='border: none; border-top: 1px solid #fda4af; opacity: 0.6; margin: 10px 0 5px 0;'>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
     
         # 2. TENTANG APLIKASI
         st.markdown('<h2 class="section-heading">🌸 Tentang Aplikasi</h2>', unsafe_allow_html=True)
