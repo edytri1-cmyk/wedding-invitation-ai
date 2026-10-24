@@ -525,7 +525,7 @@ else:
 
     st.markdown("🧭 **Alur Aplikasi:**")
 
-    # Daftar tahapan alur beserta deskripsinya
+# Daftar tahapan alur beserta deskripsinya
     steps_info = [
         {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & setujui syarat."},
         {"num": "2", "title": "Desain & Preview", "desc": "Isi data mempelai, foto & tema."},
@@ -558,9 +558,12 @@ else:
                 </div>
             """, unsafe_allow_html=True)
             
-            # Tombol pilih menu
+            # Tombol pilih menu dengan warna dinamis (Primary jika aktif, Secondary jika tidak)
             btn_label = f"Pilih Tahap {info['num']}"
-            if st.button(btn_label, key=f"nav_btn_{real_idx}", use_container_width=True):
+            is_active = (st.session_state["active_step_idx"] == real_idx)
+            btn_type = "primary" if is_active else "secondary"
+            
+            if st.button(btn_label, key=f"nav_btn_{real_idx}", type=btn_type, use_container_width=True):
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
