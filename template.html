@@ -38,12 +38,13 @@
          * ESTETIKA LUXURY & ORNAMEN BUNGA (GOLD ACCENTS & FLORALS)
          * --------------------------------------------------------- */
         
-        /* Bingkai Kartu Undangan Klasik Mewah */
+        /* Bingkai Kartu Undangan Klasik Mewah (Transparan 55%, Garis Tipis Gold) */
         .luxury-card {
-            background: rgba(20, 20, 25, 0.75);
+            background: rgba(255, 245, 247, 0.55);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(251, 191, 36, 0.35);
-            box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.08), 0 10px 30px rgba(0, 0, 0, 0.6);
+            -webkit-backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(212, 175, 55, 0.6);
+            box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.1), 0 10px 30px rgba(0, 0, 0, 0.15);
             position: relative;
             border-radius: 1rem;
         }
@@ -51,18 +52,18 @@
         .luxury-card::before {
             content: '';
             position: absolute;
-            top: 6px; left: 6px; right: 6px; bottom: 6px;
-            border: 1px dashed rgba(251, 191, 36, 0.2);
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 0.5px dashed rgba(212, 175, 55, 0.4);
             pointer-events: none;
             border-radius: 0.75rem;
         }
 
         /* Efek Teks Kilau Emas (Gold Shimmer Text) */
         .gold-shimmer {
-            background: linear-gradient(135deg, #fef08a 0%, #d97706 50%, #fef08a 100%);
+            background: linear-gradient(135deg, #b45309 0%, #78350f 50%, #b45309 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.6));
         }
 
         /* Ornamen Kelopak Bunga & Daun Melayang (Floating Floral Accents) */
@@ -145,53 +146,53 @@
             <!-- SECTION 1: COVER UTAMA -->
             <section class="content-section flex flex-col items-center justify-center text-center py-10 min-h-[85vh]">
                 <div class="space-y-3 mb-6 text-center">
-                    <p class="text-xs tracking-[0.25em] uppercase text-amber-300/80 font-medium">The Wedding Of</p>
+                    <p class="text-xs tracking-[0.25em] uppercase text-amber-700 font-bold">The Wedding Of</p>
                     <h1 class="text-4xl font-serif-custom font-semibold tracking-wide gold-shimmer">
-                        {{ groom_name }} <span class="text-2xl text-amber-400 font-normal">&</span> {{ bride_name }}
+                        {{ groom_name }} <span class="text-2xl text-amber-600 font-normal">&</span> {{ bride_name }}
                     </h1>
                     {% if guest_name %}
                     <div class="mt-4 p-3 luxury-card inline-block">
-                        <p class="text-[10px] uppercase tracking-widest text-amber-200/70">Kepada Yth.</p>
-                        <p class="text-base font-semibold font-serif-custom text-amber-300">{{ guest_name }}</p>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-700 font-bold">Kepada Yth.</p>
+                        <p class="text-base font-semibold font-serif-custom text-slate-900">{{ guest_name }}</p>
                     </div>
                     {% endif %}
                 </div>
 
                 <!-- Foto Utama dengan Bingkai Mewah -->
                 <div class="w-full max-w-xs p-2 luxury-card mb-4">
-                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl border border-amber-400/20">
+                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl border border-amber-400/30">
                 </div>
 
                 <!-- BUNGKUSAN LUXURY CARD UNTUK QUOTE / KATA-KATA INDAH -->
                 <div class="w-full max-w-xs p-4 luxury-card my-2 space-y-2 text-center">
-                    <p class="text-xs italic font-serif-custom text-amber-100/90 leading-relaxed">
+                    <p class="text-xs italic font-serif-custom text-slate-800 leading-relaxed font-medium">
                         "{{ quote_text }}"
                     </p>
                 </div>
 
                 <div class="space-y-2 mt-2">
-                    <div class="animate-bounce pt-2 text-xs text-amber-300/70">👇 Gulir ke bawah untuk melihat undangan</div>
+                    <div class="animate-bounce pt-2 text-xs text-amber-700 font-bold">👇 Gulir ke bawah untuk melihat undangan</div>
                 </div>
 
                 <!-- Countdown Timer -->
                 <div class="w-full my-4 p-4 luxury-card text-center">
-                    <p class="text-xs uppercase tracking-widest text-amber-300 mb-3 font-semibold">⏳ Menghitung Hari Menjelang Acara</p>
+                    <p class="text-xs uppercase tracking-widest text-amber-800 mb-3 font-bold">⏳ Menghitung Hari Menjelang Acara</p>
                     <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
-                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
-                            <span id="cd-days" class="block text-xl font-bold gold-shimmer">00</span>
-                            <span class="text-[10px] text-amber-200/70 uppercase">Hari</span>
+                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
+                            <span id="cd-days" class="block text-xl font-bold text-amber-900">00</span>
+                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Hari</span>
                         </div>
-                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
-                            <span id="cd-hours" class="block text-xl font-bold gold-shimmer">00</span>
-                            <span class="text-[10px] text-amber-200/70 uppercase">Jam</span>
+                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
+                            <span id="cd-hours" class="block text-xl font-bold text-amber-900">00</span>
+                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Jam</span>
                         </div>
-                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
-                            <span id="cd-minutes" class="block text-xl font-bold gold-shimmer">00</span>
-                            <span class="text-[10px] text-amber-200/70 uppercase">Menit</span>
+                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
+                            <span id="cd-minutes" class="block text-xl font-bold text-amber-900">00</span>
+                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Menit</span>
                         </div>
-                        <div class="p-2 bg-black/40 rounded-xl border border-amber-400/20">
-                            <span id="cd-seconds" class="block text-xl font-bold gold-shimmer">00</span>
-                            <span class="text-[10px] text-amber-200/70 uppercase">Detik</span>
+                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
+                            <span id="cd-seconds" class="block text-xl font-bold text-amber-900">00</span>
+                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Detik</span>
                         </div>
                     </div>
                 </div>
@@ -201,11 +202,11 @@
             {% if gallery_photos %}
                 {% for item in gallery_photos %}
                 <section class="content-section flex flex-col items-center justify-center py-6">
-                    <p class="text-xs uppercase tracking-[0.2em] text-amber-300/80 mb-3">Momen Bahagia Kami</p>
+                    <p class="text-xs uppercase tracking-[0.2em] text-amber-700 mb-3 font-bold">Momen Bahagia Kami</p>
                     <div class="w-full luxury-card p-3">
-                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl border border-amber-400/20">
+                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl border border-amber-400/30">
                         {% if item.caption %}
-                        <p class="text-sm text-center font-serif-custom italic mt-3 text-amber-100/90 px-2">
+                        <p class="text-sm text-center font-serif-custom italic mt-3 text-slate-800 px-2 font-medium">
                             "{{ item.caption }}"
                         </p>
                         {% endif %}
@@ -220,12 +221,12 @@
                 
                 <!-- Akad Nikah -->
                 <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
-                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/40">
+                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-900 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-500/40">
                         💍 Akad Nikah
                     </span>
-                    <p class="text-sm font-semibold pt-1 text-amber-100">📅 {{ akad_day }}, {{ akad_date }}</p>
-                    <p class="text-xs text-amber-200/90">⏰ Pukul {{ akad_time }}</p>
-                    <p class="text-xs text-amber-100/80 px-2">📍 {{ akad_location }}</p>
+                    <p class="text-sm font-bold pt-1 text-slate-900">📅 {{ akad_day }}, {{ akad_date }}</p>
+                    <p class="text-xs text-slate-800 font-semibold">⏰ Pukul {{ akad_time }}</p>
+                    <p class="text-xs text-slate-700 px-2 font-medium">📍 {{ akad_location }}</p>
                     {% if akad_maps_url %}
                     <a href="{{ akad_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
                         🗺️ Google Maps Akad
@@ -235,12 +236,12 @@
 
                 <!-- Resepsi Pernikahan -->
                 <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
-                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-300 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-400/40">
+                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-900 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-500/40">
                         🥳 Resepsi Pernikahan
                     </span>
-                    <p class="text-sm font-semibold pt-1 text-amber-100">📅 {{ resep_day }}, {{ resep_date }}</p>
-                    <p class="text-xs text-amber-200/90">⏰ Pukul {{ resep_time }}</p>
-                    <p class="text-xs text-amber-100/80 px-2">📍 {{ resep_location }}</p>
+                    <p class="text-sm font-bold pt-1 text-slate-900">📅 {{ resep_day }}, {{ resep_date }}</p>
+                    <p class="text-xs text-slate-800 font-semibold">⏰ Pukul {{ resep_time }}</p>
+                    <p class="text-xs text-slate-700 px-2 font-medium">📍 {{ resep_location }}</p>
                     {% if resep_maps_url %}
                     <a href="{{ resep_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
                         🗺️ Google Maps Resepsi
@@ -253,19 +254,19 @@
                 <div class="luxury-card p-5 text-center space-y-3">
                     {% if turut_mengundang %}
                     <div>
-                        <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🤝 Turut Mengundang</p>
-                        <p class="text-xs text-amber-100/90 whitespace-pre-line leading-relaxed">{{ turut_mengundang }}</p>
+                        <p class="text-xs font-bold text-amber-800 mb-1 tracking-wider uppercase">🤝 Turut Mengundang</p>
+                        <p class="text-xs text-slate-800 whitespace-pre-line leading-relaxed font-medium">{{ turut_mengundang }}</p>
                     </div>
                     {% endif %}
 
                     {% if turut_mengundang and bank_info %}
-                    <hr class="border-amber-400/20 my-2">
+                    <hr class="border-amber-500/30 my-2">
                     {% endif %}
 
                     {% if bank_info %}
                     <div>
-                        <p class="text-xs font-semibold text-amber-300 mb-1 tracking-wider uppercase">🎁 Amplop Digital</p>
-                        <p class="text-xs text-amber-100/90">{{ bank_info }}</p>
+                        <p class="text-xs font-bold text-amber-800 mb-1 tracking-wider uppercase">🎁 Amplop Digital</p>
+                        <p class="text-xs text-slate-800 font-medium">{{ bank_info }}</p>
                     </div>
                     {% endif %}
                 </div>
@@ -273,22 +274,22 @@
 
                 <!-- Form RSVP -->
                 <div class="luxury-card p-5 space-y-3" id="rsvp-card">
-                    <p class="text-xs font-semibold text-center text-amber-300 uppercase tracking-widest">Konfirmasi Kehadiran</p>
+                    <p class="text-xs font-bold text-center text-amber-800 uppercase tracking-widest">Konfirmasi Kehadiran</p>
                     <div>
-                        <label class="text-[10px] text-amber-200/80">Nama Anda:</label>
-                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 focus:outline-none focus:border-amber-400">
+                        <label class="text-[10px] text-slate-700 font-bold">Nama Anda:</label>
+                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 focus:outline-none focus:border-amber-600">
                     </div>
                     <div>
-                        <label class="text-[10px] text-amber-200/80">Kehadiran:</label>
-                        <select id="rsvp-status" class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 focus:outline-none focus:border-amber-400">
-                            <option class="bg-slate-900">Hadir</option>
-                            <option class="bg-slate-900">Ragu-ragu</option>
-                            <option class="bg-slate-900">Maaf, Tidak Bisa Hadir</option>
+                        <label class="text-[10px] text-slate-700 font-bold">Kehadiran:</label>
+                        <select id="rsvp-status" class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 focus:outline-none focus:border-amber-600">
+                            <option class="bg-white text-slate-900">Hadir</option>
+                            <option class="bg-white text-slate-900">Ragu-ragu</option>
+                            <option class="bg-white text-slate-900">Maaf, Tidak Bisa Hadir</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-amber-200/80">Ucapan & Doa:</label>
-                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-2 mt-0.5 rounded-lg bg-black/40 border border-amber-400/30 text-xs text-amber-100 h-16 focus:outline-none focus:border-amber-400"></textarea>
+                        <label class="text-[10px] text-slate-700 font-bold">Ucapan & Doa:</label>
+                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 h-16 focus:outline-none focus:border-amber-600"></textarea>
                     </div>
                     <button type="button" onclick="submitRSVP()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-2.5 rounded-lg text-xs shadow-lg transition">
                         Kirim RSVP
@@ -299,14 +300,14 @@
             <!-- SECTION 4: QR CODE CHECK-IN -->
             <section class="content-section flex flex-col items-center justify-center py-10 text-center">
                 <h2 class="text-2xl font-serif-custom font-semibold mb-2 gold-shimmer">QR Code Check-In</h2>
-                <p class="text-xs text-amber-200/80 mb-6 px-4">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
+                <p class="text-xs text-amber-800 mb-6 px-4 font-semibold">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
                 
-                <div class="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-400/40">
+                <div class="p-4 bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50">
                     <div id="qrcode"></div>
                 </div>
-                <p class="text-xs font-semibold mt-4 text-amber-300">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
+                <p class="text-xs font-bold mt-4 text-amber-900">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
 
-                <div class="text-[10px] text-amber-200/50 pt-8 pb-4">
+                <div class="text-[10px] text-amber-900/60 pt-8 pb-4 font-medium">
                     Generated with AI Invitation Agent
                 </div>
             </section>
@@ -349,8 +350,8 @@
             card.innerHTML = `
                 <div class="text-center py-6 space-y-2">
                     <p class="text-3xl">✅</p>
-                    <p class="text-sm font-bold text-amber-300">Terima Kasih, ${nama}!</p>
-                    <p class="text-xs text-amber-100/80">Konfirmasi kehadiran Anda berhasil dikirim.</p>
+                    <p class="text-sm font-bold text-amber-900">Terima Kasih, ${nama}!</p>
+                    <p class="text-xs text-slate-800 font-medium">Konfirmasi kehadiran Anda berhasil dikirim.</p>
                 </div>
             `;
     
@@ -393,7 +394,7 @@
     
                 if (distance < 0) {
                     clearInterval(timerInterval);
-                    document.getElementById("countdown-timer").innerHTML = "<p class='col-span-4 text-sm font-bold text-amber-300 py-2'>🎉 Hari Bahagia Telah Tiba!</p>";
+                    document.getElementById("countdown-timer").innerHTML = "<p class='col-span-4 text-sm font-bold text-amber-900 py-2'>🎉 Hari Bahagia Telah Tiba!</p>";
                     return;
                 }
     
