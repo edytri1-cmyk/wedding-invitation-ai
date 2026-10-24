@@ -527,10 +527,10 @@ else:
 
 # Daftar tahapan alur beserta deskripsinya
     steps_info = [
-        {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & setujui syarat."},
-        {"num": "2", "title": "Desain & Preview", "desc": "Isi data mempelai, foto & tema."},
-        {"num": "3", "title": "Buat Link Undangan", "desc": "Aktivasi & bayar langganan."},
-        {"num": "4", "title": "Manajemen RSVP", "desc": "Pantau kehadiran & ucapan tamu."}
+        {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & tekan centang (v) untuk setujui syarat."},
+        {"num": "2", "title": "Desain & Preview", "desc": "Isi data mempelai, tanggal pernikahan, tema, upload foto & pilihan music latar."},
+        {"num": "3", "title": "Buat Link Undangan", "desc": "Aktivasi Layanan."},
+        {"num": "4", "title": "Manajemen RSVP", "desc": "Pantau kehadiran & cek ucapan dari tamu."}
     ]
 
     # Jika sesi aktif, batasi hanya 2 tahap terakhir
