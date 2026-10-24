@@ -564,7 +564,7 @@ else:
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
-    st.markdown("---")
+    #st.markdown("---")
 
     # Tentukan string active_step agar kompatibel dengan logika kode di bawahnya
     full_menu_list = [
