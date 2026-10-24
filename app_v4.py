@@ -673,15 +673,15 @@ else:
             st.markdown("""
                 <div style="padding-top: 10px;">
                     <span style="background: #ffe4e6; color: #9f1239; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px;">
-                        🌸 Wedding Invitation Online • Nuansa Sakura
+                        🌸 Wedding Invitation AI Generator
                     </span>
                     <h1 class="hero-title" style="margin-top: 18px;">
                         Undang Tamu Anda dengan Keindahan & Kemudahan
                     </h1>
                     <p class="hero-desc">
                         Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. 
-                        kami membantu anda menciptakan undangan pernikahan digital yang indah, modern, 
-                        dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada cinta kalian.
+                        aplikasi ini membantu anda membuat undangan pernikahan digital yang cepat, praktis, indah, modern, 
+                        dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada rencana pernikahan kalian.
                     </p>
                 </div>
             """, unsafe_allow_html=True)
