@@ -675,7 +675,7 @@ else:
                     <span style="background: #ffe4e6; color: #9f1239; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px;">
                         🌸 Wedding Invitation AI Generator
                     </span>
-                    <h1 class="hero-title" style="margin-top: 18px;">
+                    <h1 class="hero-title" style="margin-top: 18px; color: #f43f5e;">
                         Undang Tamu Anda dengan Keindahan & Kemudahan
                     </h1>
                     <p class="hero-desc">
