@@ -325,24 +325,30 @@
       </div>
     </section>
 
-    <!-- ================= HALAMAN 5: GALERI FOTO ================= -->
+    <!-- ================= HALAMAN 5: GALERI FOTO PREWEDDING ================= -->
     <section class="section-page" id="page-gallery">
       <div class="section-label">Momen Indah</div>
       <div class="section-title">Galeri Pre-Wedding</div>
       <div class="section-desc" style="font-style: italic; font-family: 'Cormorant Garamond'; font-size: 18px; margin-top: -10px;">"A moment that lasts forever"</div>
-
-      <div class="gallery-main-photo" style="background-image: url('{{ gallery_main|default("https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop") }}');"></div>
-
-      <div class="gallery-pair">
-        <div class="gallery-item" style="background-image: url('{{ gallery_1|default("https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop") }}');"></div>
-        <div class="gallery-item" style="background-image: url('{{ gallery_2|default("https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop") }}');"></div>
-      </div>
-
-      <div class="gallery-pair">
-        <div class="gallery-item" style="background-image: url('{{ gallery_3|default("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop") }}');"></div>
-        <div class="gallery-item" style="background-image: url('{{ gallery_4|default("https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=500&fit=crop") }}');"></div>
-      </div>
-      <div class="section-label" style="margin-top: 10px;">Aruna &amp; Aditya Gallery</div>
+    
+      {% if gallery_list and gallery_list|length > 0 %}
+        <!-- Foto Utama (Foto pertama) -->
+        <div class="gallery-main-photo" style="background-image: url('{{ gallery_list[0] }}');"></div>
+    
+        <!-- Sisa foto ditampilkan dinamis (misal foto ke-2 dan seterusnya) -->
+        {% if gallery_list|length > 1 %}
+          {% set remaining_photos = gallery_list[1:] %}
+          {% for pair in remaining_photos | batch(2) %}
+            <div class="gallery-pair">
+              {% for img_url in pair %}
+                <div class="gallery-item" style="background-image: url('{{ img_url }}');"></div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    
+      <div class="section-label" style="margin-top: 10px;">Galeri Prewedding</div>
     </section>
 
     <!-- ================= HALAMAN 6: RSVP & FORMULIR ================= -->
