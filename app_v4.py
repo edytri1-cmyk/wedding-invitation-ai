@@ -905,8 +905,9 @@ else:
                 # HALAMAN 7: PENUTUP, FOTO BACKGROUND & AYAT AL-QURAN
                 # =========================================================
                 with st.expander("📌 Halaman 7: Penutup & Ayat Pernikahan", expanded=False):
+                    # Di bagian Halaman 7 app.py:
                     c_photo = st.file_uploader("Foto Background Penutup", type=["jpg", "jpeg", "png"], key="closing_img_file", disabled=is_session_active)
-                    closing_photo = file_to_base64(c_photo) if c_photo else st.text_input("Atau URL Foto Background Penutup", cover_photo_url, disabled=is_session_active)
+                    closing_photo = file_to_base64(c_photo) if c_photo else st.text_input("Atau URL Foto Background Penutup", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active), cover_photo_url, disabled=is_session_active)
                     
                     quote_text = st.text_area(
                         "Ayat Al-Quran / Kutipan Pernikahan",
