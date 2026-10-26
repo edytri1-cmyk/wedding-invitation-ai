@@ -188,29 +188,50 @@
 
     <!-- ================= HALAMAN 1: COVER ================= -->
     <section class="section-page" id="page-cover">
-      <div class="romantic-bg"></div>
+      <div class="romantic-bg" style="background-image: url('{{ photo_url }}');"></div>
       <div class="photographic-scrim"></div>
       <div class="portrait-frame"></div>
       
-      <div class="hero-content">
-        <div class="wedding-heading">
-          <div class="monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
-          <div class="section-label" style="color: #E6D9BF;">The Wedding Of</div>
+      <div class="hero-content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100%; padding: 40px 20px; z-index: 3;">
+        
+        <!-- Bagian Atas: Label / Judul -->
+        <div class="wedding-heading" style="text-align: center; margin-top: 20px;">
+          <div class="section-label" style="color: #E6D9BF; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">The Wedding Of</div>
         </div>
 
-        <div class="wedding-introduction">
-          <div class="couple-names-cover">
-            {{ bride_name|default('Aruna Kirana Putri') }}<br>
-            <span style="font-family: 'Italianno'; font-size: 48px; color: #E6D9BF;">&amp;</span><br>
-            {{ groom_name|default('Aditya Pratama') }}
+        <!-- Bagian Tengah: Nama Mempelai dengan Ukuran Proporsional & Font Sambung -->
+        <div class="wedding-introduction" style="text-align: center; width: 100%;">
+          <div class="couple-names-cover" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            
+            <!-- Nama Mempelai Wanita -->
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 32px; line-height: 120%; color: #FFFCF5; font-weight: 500;">
+              {{ bride_name|default('Aruna Kirana Putri') }}
+            </div>
+            
+            <!-- Simbol & -->
+            <span style="font-family: 'Italianno', cursive; font-size: 42px; color: #E6D9BF; line-height: 80%; margin: 2px 0;">&amp;</span>
+            
+            <!-- Nama Mempelai Pria -->
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 32px; line-height: 120%; color: #FFFCF5; font-weight: 500;">
+              {{ groom_name|default('Aditya Pratama') }}
+            </div>
+
           </div>
-          <div class="date-and-city">{{ akad_date|default('Sabtu, 31 Oktober 2026') }} — {{ resep_address|default('Bandung') }}</div>
+
+          <!-- Tanggal & Kota -->
+          <div class="date-and-city" style="font-size: 13px; color: #E6D9BF; margin-top: 24px; letter-spacing: 1px;">
+            {{ akad_date|default('Sabtu, 31 Oktober 2026') }} — {{ event_city|default('Bandung') }}
+          </div>
         </div>
 
-        <div class="scroll-cue" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-          <div class="wedding-sentiment">"{{ quote_text|default('Maha Suci Allah yang menciptakan pasangan-pasangan') }}"</div>
-          <span style="font-size: 10px; color: #E6D9BF; letter-spacing: 1px; margin-top: 8px;">↓ GULIR KE BAWAH</span>
+        <!-- Bagian Bawah: Quote & Gulir -->
+        <div class="scroll-cue" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 20px;">
+          <div class="wedding-sentiment" style="font-size: 12px; font-style: italic; color: #E6D9BF; max-width: 280px; text-align: center;">
+            "{{ quote_text|default('Maha Suci Allah yang menciptakan pasangan-pasangan') }}"
+          </div>
+          <span style="font-size: 9px; color: #E6D9BF; letter-spacing: 1.5px; margin-top: 6px; opacity: 0.8;">↓ GULIR KE BAWAH</span>
         </div>
+
       </div>
     </section>
 
