@@ -793,110 +793,109 @@ else:
             col_form, col_preview = st.columns([1, 1])
 
             with col_form:
-                st.subheader("📋 Informasi Mempelai")
+                st.subheader("📋 Form Isian Premium (7 Halaman)")
                 
                 if is_session_active:
                     st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
 
-                groom_name = st.text_input("Nama Mempelai Pria", "Budi", disabled=is_session_active)
-                bride_name = st.text_input("Nama Mempelai Wanita", "Siti", disabled=is_session_active)
-                
-                theme_options = [
-                    "✨ Chic & Modern Green", 
-                    "⚡ Energetic Sunset Neon", 
-                    "🌸 Boho Sunrise Neon", 
-                    "🌿 Minimalist Emerald Organic",
-                    "🌿 Sage Green Botanical",
-                    "☕ Mocha Latte Vintage",
-                    "💜 Lavender Dream Royalty",
-                    "🌅 Peach Blossom Sunset",
-                    "🖤 Dark Luxury Elegance", 
-                    "🏛️ Celestial Midnight Starlight",
-                    "🌊 Royal Ocean Blue",           
-                    "🍷 Burgundy Velvet Romance",     
-                    "🌻 Bohemian Sunset Vintage",     
-                    "💎 Diamond Silver Crystal",
-                    "🌸 Cherry Blossom Japanese Spring",
-                    "🌾 Rustic Wheat & Pampas Grass",
-                    "❄️ Winter Ice Blue Serenity",
-                    "🍋 Mediterranean Lemon & Olive",
-                    "🌸 Cherry Blossom Japanese Spring",
-                    "🌺 Vibrant Colorful Spring Garden"
-                ]
-                theme_choice = st.selectbox("Tema Visual AI", theme_options, disabled=is_session_active)
+                # =========================================================
+                # HALAMAN 1: COVER UTAMA & IDENTITAS MEMPELAI
+                # =========================================================
+                with st.expander("📌 Halaman 1: Cover & Identitas Utama", expanded=True):
+                    cover_photo = st.file_uploader("Foto Cover Halaman Pertama", type=["jpg", "jpeg", "png"], key="cover_img", disabled=is_session_active)
+                    cover_photo_url = file_to_base64(cover_photo) if cover_photo else st.text_input("Atau URL Foto Cover", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
+                    
+                    couple_initials = st.text_input("Singkatan Nama Kedua Mempelai", "A & A", disabled=is_session_active, help="Contoh: A & A atau A & H")
+                    groom_name = st.text_input("Nama Lengkap Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
+                    bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
 
-                st.markdown("---")
-                st.markdown("#### 💍 Acara Akad Nikah")
-                akad_date = st.date_input("Tanggal Akad Nikah", disabled=is_session_active, key="akad_date")
-                akad_day = st.text_input("Hari Akad Nikah", "Sabtu", disabled=is_session_active, key="akad_day")
-                akad_time = st.text_input("Waktu / Jam Akad Nikah", "08.00 - 10.00 WIB", disabled=is_session_active, key="akad_time")
-                akad_location = st.text_input("Lokasi Akad Nikah", "Masjid Agung, Jakarta", disabled=is_session_active, key="akad_loc")
-                akad_maps_url = st.text_input("URL Google Maps Akad", "https://maps.google.com", disabled=is_session_active, key="akad_maps")
+                # =========================================================
+                # HALAMAN 2: DETAIL FOTO & ORANG TUA MEMPELAI
+                # =========================================================
+                with st.expander("📌 Halaman 2: Foto Personal & Orang Tua", expanded=False):
+                    col_p1, col_p2 = st.columns(2)
+                    with col_p1:
+                        b_photo = st.file_uploader("Foto Mempelai Wanita (Sendiri)", type=["jpg", "jpeg", "png"], key="b_photo_file", disabled=is_session_active)
+                        bride_photo = file_to_base64(b_photo) if b_photo else st.text_input("URL Foto Wanita", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop", disabled=is_session_active)
+                    with col_p2:
+                        g_photo = st.file_uploader("Foto Mempelai Pria (Sendiri)", type=["jpg", "jpeg", "png"], key="g_photo_file", disabled=is_session_active)
+                        groom_photo = file_to_base64(g_photo) if g_photo else st.text_input("URL Foto Pria", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop", disabled=is_session_active)
 
-                st.markdown("---")
-                st.markdown("#### 🥳 Acara Resepsi")
-                resep_date = st.date_input("Tanggal Resepsi", disabled=is_session_active, key="resep_date")
-                resep_day = st.text_input("Hari Resepsi", "Sabtu", disabled=is_session_active, key="resep_day")
-                resep_time = st.text_input("Waktu / Jam Resepsi", "11.00 - 13.00 WIB", disabled=is_session_active, key="resep_time")
-                resep_location = st.text_input("Lokasi Resepsi", "Gedung Cendrawasih, Jakarta", disabled=is_session_active, key="resep_loc")
-                resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
+                    bride_parents = st.text_input("Nama Orang Tua Mempelai Wanita", "Bapak H. Darmawan Putri & Ibu Hj. Siti Aminah", disabled=is_session_active)
+                    groom_parents = st.text_input("Nama Orang Tua Mempelai Pria", "Bapak H. Hendra Pratama & Ibu Hj. Rina Marlina", disabled=is_session_active)
 
-                st.markdown("---")
-                st.markdown("#### 🤝 Turut Mengundang")
-                turut_mengundang = st.text_area(
-                    "Turut Mengundang (Gunakan koma atau baris baru)", 
-                    "Keluarga Besar Pria:\n- Bp. Ahmad & Ibu Siti\nKeluarga Besar Wanita:\n- Bp. Dahlan & Ibu Aminah", 
-                    disabled=is_session_active,
-                    height=100
-                )
-                bank_info = st.text_input("Informasi Amplop Digital / Bank", "BCA 123456789 a.n Budi", disabled=is_session_active)
+                # =========================================================
+                # HALAMAN 3: AKAD, RESEPSI & COUNTDOWN
+                # =========================================================
+                with st.expander("📌 Halaman 3: Jadwal Acara & Lokasi", expanded=False):
+                    st.markdown("#### 💍 Akad Nikah")
+                    akad_date = st.date_input("Tanggal Akad Nikah", disabled=is_session_active, key="akad_date")
+                    akad_time = st.text_input("Waktu / Jam Akad", "08.00 WIB s/d Selesai", disabled=is_session_active, key="akad_time")
+                    akad_venue = st.text_input("Nama Tempat Akad", "Masjid Agung Trans Studio", disabled=is_session_active, key="akad_venue")
+                    akad_address = st.text_area("Alamat Lengkap Akad", "Jl. Gatot Subroto No.289, Bandung", disabled=is_session_active, key="akad_addr")
+                    akad_maps_url = st.text_input("URL Google Maps Akad", "https://maps.google.com", disabled=is_session_active, key="akad_maps")
 
-                st.markdown("---")
-                
-                st.subheader("🖼️ Galeri Foto")
-                uploaded_photos = st.file_uploader(
-                    "Upload Foto Galeri (Maksimal 5 foto, @ maks 2MB)",
-                    type=["jpg", "jpeg", "png"],
-                    accept_multiple_files=True,
-                    disabled=is_session_active
-                )
-                
-                gallery_data = []
-                
-                if uploaded_photos:
-                    if len(uploaded_photos) > 5:
-                        st.error("⚠️ Maksimal hanya boleh mengupload 5 foto!")
-                    else:
-                        has_oversized_file = False
-                        for photo in uploaded_photos:
-                            if photo.size > 2 * 1024 * 1024:
-                                st.error(f"⚠️ File {photo.name} terlalu besar! Harap upload foto di bawah 2MB.")
-                                has_oversized_file = True
-                        
-                        if not has_oversized_file:
-                            st.markdown("### ✍️ Tulis Keterangan / Cerita Foto:")
-                            
-                            temp_gallery = []
-                            for i, photo in enumerate(uploaded_photos):
-                                caption = st.text_input(
-                                    f"Cerita untuk Foto {i+1} ({photo.name})",
-                                    placeholder="Contoh: Momen saat liburan pertama di luar negeri...",
-                                    key=f"caption_{i}"
-                                )
-                                
-                                bytes_data = photo.getvalue()
-                                base64_encoded = base64.b64encode(bytes_data).decode("utf-8")
-                                img_src = f"data:image/{photo.type.split('/')[-1]};base64,{base64_encoded}"
-                                
-                                temp_gallery.append({
-                                    "photo": img_src,
-                                    "caption": caption
-                                })
-                            
-                            st.session_state['gallery_photos'] = temp_gallery
-        
-                default_photo_url = st.text_input("Atau URL Foto Sampul Utama", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
+                    st.markdown("---")
+                    st.markdown("#### 🥳 Resepsi Pernikahan")
+                    resep_date = st.date_input("Tanggal Resepsi", disabled=is_session_active, key="resep_date")
+                    resep_time = st.text_input("Waktu / Jam Resepsi", "11.00 - 14.00 WIB", disabled=is_session_active, key="resep_time")
+                    resep_venue = st.text_input("Nama Tempat Resepsi", "The Trans Luxury Hotel Ballroom", disabled=is_session_active, key="resep_venue")
+                    resep_address = st.text_area("Alamat Lengkap Resepsi", "Jl. Gatot Subroto No.289, Bandung", disabled=is_session_active, key="resep_addr")
+                    resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
 
+                # =========================================================
+                # HALAMAN 4: OUR STORY (TIMELINE)
+                # =========================================================
+                with st.expander("📌 Halaman 4: Our Story (Perjalanan Cinta)", expanded=False):
+                    story_img = st.file_uploader("Foto Ilustrasi Our Story", type=["jpg", "jpeg", "png"], key="story_img_file", disabled=is_session_active)
+                    story_photo = file_to_base64(story_img) if story_img else st.text_input("URL Foto Story", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop", disabled=is_session_active)
+                    
+                    st.markdown("Cerita perjalanan waktu penting otomatis ditampilkan sesuai template (Pertama Bertemu, Komitmen, Menuju Halal).")
+
+                # =========================================================
+                # HALAMAN 5: GALERI FOTO PREWEDDING
+                # =========================================================
+                with st.expander("📌 Halaman 5: Galeri Foto Prewedding", expanded=False):
+                    uploaded_gallery = st.file_uploader(
+                        "Upload Galeri (Maksimal 5 Foto)",
+                        type=["jpg", "jpeg", "png"],
+                        accept_multiple_files=True,
+                        disabled=is_session_active,
+                        key="gallery_uploader"
+                    )
+                    
+                    gallery_slots = {}
+                    if uploaded_gallery:
+                        for idx, f in enumerate(uploaded_gallery[:5]):
+                            b64_img = file_to_base64(f)
+                            gallery_slots[f"gallery_{idx+1}"] = b64_img
+                    
+                    # Fallback default gallery keys jika kosong
+                    gallery_main = gallery_slots.get("gallery_1", "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop")
+                    gal_1 = gallery_slots.get("gallery_2", "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop")
+                    gal_2 = gallery_slots.get("gallery_3", "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop")
+                    gal_3 = gallery_slots.get("gallery_4", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=500&fit=crop")
+                    gal_4 = gallery_slots.get("gallery_5", "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=500&fit=crop")
+
+                # =========================================================
+                # HALAMAN 6: RSVP & UCAPAN DOA
+                # =========================================================
+                with st.expander("📌 Halaman 6: RSVP & Buku Tamu", expanded=False):
+                    st.info("Formulir RSVP dan daftar ucapan tamu otomatis aktif dan terhubung ke backend Google Sheets.")
+
+                # =========================================================
+                # HALAMAN 7: PENUTUP & AYAT AL-QURAN
+                # =========================================================
+                with st.expander("📌 Halaman 7: Penutup & Ayat Pernikahan", expanded=False):
+                    quote_text = st.text_area(
+                        "Ayat Al-Quran / Kutipan Pernikahan",
+                        "Maha Suci Allah yang telah menciptakan pasangan-pasangan semuanya, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka maupun dari apa yang tidak mereka ketahui.",
+                        disabled=is_session_active
+                    )
+
+                # =========================================================
+                # PENGATURAN MUSIK LATAR BELAKANG
+                # =========================================================
                 st.markdown("---")
                 st.subheader("🎵 Background Music Player")
                 music_option = st.radio("Sumber Musik Background:", ["Preset Musik", "Upload File MP3", "URL MP3 Eksternal"], disabled=is_session_active)
@@ -921,24 +920,10 @@ else:
                 st.markdown("---")
                 test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono", disabled=True)
                 
-                btn_generate = st.button("🚀 Generate & Kunci Desain AI", type="primary", use_container_width=True, disabled=is_session_active)
+                btn_generate = st.button("🚀 Generate & Kunci Undangan 7 Halaman", type="primary", use_container_width=True, disabled=is_session_active)
 
                 if btn_generate:
-                    with st.spinner("Agent AI sedang merancang kata-kata & gaya visual..."):
-                        prompt = f"Buat 1 kalimat quote cinta indah tema {theme_choice} untuk {groom_name} & {bride_name}. Tentukan kelas Tailwind CSS theme_bg, theme_card_bg, theme_text yang mencerminkan gaya {theme_choice}. Format JSON."
-
-                        gallery_photos = []
-                        raw_gallery = st.session_state.get('gallery_photos', [])
-                        
-                        if raw_gallery and len(raw_gallery) > 0:
-                            gallery_photos = raw_gallery
-                        else:
-                            gallery_photos = [{"photo": default_photo_url, "caption": "Momen Bahagia Kami"}]
-
-                        ai_data, provider_used = generate_ai_content(prompt, theme_choice, groom_name, bride_name)
-
-                        st.info(f"API Provider yang merespons: {provider_used}")
-
+                    with st.spinner("Merangkai 7 halaman undangan eksklusif..."):
                         st.session_state["design_ready"] = True
                         st.session_state["groom_name"] = groom_name
                         st.session_state["bride_name"] = bride_name
@@ -953,29 +938,34 @@ else:
 
                             jinja_template = Template(template_content)
                             rendered_html = jinja_template.render(
+                                couple_initials=couple_initials,
                                 groom_name=groom_name,
                                 bride_name=bride_name,
-                                quote_text=ai_data.get("quote"),
+                                bride_photo=bride_photo,
+                                groom_photo=groom_photo,
+                                bride_parents=bride_parents,
+                                groom_parents=groom_parents,
                                 akad_date=akad_date.strftime("%d %B %Y"),
                                 raw_event_date=akad_date.strftime("%Y-%m-%d"),
-                                akad_day=akad_day,
                                 akad_time=akad_time,
-                                akad_location=akad_location,
+                                akad_venue=akad_venue,
+                                akad_address=akad_address,
                                 akad_maps_url=akad_maps_url,
                                 resep_date=resep_date.strftime("%d %B %Y"),
-                                resep_day=resep_day,
                                 resep_time=resep_time,
-                                resep_location=resep_location,
+                                resep_venue=resep_venue,
+                                resep_address=resep_address,
                                 resep_maps_url=resep_maps_url,
-                                turut_mengundang=turut_mengundang,
-                                photo_url=gallery_photos[0]["photo"] if gallery_photos else default_photo_url,
-                                gallery_photos=gallery_photos,
-                                bank_info=bank_info,
+                                story_photo=story_photo,
+                                gallery_main=gallery_main,
+                                gallery_1=gal_1,
+                                gallery_2=gal_2,
+                                gallery_3=gal_3,
+                                gallery_4=gal_4,
+                                quote_text=quote_text,
+                                photo_url=cover_photo_url,
                                 music_url=final_music_url,
                                 guest_name=test_guest_name,
-                                theme_bg=ai_data.get("theme_bg", "bg-slate-900"),
-                                theme_card_bg=ai_data.get("theme_card_bg", "bg-slate-800"),
-                                theme_text=ai_data.get("theme_text", "text-amber-100"),
                                 current_user_id=current_user
                             )
 
@@ -988,7 +978,7 @@ else:
                             save_json(INVITATION_DATA_FILE, invitation_payload)
 
                             st.session_state["rendered_html"] = rendered_html
-                            st.success(f"✅ Undangan Berhasil Dibuat!")
+                            st.success(f"✅ Undangan 7 Halaman Berhasil Dibuat!")
                         except Exception as e:
                             st.error(f"Gagal merender template HTML: {e}")
 
@@ -997,7 +987,7 @@ else:
                 if "rendered_html" in st.session_state:
                     st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
                 else:
-                    st.info("Atur form di sebelah kiri lalu klik 'Generate & Kunci Desain AI' untuk melihat pratinjau.")
+                    st.info("Atur form di sebelah kiri lalu klik tombol generate untuk melihat pratinjau.")
 
     elif "Buat Link Undangan" in active_step:
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
