@@ -1,454 +1,343 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Undangan Pernikahan - {{ groom_name }} & {{ bride_name }}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#343B32" />
+  <title>Undangan Pernikahan — {{ groom_name }} &amp; {{ bride_name }}</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- Meta Open Graph untuk Thumbnail & Pratinjau WhatsApp -->
-    <meta property="og:title" content="Undangan Pernikahan {{ groom_name }} & {{ bride_name }}" />
-    <meta property="og:description" content="Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir." />
-    <meta property="og:image" content="{{ og_image_url }}" />
-    <meta property="og:type" content="website" />
-    
-    <!-- External Libraries -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            overflow-x: hidden; 
-        }
-        .font-serif-custom { font-family: 'Playfair Display', serif; }
-        
-        .scroll-container {
-            overflow-y: auto;
-            height: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .content-section {
-            width: 100%;
-            position: relative;
-        }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #343B32;
+      font-family: 'Inter', sans-serif;
+      color: #39362E;
+      overflow-x: hidden;
+    }
 
-        /* ---------------------------------------------------------
-         * ESTETIKA LUXURY & ORNAMEN BUNGA (GOLD ACCENTS & FLORALS)
-         * --------------------------------------------------------- */
-        
-        /* Bingkai Kartu Undangan Klasik Mewah (Untuk Teks & Konten) */
-        .luxury-card {
-            background: rgba(255, 245, 247, 0.30);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 0.5px solid rgba(212, 175, 55, 0.6);
-            box-shadow: inset 0 0 15px rgba(251, 191, 36, 0.1), 0 10px 30px rgba(0, 0, 0, 0.15);
-            position: relative;
-            border-radius: 1rem;
-        }
-        
-        .luxury-card::before {
-            content: '';
-            position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
-            border: 0.5px dashed rgba(212, 175, 55, 0.4);
-            pointer-events: none;
-            border-radius: 0.75rem;
-        }
+    /* Container Utama Berbasis Mobile Frame */
+    .invitation-container {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #F8F5EE;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 58px 32px 32px;
+      isolation: isolate;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
 
-        /* Khusus Wrapper Foto Tanpa Garis Bingkai */
-        .photo-wrapper {
-            background: rgba(255, 245, 247, 0.3);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 1rem;
-            padding: 4px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+    /* Fine frame */
+    .fine-frame {
+      box-sizing: border-box;
+      position: absolute;
+      width: calc(100% - 32px);
+      height: calc(100% - 32px);
+      left: 16px;
+      top: 16px;
+      border: 1px solid #D7C9AE;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-        /* Efek Teks Kilau Emas (Gold Shimmer Text) */
-        .gold-shimmer {
-            background: linear-gradient(135deg, #b45309 0%, #78350f 50%, #b45309 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.6));
-        }
+    .section-label {
+      width: 100%;
+      font-size: 10px;
+      line-height: 150%;
+      text-align: center;
+      color: #927442;
+      z-index: 1;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-        /* Ornamen Kelopak Bunga & Daun Melayang (Floating Floral Accents) */
-        .floral-floating {
-            position: fixed;
-            z-index: 2;
-            pointer-events: none;
-            user-select: none;
-            opacity: 0.75;
-            animation: floatFloral linear infinite;
-        }
+    .opening-sentiment {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 115%;
+      text-align: center;
+      color: #39362E;
+      z-index: 2;
+      margin-bottom: 24px;
+    }
 
-        @keyframes floatFloral {
-            0% {
-                transform: translateY(-10vh) rotate(0deg) translateX(0);
-                opacity: 0.8;
-            }
-            50% {
-                transform: translateY(50vh) rotate(180deg) translateX(15px);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(110vh) rotate(360deg) translateX(-15px);
-                opacity: 0;
-            }
-        }
+    /* Envelope composition */
+    .envelope-box {
+      position: relative;
+      width: 366px;
+      height: 386px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 3;
+      margin-bottom: 20px;
+    }
 
-        .motion-bg {
-            background-size: 300% 300%;
-            animation: luxuryGradient 10s ease infinite;
-            position: relative;
-        }
+    .envelope-body {
+      position: absolute;
+      width: 358px;
+      height: 247px;
+      left: 4px;
+      top: 125px;
+      background: #E0D0AE;
+      border: 1px solid #D7C9AE;
+      box-shadow: 0px 16px 30px rgba(86, 69, 42, 0.125);
+      border-radius: 2px;
+      z-index: 0;
+    }
 
-        @keyframes luxuryGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    .invitation-card {
+      position: absolute;
+      width: 310px;
+      height: 290px;
+      left: 28px;
+      top: 45px;
+      background: #FFFCF5;
+      box-shadow: 0px 1px 10px rgba(88, 74, 44, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      z-index: 1;
+    }
 
-        .ambient-glow {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 30%, rgba(251, 191, 36, 0.15), transparent 70%);
-            animation: ambientPulse 5s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
-        @keyframes ambientPulse {
-            0% { opacity: 0.3; transform: scale(0.95); }
-            100% { opacity: 0.8; transform: scale(1.05); }
-        }
-        
-        /* Efek Bintang Kelap-Kelip */
-        .star {
-            position: fixed;
-            background-color: #fef08a;
-            border-radius: 50%;
-            z-index: 1;
-            pointer-events: none;
-            animation: twinkle ease-in-out infinite alternate;
-        }
-        
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.6); box-shadow: 0 0 2px rgba(254, 240, 138, 0.3); }
-            100% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 8px rgba(254, 240, 138, 0.9); }
-        }
-    </style>
+    .card-border {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 12px 0px;
+      gap: 7px;
+      width: 100%;
+      height: 100%;
+      border: 0.7px solid #D7C9AE;
+    }
+
+    .card-monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      color: #927442;
+    }
+
+    .card-dedication {
+      font-size: 8px;
+      color: #766E60;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .couple-names-preview {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: #39362E;
+      text-align: center;
+    }
+
+    .wedding-date {
+      font-size: 10px;
+      color: #927442;
+    }
+
+    .envelope-lower-fold {
+      position: absolute;
+      width: 358px;
+      height: 136px;
+      left: 4px;
+      top: 236px;
+      background: #EDE3CF;
+      border: 0.7px solid #D7C9AE;
+      z-index: 3;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      width: 358px;
+      height: 145px;
+      left: 4px;
+      top: 125px;
+      background: #E6D9BF;
+      border: 0.8px solid #D8C299;
+      z-index: 4;
+    }
+
+    .wax-seal {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      left: 153px;
+      top: 233px;
+      background: #AE8951;
+      box-shadow: 0px 3px 5px rgba(102, 80, 46, 0.25);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
+    }
+
+    .seal-monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 23px;
+      color: #E6D9BF;
+    }
+
+    /* Recipient Section */
+    .recipient {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0px;
+      gap: 8px;
+      width: 100%;
+      z-index: 4;
+    }
+
+    .salutation {
+      font-size: 12px;
+      color: #766E60;
+    }
+
+    .guest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: #39362E;
+      text-align: center;
+    }
+
+    .personal-invitation {
+      font-size: 12px;
+      color: #766E60;
+      text-align: center;
+    }
+
+    /* Action Button */
+    .action-btn {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      height: 50px;
+      background: #927442;
+      border: 1px solid #927442;
+      color: #FFFCF5;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 5;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: #7a6035;
+    }
+
+    /* Closing Ornament */
+    .closing-ornament {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 20px 0 10px;
+      z-index: 6;
+    }
+
+    .fine-rule {
+      width: 48px;
+      height: 1px;
+      background: #D7C9AE;
+    }
+
+    .diamond {
+      width: 5px;
+      height: 5px;
+      background: #927442;
+      transform: rotate(45deg);
+    }
+
+    .opening-footer {
+      font-size: 9px;
+      color: #927442;
+      z-index: 7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
-    
-<body class="{{ theme_bg }} {{ theme_text }} min-h-screen flex justify-center bg-gray-950">
+<body>
 
-    <!-- Container HP Fullscreen -->
-    <div class="w-full max-w-md min-h-screen shadow-2xl relative {{ theme_card_bg }} motion-bg flex flex-col">
-        
-        <!-- Ambient Glow Effects -->
-        <div class="ambient-glow"></div>
+  <div class="invitation-container">
+    <!-- Fine frame dekoratif -->
+    <div class="fine-frame"></div>
 
-        <!-- Scrollable Main Wrapper -->
-        <div class="scroll-container relative z-10 flex flex-col space-y-8 p-6">
-            
-            <!-- SECTION 1: COVER UTAMA -->
-            <section class="content-section flex flex-col items-center justify-center text-center py-10 min-h-[85vh]">
-                <div class="space-y-3 mb-6 text-center">
-                    <p class="text-xs tracking-[0.25em] uppercase text-amber-700 font-bold">The Wedding Of</p>
-                    <h1 class="text-4xl font-serif-custom font-semibold tracking-wide gold-shimmer">
-                        {{ groom_name }} <span class="text-2xl text-amber-600 font-normal">&</span> {{ bride_name }}
-                    </h1>
-                    {% if guest_name %}
-                    <div class="mt-4 p-3 luxury-card inline-block">
-                        <p class="text-[10px] uppercase tracking-widest text-slate-700 font-bold">Kepada Yth.</p>
-                        <p class="text-base font-semibold font-serif-custom text-slate-900">{{ guest_name }}</p>
-                    </div>
-                    {% endif %}
-                </div>
+    <!-- Section label -->
+    <div class="section-label">The Wedding Invitation</div>
 
-                <!-- Foto Utama Tanpa Garis Bingkai Kotak -->
-                <div class="w-full max-w-xs photo-wrapper mb-4">
-                    <img src="{{ photo_url }}" class="w-full h-auto max-h-[450px] object-cover mx-auto rounded-xl">
-                </div>
+    <!-- Opening sentiment -->
+    <div class="opening-sentiment">Kepada Yang Terhormat</div>
 
-                <!-- BUNGKUSAN LUXURY CARD UNTUK QUOTE / KATA-KATA INDAH -->
-                <div class="w-full max-w-xs p-4 luxury-card my-2 space-y-2 text-center">
-                    <p class="text-xs italic font-serif-custom text-slate-800 leading-relaxed font-medium">
-                        "{{ quote_text }}"
-                    </p>
-                </div>
-
-                <div class="space-y-2 mt-2">
-                    <div class="animate-bounce pt-2 text-xs text-amber-700 font-bold">👇 Gulir ke bawah untuk melihat undangan</div>
-                </div>
-
-                <!-- Countdown Timer -->
-                <div class="w-full my-4 p-4 luxury-card text-center">
-                    <p class="text-xs uppercase tracking-widest text-amber-800 mb-3 font-bold">⏳ Menghitung Hari Menjelang Acara</p>
-                    <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
-                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
-                            <span id="cd-days" class="block text-xl font-bold text-amber-900">00</span>
-                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Hari</span>
-                        </div>
-                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
-                            <span id="cd-hours" class="block text-xl font-bold text-amber-900">00</span>
-                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Jam</span>
-                        </div>
-                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
-                            <span id="cd-minutes" class="block text-xl font-bold text-amber-900">00</span>
-                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Menit</span>
-                        </div>
-                        <div class="p-2 bg-white/70 rounded-xl border border-amber-400/40 shadow-sm">
-                            <span id="cd-seconds" class="block text-xl font-bold text-amber-900">00</span>
-                            <span class="text-[10px] text-slate-700 uppercase font-semibold">Detik</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- SECTION 2: GALERI FOTO TANPA LIS/BINGKAI KOTAK -->
-            {% if gallery_photos %}
-                {% for item in gallery_photos %}
-                <section class="content-section flex flex-col items-center justify-center py-6">
-                    <p class="text-xs uppercase tracking-[0.2em] text-amber-700 mb-3 font-bold">Momen Bahagia Kami</p>
-                    <div class="w-full photo-wrapper p-1.5">
-                        <img src="{{ item.photo }}" class="w-full h-auto max-h-[550px] object-contain mx-auto rounded-xl">
-                        {% if item.caption %}
-                        <p class="text-sm text-center font-serif-custom italic mt-3 text-slate-800 px-2 font-medium">
-                            "{{ item.caption }}"
-                        </p>
-                        {% endif %}
-                    </div>
-                </section>
-                {% endfor %}
-            {% endif %}
-
-            <!-- SECTION 3: DETAIL ACARA & RSVP -->
-            <section class="content-section flex flex-col justify-center py-6 space-y-4">
-                <h2 class="text-xl font-serif-custom font-semibold text-center gold-shimmer">Rangkaian Acara & RSVP</h2>
-                
-                <!-- Akad Nikah -->
-                <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
-                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-900 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-500/40">
-                        💍 Akad Nikah
-                    </span>
-                    <p class="text-sm font-bold pt-1 text-slate-900">📅 {{ akad_day }}, {{ akad_date }}</p>
-                    <p class="text-xs text-slate-800 font-semibold">⏰ Pukul {{ akad_time }}</p>
-                    <p class="text-xs text-slate-700 px-2 font-medium">📍 {{ akad_location }}</p>
-                    {% if akad_maps_url %}
-                    <a href="{{ akad_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
-                        🗺️ Google Maps Akad
-                    </a>
-                    {% endif %}
-                </div>
-
-                <!-- Resepsi Pernikahan -->
-                <div class="luxury-card p-5 text-center flex flex-col items-center space-y-2">
-                    <span class="px-3.5 py-1 bg-amber-500/20 text-amber-900 rounded-full text-[11px] font-bold tracking-wider uppercase border border-amber-500/40">
-                        🥳 Resepsi Pernikahan
-                    </span>
-                    <p class="text-sm font-bold pt-1 text-slate-900">📅 {{ resep_day }}, {{ resep_date }}</p>
-                    <p class="text-xs text-slate-800 font-semibold">⏰ Pukul {{ resep_time }}</p>
-                    <p class="text-xs text-slate-700 px-2 font-medium">📍 {{ resep_location }}</p>
-                    {% if resep_maps_url %}
-                    <a href="{{ resep_maps_url }}" target="_blank" class="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 px-4 py-1.5 rounded-lg text-xs font-bold shadow-md mt-2 hover:from-amber-400 hover:to-amber-500 transition">
-                        🗺️ Google Maps Resepsi
-                    </a>
-                    {% endif %}
-                </div>
-
-                <!-- Turut Mengundang & Amplop Digital -->
-                {% if turut_mengundang or bank_info %}
-                <div class="luxury-card p-5 text-center space-y-3">
-                    {% if turut_mengundang %}
-                    <div>
-                        <p class="text-xs font-bold text-amber-800 mb-1 tracking-wider uppercase">🤝 Turut Mengundang</p>
-                        <p class="text-xs text-slate-800 whitespace-pre-line leading-relaxed font-medium">{{ turut_mengundang }}</p>
-                    </div>
-                    {% endif %}
-
-                    {% if turut_mengundang and bank_info %}
-                    <hr class="border-amber-500/30 my-2">
-                    {% endif %}
-
-                    {% if bank_info %}
-                    <div>
-                        <p class="text-xs font-bold text-amber-800 mb-1 tracking-wider uppercase">🎁 Amplop Digital</p>
-                        <p class="text-xs text-slate-800 font-medium">{{ bank_info }}</p>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endif %}
-
-                <!-- Form RSVP -->
-                <div class="luxury-card p-5 space-y-3" id="rsvp-card">
-                    <p class="text-xs font-bold text-center text-amber-800 uppercase tracking-widest">Konfirmasi Kehadiran</p>
-                    <div>
-                        <label class="text-[10px] text-slate-700 font-bold">Nama Anda:</label>
-                        <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Nama Lengkap" class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 focus:outline-none focus:border-amber-600">
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-700 font-bold">Kehadiran:</label>
-                        <select id="rsvp-status" class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 focus:outline-none focus:border-amber-600">
-                            <option class="bg-white text-slate-900">Hadir</option>
-                            <option class="bg-white text-slate-900">Ragu-ragu</option>
-                            <option class="bg-white text-slate-900">Maaf, Tidak Bisa Hadir</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-700 font-bold">Ucapan & Doa:</label>
-                        <textarea id="rsvp-ucapan" placeholder="Tuliskan ucapan selamat..." class="w-full p-2 mt-0.5 rounded-lg bg-white/80 border border-amber-400/50 text-xs text-slate-900 h-16 focus:outline-none focus:border-amber-600"></textarea>
-                    </div>
-                    <button type="button" onclick="submitRSVP()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-2.5 rounded-lg text-xs shadow-lg transition">
-                        Kirim RSVP
-                    </button>
-                </div>
-            </section>
-            
-            <!-- SECTION 4: QR CODE CHECK-IN -->
-            <section class="content-section flex flex-col items-center justify-center py-10 text-center">
-                <h2 class="text-2xl font-serif-custom font-semibold mb-2 gold-shimmer">QR Code Check-In</h2>
-                <p class="text-xs text-amber-800 mb-6 px-4 font-semibold">Tunjukkan QR Code ini kepada penerima tamu di lokasi acara</p>
-                
-                <div class="p-4 bg-white rounded-2xl shadow-2xl border-2 border-amber-500/50">
-                    <div id="qrcode"></div>
-                </div>
-                <p class="text-xs font-bold mt-4 text-amber-900">{{ guest_name if guest_name else 'Tamu Undangan' }}</p>
-
-                <div class="text-[10px] text-amber-900/60 pt-8 pb-4 font-medium">
-                    Generated with AI Invitation Agent
-                </div>
-            </section>
-
+    <!-- Envelope composition -->
+    <div class="envelope-box">
+      <div class="envelope-body"></div>
+      
+      <div class="invitation-card">
+        <div class="card-border">
+          <div class="card-monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
+          <div class="card-dedication">The Wedding Of</div>
+          <div class="couple-names-preview">{{ bride_name|default('Anissa') }} &amp; {{ groom_name|default('Hamzah') }}</div>
+          <div class="wedding-date">{{ event_date|default('31 Oktober 2026') }}</div>
         </div>
+      </div>
+
+      <div class="envelope-lower-fold"></div>
+      <div class="envelope-flap"></div>
+
+      <div class="wax-seal">
+        <div class="seal-monogram">{{ bride_initial|default('A') }}</div>
+      </div>
     </div>
 
-    <!-- Floating Audio Player -->
-    {% if music_url %}
-    <div class="fixed bottom-4 right-4 z-50">
-        <audio id="bg-audio" loop src="{{ music_url }}"></audio>
-        <button onclick="toggleAudio()" class="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 p-3 rounded-full shadow-2xl font-bold flex items-center justify-center border border-amber-300">
-            🎵 <span id="audio-status" class="ml-1 text-xs">Play</span>
-        </button>
+    <!-- Recipient -->
+    <div class="recipient">
+      <div class="salutation">Bapak/Ibu/Saudara/i</div>
+      <div class="guest-name">{{ guest_name | default('Tamu Undangan') }}</div>
+      <div class="personal-invitation">Tanpa mengurangi rasa hormat, kami mengundang Anda</div>
     </div>
-    {% endif %}
 
-    <!-- SCRIPTS UTAMA -->
-    <script>
-        // 1. Audio Toggle Player
-        function toggleAudio() {
-            var audio = document.getElementById('bg-audio');
-            var status = document.getElementById('audio-status');
-            if (audio.paused) { audio.play(); status.innerText = "Pause"; } 
-            else { audio.pause(); status.innerText = "Play"; }
-        }
+    <!-- Action Button (Buka Undangan) -->
+    <a href="#detil-acara" class="action-btn">
+      <span>Buka Undangan</span>
+    </a>
 
-        // 2. Fungsi Kirim RSVP
-        function submitRSVP() {
-            var nama = document.getElementById('rsvp-nama').value;
-            var status = document.getElementById('rsvp-status').value;
-            var ucapan = document.getElementById('rsvp-ucapan').value;
-    
-            if (!nama || nama.trim() === "") {
-                alert("Mohon isi nama Anda terlebih dahulu.");
-                return;
-            }
-    
-            var card = document.getElementById('rsvp-card');
-            card.innerHTML = `
-                <div class="text-center py-6 space-y-2">
-                    <p class="text-3xl">✅</p>
-                    <p class="text-sm font-bold text-amber-900">Terima Kasih, ${nama}!</p>
-                    <p class="text-xs text-slate-800 font-medium">Konfirmasi kehadiran Anda berhasil dikirim.</p>
-                </div>
-            `;
-    
-            var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
-            
-            var payload = {
-                user_id: currentUserId,
-                nama: nama,
-                status: status,
-                ucapan: ucapan
-            };
-    
-            fetch(scriptUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-        }
+    <!-- Closing ornament -->
+    <div class="closing-ornament">
+      <div class="fine-rule"></div>
+      <div class="diamond"></div>
+      <div class="fine-rule"></div>
+    </div>
 
-        // 3. Inisialisasi Saat Halaman Dimuat (QR Code, Countdown, & Efek Visual Bunga/Floral)
-        window.addEventListener('DOMContentLoaded', function() {
-            // A. Generate QR Code
-            var guest = "{{ guest_name if guest_name else 'GUEST-GENERAL' }}";
-            new QRCode(document.getElementById("qrcode"), {
-                text: "CHECKIN-" + encodeURIComponent(guest),
-                width: 160,
-                height: 160
-            });
+    <div class="opening-footer">Digital Wedding Invitation</div>
+  </div>
 
-            // B. Countdown Timer Real-Time
-            var rawDate = "{{ raw_event_date if raw_event_date else '2026-12-31' }}";
-            var eventTargetDate = new Date(rawDate + "T09:00:00").getTime();
-    
-            var timerInterval = setInterval(function() {
-                var now = new Date().getTime();
-                var distance = eventTargetDate - now;
-    
-                if (distance < 0) {
-                    clearInterval(timerInterval);
-                    document.getElementById("countdown-timer").innerHTML = "<p class='col-span-4 text-sm font-bold text-amber-900 py-2'>🎉 Hari Bahagia Telah Tiba!</p>";
-                    return;
-                }
-    
-                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-                document.getElementById("cd-days").innerText = days < 10 ? "0" + days : days;
-                document.getElementById("cd-hours").innerText = hours < 10 ? "0" + hours : hours;
-                document.getElementById("cd-minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
-                document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
-            }, 1000);
-
-            // C. Efek Visual Bintang Kelap-Kelip & Ornamen Bunga Melayang (Floral Animation)
-            const body = document.body;
-            
-            // Bintang Kelap-kelip
-            for (let i = 0; i < 25; i++) {
-                let star = document.createElement('div');
-                star.className = 'star';
-                let size = Math.random() * 3 + 2;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.top = Math.random() * 100 + 'vh';
-                star.style.left = Math.random() * 100 + 'vw';
-                star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-                star.style.animationDelay = (Math.random() * 3) + 's';
-                body.appendChild(star);
-            }
-    
-            // Ornamen Bunga & Daun Jatuh/Melayang
-            const floralIcons = ['🌸', '💮', '🌿', '✨', '💐', '🍂'];
-            for (let i = 0; i < 15; i++) {
-                let floral = document.createElement('div');
-                floral.className = 'floral-floating';
-                floral.innerText = floralIcons[Math.floor(Math.random() * floralIcons.length)];
-                floral.style.fontSize = (Math.random() * 14 + 14) + 'px';
-                floral.style.left = Math.random() * 100 + 'vw';
-                floral.style.animationDuration = (Math.random() * 7 + 6) + 's';
-                floral.style.animationDelay = (Math.random() * 5) + 's';
-                body.appendChild(floral);
-            }
-        });
-    </script>
 </body>
 </html>
