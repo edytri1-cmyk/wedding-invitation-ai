@@ -345,38 +345,6 @@
       });
     </script>
 
-
-      <!-- Kartu Akad Nikah -->
-      <div class="event-card">
-        <div class="event-title">Akad Nikah</div>
-        <div class="event-schedule">
-          <span class="event-date-text">📅 {{ akad_date|default('Sabtu, 31 Oktober 2026') }}</span>
-          <span class="event-time-text">⏰ Pukul {{ akad_time|default('08.00 WIB s/d Selesai') }}</span>
-        </div>
-        <div class="fine-rule" style="width: 40px; margin: 4px 0;"></div>
-        <div class="venue-name">{{ akad_venue|default('Masjid Agung Trans Studio') }}</div>
-        <div class="venue-address">{{ akad_address|default('Jl. Gatot Subroto No.289, Cibangkong, Batununggal, Kota Bandung') }}</div>
-        <a href="{{ akad_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
-          📍 Lihat Lokasi Akad (Google Maps)
-        </a>
-      </div>
-
-      <!-- Kartu Resepsi -->
-      <div class="event-card">
-        <div class="event-title">Resepsi</div>
-        <div class="event-schedule">
-          <span class="event-date-text">📅 {{ resep_date|default('Sabtu, 31 Oktober 2026') }}</span>
-          <span class="event-time-text">⏰ Pukul {{ resep_time|default('11.00 - 14.00 WIB') }}</span>
-        </div>
-        <div class="fine-rule" style="width: 40px; margin: 4px 0;"></div>
-        <div class="venue-name">{{ resep_venue|default('The Trans Luxury Hotel Ballroom') }}</div>
-        <div class="venue-address">{{ resep_address|default('Jl. Gatot Subroto No.289, Bandung') }}</div>
-        <a href="{{ resep_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
-          📍 Lihat Lokasi Resepsi (Google Maps)
-        </a>
-      </div>
-    </section>
-
     <!-- ================= HALAMAN 4: OUR STORY ================= -->
     <section class="section-page" id="page-story">
       <div class="section-label">Perjalanan Kami</div>
