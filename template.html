@@ -84,7 +84,7 @@
     .fine-rule { width: 48px; height: 1px; background: #D7C9AE; }
     .diamond { width: 5px; height: 5px; background: #927442; transform: rotate(45deg); }
 
-    /* HALAMAN 1: COVER UTAMA */
+    /* HALAMAN 1: COVER UTAMA & COUNTDOWN STYLING */
     #page-cover {
       background: #343B32;
       justify-content: space-between;
@@ -110,6 +110,41 @@
     .couple-names-cover { font-family: 'Cormorant Garamond', serif; font-size: 56px; line-height: 95%; color: #FFFCF5; margin: 15px 0; }
     .date-and-city { font-size: 11px; color: #E6D9BF; letter-spacing: 1px; }
     .wedding-sentiment { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; color: #F8F5EE; }
+
+    /* Dynamic Countdown Grid Styling */
+    .cover-countdown {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .cd-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 52px;
+      padding: 6px 8px;
+      background: rgba(26, 30, 25, 0.45);
+      border: 0.8px solid rgba(230, 217, 191, 0.5);
+      border-radius: 4px;
+      backdrop-filter: blur(2px);
+    }
+    .cd-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #FFFCF5;
+      line-height: 100%;
+    }
+    .cd-unit {
+      font-size: 8px;
+      color: #E6D9BF;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
 
     /* HALAMAN 2: KEDUA MEMPELAI & ORANG TUA */
     #page-couple { background: #F8F5EE; gap: 20px; }
@@ -305,7 +340,7 @@
           </div>
         </div>
 
-        <!-- Bagian Tengah: Nama Mempelai dengan Ukuran Proporsional & Font Sambung -->
+        <!-- Bagian Tengah: Nama Mempelai, Tanggal, Kota & Countdown Timer -->
         <div class="wedding-introduction" style="text-align: center; width: 100%;">
           <div class="couple-names-cover" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
             
@@ -325,8 +360,28 @@
           </div>
 
           <!-- Tanggal & Kota -->
-          <div class="date-and-city" style="font-size: 13px; color: #E6D9BF; margin-top: 24px; letter-spacing: 1px;">
+          <div class="date-and-city" style="font-size: 13px; color: #E6D9BF; margin-top: 20px; letter-spacing: 1px;">
             {{ akad_date|default('Sabtu, 31 Oktober 2026') }} — {{ event_city|default('Bandung') }}
+          </div>
+
+          <!-- PENGHITUNG WAKTU MUNDUR (COUNTDOWN TIMER) -->
+          <div class="cover-countdown" id="cover-countdown" data-target="{{ raw_event_date|default('2026-10-31') }}">
+            <div class="cd-box">
+              <span class="cd-number" id="cd-days">00</span>
+              <span class="cd-unit">Hari</span>
+            </div>
+            <div class="cd-box">
+              <span class="cd-number" id="cd-hours">00</span>
+              <span class="cd-unit">Jam</span>
+            </div>
+            <div class="cd-box">
+              <span class="cd-number" id="cd-minutes">00</span>
+              <span class="cd-unit">Menit</span>
+            </div>
+            <div class="cd-box">
+              <span class="cd-number" id="cd-seconds">00</span>
+              <span class="cd-unit">Detik</span>
+            </div>
           </div>
         </div>
 
@@ -340,6 +395,42 @@
 
       </div>
     </section>
+
+    <!-- SCRIPT PENGLOGIKAAN COUNTDOWN TIMER COVER -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const countdownContainer = document.getElementById("cover-countdown");
+        if (countdownContainer) {
+          const rawDateStr = countdownContainer.dataset.target; // Format YYYY-MM-DD
+          const targetDate = new Date(rawDateStr + "T08:00:00").getTime();
+
+          function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+              const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+              const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+              const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+              document.getElementById("cd-days").textContent = String(days).padStart(2, '0');
+              document.getElementById("cd-hours").textContent = String(hours).padStart(2, '0');
+              document.getElementById("cd-minutes").textContent = String(minutes).padStart(2, '0');
+              document.getElementById("cd-seconds").textContent = String(seconds).padStart(2, '0');
+            } else {
+              document.getElementById("cd-days").textContent = "00";
+              document.getElementById("cd-hours").textContent = "00";
+              document.getElementById("cd-minutes").textContent = "00";
+              document.getElementById("cd-seconds").textContent = "00";
+            }
+          }
+
+          updateCountdown();
+          setInterval(updateCountdown, 1000);
+        }
+      });
+    </script>
 
     <!-- ================= HALAMAN 2: KEDUA MEMPELAI & ORANG TUA ================= -->
     <section class="section-page" id="page-couple">
@@ -461,9 +552,9 @@
             <div class="timeline-rule"></div>
           </div>
           <div class="chapter-content">
-            <div class="chapter-date">Januari 2021</div>
-            <div class="chapter-title">Pertama Bertemu</div>
-            <div class="chapter-narrative">Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.</div>
+            <div class="chapter-date">{{ story_date_1|default('Januari 2021') }}</div>
+            <div class="chapter-title">{{ story_title_1|default('Pertama Bertemu') }}</div>
+            <div class="chapter-narrative">{{ story_desc_1|default('Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.') }}</div>
           </div>
         </div>
 
@@ -474,9 +565,9 @@
             <div class="timeline-rule"></div>
           </div>
           <div class="chapter-content">
-            <div class="chapter-date">Maret 2024</div>
-            <div class="chapter-title">Komitmen Bersama</div>
-            <div class="chapter-narrative">Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.</div>
+            <div class="chapter-date">{{ story_date_2|default('Maret 2024') }}</div>
+            <div class="chapter-title">{{ story_title_2|default('Komitmen Bersama') }}</div>
+            <div class="chapter-narrative">{{ story_desc_2|default('Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.') }}</div>
           </div>
         </div>
 
@@ -486,9 +577,9 @@
             <div class="diamond-marker"></div>
           </div>
           <div class="chapter-content">
-            <div class="chapter-date">Oktober 2026</div>
-            <div class="chapter-title">Menuju Halal</div>
-            <div class="chapter-narrative">Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.</div>
+            <div class="chapter-date">{{ story_date_3|default('Oktober 2026') }}</div>
+            <div class="chapter-title">{{ story_title_3|default('Menuju Halal') }}</div>
+            <div class="chapter-narrative">{{ story_desc_3|default('Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.') }}</div>
           </div>
         </div>
       </div>
