@@ -157,11 +157,39 @@
     .chapter-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #39362E; }
     .chapter-narrative { font-size: 12px; line-height: 170%; color: #766E60; }
 
-    /* HALAMAN 5: GALERI FOTO */
+/* HALAMAN 5: GALERI FOTO */
     #page-gallery { background: #FFFCF5; }
-    .gallery-main-photo { width: 100%; max-width: 382px; height: 280px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 12px; }
-    .gallery-pair { display: flex; flex-direction: row; gap: 12px; width: 100%; max-width: 382px; margin-bottom: 12px; }
-    .gallery-item { width: 50%; height: 200px; background-size: cover; background-position: center; border-radius: 4px; }
+    
+    .gallery-main-photo { 
+      width: 100%; 
+      max-width: 382px; 
+      height: 320px; /* Disesuaikan agar lebih proporsional untuk foto utuh */
+      background-size: contain; /* Mengubah dari cover agar foto tidak terpotong */
+      background-repeat: no-repeat;
+      background-position: center; 
+      background-color: #F7F2EB; /* Warna latar belakang cadangan jika rasio foto berbeda */
+      border-radius: 4px; 
+      margin-bottom: 12px; 
+    }
+    
+    .gallery-pair { 
+      display: flex; 
+      flex-direction: row; 
+      gap: 12px; 
+      width: 100%; 
+      max-width: 382px; 
+      margin-bottom: 12px; 
+    }
+    
+    .gallery-item { 
+      width: 50%; 
+      height: 220px; /* Disesuaikan sedikit */
+      background-size: contain; /* Mengubah dari cover agar foto tidak terpotong */
+      background-repeat: no-repeat;
+      background-position: center; 
+      background-color: #F7F2EB; /* Warna latar belakang cadangan */
+      border-radius: 4px; 
+    }
 
     /* HALAMAN 6: RSVP & FORMULIR */
     #page-rsvp { background: #F8F5EE; }
