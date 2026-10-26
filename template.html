@@ -274,45 +274,76 @@
       </div>
     </section>
 
-    <!-- ================= HALAMAN 3: WAKTU, LOKASI & COUNTDOWN ================= -->
+<!-- ================= HALAMAN 3: WAKTU, LOKASI & COUNTDOWN ================= -->
     <section class="section-page" id="page-schedule">
+      <div class="section-label">Save The Date</div>
+      <div class="section-title">Waktu &amp; Tempat</div>
+      <div class="section-desc">
+        Rangkaian acara pernikahan kami akan diselenggarakan pada:
+      </div>
+    
+      <!-- Menggunakan raw_event_date berformat YYYY-MM-DD agar aman dibaca JavaScript -->
+      <div
+        class="wedding-date-main"
+        id="wedding-date"
+        data-date="{{ raw_event_date|default('2026-10-31') }}"
+      >
+        {{ akad_date|default('Sabtu, 31 Oktober 2026') }}
+      </div>
 
-<section class="section-page" id="page-schedule">
-  <div class="section-label">Save The Date</div>
-  <div class="section-title">Waktu &amp; Tempat</div>
-  <div class="section-desc">
-    Rangkaian acara pernikahan kami akan diselenggarakan pada:
-  </div>
+      <!-- Kartu Akad Nikah -->
+      <div class="event-card" style="margin-top: 20px;">
+        <div class="event-title">Akad Nikah</div>
+        <div class="event-schedule">
+          <span class="event-date-text">📅 {{ akad_date|default('Sabtu, 31 Oktober 2026') }}</span>
+          <span class="event-time-text">⏰ Pukul {{ akad_time|default('08.00 WIB s/d Selesai') }}</span>
+        </div>
+        <div class="fine-rule" style="width: 40px; margin: 4px auto;"></div>
+        <div class="venue-name">{{ akad_venue|default('Masjid Agung Trans Studio') }}</div>
+        <div class="venue-address">{{ akad_address|default('Jl. Gatot Subroto No.289, Cibangkong, Batununggal, Kota Bandung') }}</div>
+        <a href="{{ akad_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
+          📍 Lihat Lokasi Akad (Google Maps)
+        </a>
+      </div>
 
-  <div
-    class="wedding-date-main"
-    id="wedding-date"
-    data-date="{{ akad_date|default('2026-10-31') }}"
-  >
-    Sabtu, 31 Oktober 2026
-  </div>
-</section>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dateElement = document.getElementById("wedding-date");
-    const akad_date = dateElement.dataset.date;
-
-    // Pastikan tanggal dibaca sebagai tanggal lokal
-    const date = new Date(akad_date + "T00:00:00");
-
-    if (!isNaN(date.getTime())) {
-      const formattedDate = new Intl.DateTimeFormat("id-ID", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "2-digit"
-      }).format(date);
-
-      dateElement.textContent = formattedDate;
-    }
-  });
-</script>
+      <!-- Kartu Resepsi -->
+      <div class="event-card">
+        <div class="event-title">Resepsi</div>
+        <div class="event-schedule">
+          <span class="event-date-text">📅 {{ resep_date|default('Sabtu, 31 Oktober 2026') }}</span>
+          <span class="event-time-text">⏰ Pukul {{ resep_time|default('11.00 - 14.00 WIB') }}</span>
+        </div>
+        <div class="fine-rule" style="width: 40px; margin: 4px auto;"></div>
+        <div class="venue-name">{{ resep_venue|default('The Trans Luxury Hotel Ballroom') }}</div>
+        <div class="venue-address">{{ resep_address|default('Jl. Gatot Subroto No.289, Bandung') }}</div>
+        <a href="{{ resep_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
+          📍 Lihat Lokasi Resepsi (Google Maps)
+        </a>
+      </div>
+    </section>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateElement = document.getElementById("wedding-date");
+        if (dateElement) {
+          const akad_date = dateElement.dataset.date;
+          
+          // Pastikan tanggal dibaca sebagai tanggal lokal dengan format YYYY-MM-DD
+          const date = new Date(akad_date + "T00:00:00");
+    
+          if (!isNaN(date.getTime())) {
+            const formattedDate = new Intl.DateTimeFormat("id-ID", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric"
+            }).format(date);
+    
+            dateElement.textContent = formattedDate;
+          }
+        }
+      });
+    </script>
 
 
       <!-- Kartu Akad Nikah -->
