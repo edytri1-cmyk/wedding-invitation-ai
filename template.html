@@ -238,20 +238,27 @@
       </div>
     </section>
 
-    <!-- ================= HALAMAN 2: KEDUA MEMPELAI & ORANG TUA ================= -->
+<!-- ================= HALAMAN 2: KEDUA MEMPELAI & ORANG TUA ================= -->
     <section class="section-page" id="page-couple">
       <div class="fine-ornament">
         <div class="fine-rule"></div><div class="diamond"></div><div class="fine-rule"></div>
       </div>
       <div class="section-label">Kami yang Berbahagia</div>
       <div class="section-title">Mempelai &amp; Keluarga</div>
-      <div class="section-desc">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:</div>
+      
+      <!-- Narasi pengantar dinamis dari formulir -->
+      <div class="section-desc">
+        {{ intro_greeting|default('Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:') }}
+      </div>
 
       <!-- Mempelai Wanita -->
       <div class="mempelai-card">
         <div class="portrait" style="background-image: url('{{ bride_photo|default("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop") }}');"></div>
         <div class="full-name">{{ bride_name|default('Aruna Kirana Putri, S.Arch') }}</div>
-        <div class="family-intro">Putri tercinta dari<br>Bapak H. Darmawan Putri &amp; Ibu Hj. Siti Aminah</div>
+        <div class="family-intro">
+          Putri tercinta dari<br>
+          {{ bride_parents|default('Bapak H. Darmawan Putri &amp; Ibu Hj. Siti Aminah') }}
+        </div>
       </div>
 
       <div class="union">&amp;</div>
@@ -260,7 +267,10 @@
       <div class="mempelai-card">
         <div class="portrait" style="background-image: url('{{ groom_photo|default("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop") }}');"></div>
         <div class="full-name">{{ groom_name|default('Aditya Pratama, S.T') }}</div>
-        <div class="family-intro">Putra tercinta dari<br>Bapak H. Hendra Pratama &amp; Ibu Hj. Rina Marlina</div>
+        <div class="family-intro">
+          Putra tercinta dari<br>
+          {{ groom_parents|default('Bapak H. Hendra Pratama &amp; Ibu Hj. Rina Marlina') }}
+        </div>
       </div>
     </section>
 
