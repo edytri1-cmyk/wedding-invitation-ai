@@ -776,7 +776,7 @@ else:
             "Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", 
             value=st.session_state.get("agreed_terms", False)
         )
-        
+         
         if agreement:
             st.session_state["agreed_terms"] = True
             st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** di atas untuk mulai merancang!")
