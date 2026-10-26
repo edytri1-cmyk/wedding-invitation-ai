@@ -381,22 +381,28 @@
         <button type="submit" class="btn-submit">Kirim Konfirmasi</button>
       </form>
     </section>
-
+    
     <!-- ================= HALAMAN 7: HALAMAN PENUTUP ================= -->
-    <section class="section-page" id="page-closing">
+    <section class="section-page" id="page-closing" style="justify-content: flex-end; padding-bottom: 60px;">
       <!-- Perhatikan penggunaan variabel closing_photo di sini -->
       <div class="romantic-bg" style="background-image: url('{{ closing_photo }}');"></div>
       <div class="photographic-scrim"></div>
       <div class="portrait-frame"></div>
     
-      <div class="closing-content">
-        <div class="section-label" style="color: #E6D9BF;">Terima Kasih</div>
-        <div class="closing-thanks">Merupakan Suatu Kehormatan &amp; Kebahagiaan Bagi Kami</div>
-        <div class="fine-ornament" style="margin: 10px 0;">
+      <div class="closing-content" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 3;">
+        <div class="section-label" style="color: #E6D9BF; letter-spacing: 2px;">Terima Kasih</div>
+        
+        <!-- Ukuran teks dikecilkan agar proporsional di bagian bawah -->
+        <div class="closing-thanks" style="font-size: 20px; line-height: 150%; max-width: 340px; font-family: 'Inter', sans-serif; font-weight: 400; color: #F8F5EE;">
+          Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir memberikan doa restu.
+        </div>
+
+        <div class="fine-ornament" style="margin: 8px 0; width: 100px;">
           <div class="fine-rule" style="background: #E6D9BF;"></div><div class="diamond" style="background: #E6D9BF;"></div><div class="fine-rule" style="background: #E6D9BF;"></div>
         </div>
-        <div class="closing-names">{{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}</div>
-        <div style="font-size: 11px; color: #E6D9BF; margin-top: 20px;">Digital Wedding Invitation</div>
+
+        <div class="closing-names" style="font-size: 26px; color: #FFFCF5;">{{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}</div>
+        <div style="font-size: 10px; color: #E6D9BF; margin-top: 10px; letter-spacing: 1px;">Digital Wedding Invitation</div>
       </div>
     </section>
 
