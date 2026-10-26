@@ -389,20 +389,28 @@
       <div class="photographic-scrim"></div>
       <div class="portrait-frame"></div>
     
-      <div class="closing-content" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 3;">
-        <div class="thanks fade-up">Terima Kasih</div>
+      <div class="closing-content" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 3;">
         
-        <!-- Ukuran teks dikecilkan agar proporsional di bagian bawah -->
-        <p class="fade-up" style="color:var(--muted);font-size:0.95rem;">
+        <!-- Kalimat pengantar di bagian atas -->
+        <p class="fade-up" style="color: #F8F5EE; font-size: 13px; line-height: 170%; max-width: 340px; font-family: 'Inter', sans-serif;">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
         </p>
 
-        <div class="fine-ornament" style="margin: 8px 0; width: 100px;">
+        <!-- Tulisan Terima Kasih dengan gaya font skrip/sambung khas keemasan -->
+        <div class="fade-up" style="font-family: 'Italianno', cursive; font-size: 52px; line-height: 100%; color: #E6D9BF; margin: 10px 0;">
+          Terima Kasih
+        </div>
+
+        <div class="fine-ornament" style="margin: 4px 0; width: 80px;">
           <div class="fine-rule" style="background: #E6D9BF;"></div><div class="diamond" style="background: #E6D9BF;"></div><div class="fine-rule" style="background: #E6D9BF;"></div>
         </div>
 
-        <div class="closing-names" style="font-size: 26px; color: #FFFCF5;">{{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}</div>
-        <div style="font-size: 10px; color: #E6D9BF; margin-top: 10px; letter-spacing: 1px;">Digital Wedding Invitation</div>
+        <!-- Nama pasangan menggunakan font serif klasik -->
+        <div class="closing-names" style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: #FFFCF5;">
+          {{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}
+        </div>
+        
+        <div style="font-size: 9px; color: #E6D9BF; margin-top: 10px; letter-spacing: 1.5px; text-transform: uppercase;">Digital Wedding Invitation</div>
       </div>
     </section>
 
