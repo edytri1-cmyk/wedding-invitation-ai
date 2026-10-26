@@ -384,10 +384,11 @@
 
     <!-- ================= HALAMAN 7: HALAMAN PENUTUP ================= -->
     <section class="section-page" id="page-closing">
-      <div class="romantic-bg"></div>
+      <!-- Perhatikan penggunaan variabel closing_photo di sini -->
+      <div class="romantic-bg" style="background-image: url('{{ closing_photo }}');"></div>
       <div class="photographic-scrim"></div>
       <div class="portrait-frame"></div>
-
+    
       <div class="closing-content">
         <div class="section-label" style="color: #E6D9BF;">Terima Kasih</div>
         <div class="closing-thanks">Merupakan Suatu Kehormatan &amp; Kebahagiaan Bagi Kami</div>
@@ -395,7 +396,7 @@
           <div class="fine-rule" style="background: #E6D9BF;"></div><div class="diamond" style="background: #E6D9BF;"></div><div class="fine-rule" style="background: #E6D9BF;"></div>
         </div>
         <div class="closing-names">{{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}</div>
-        <div style="font-size: 11px; color: #E6D9BF; margin-top: 20px;">Digital Wedding Invitation Powered by Undanganku.com</div>
+        <div style="font-size: 11px; color: #E6D9BF; margin-top: 20px;">Digital Wedding Invitation</div>
       </div>
     </section>
 
