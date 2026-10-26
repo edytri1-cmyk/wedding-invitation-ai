@@ -276,10 +276,44 @@
 
     <!-- ================= HALAMAN 3: WAKTU, LOKASI & COUNTDOWN ================= -->
     <section class="section-page" id="page-schedule">
-      <div class="section-label">Save The Date</div>
-      <div class="section-title">Waktu &amp; Tempat</div>
-      <div class="section-desc">Rangkaian acara pernikahan kami akan diselenggarakan pada:</div>
-      <div class="wedding-date-main">{{ akad_date|default('Sabtu, 31 Oktober 2026') }}</div>
+
+<section class="section-page" id="page-schedule">
+  <div class="section-label">Save The Date</div>
+  <div class="section-title">Waktu &amp; Tempat</div>
+  <div class="section-desc">
+    Rangkaian acara pernikahan kami akan diselenggarakan pada:
+  </div>
+
+  <div
+    class="wedding-date-main"
+    id="wedding-date"
+    data-date="{{ akad_date|default('2026-10-31') }}"
+  >
+    Sabtu, 31 Oktober 2026
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dateElement = document.getElementById("wedding-date");
+    const akad_date = dateElement.dataset.date;
+
+    // Pastikan tanggal dibaca sebagai tanggal lokal
+    const date = new Date(akad_date + "T00:00:00");
+
+    if (!isNaN(date.getTime())) {
+      const formattedDate = new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "2-digit"
+      }).format(date);
+
+      dateElement.textContent = formattedDate;
+    }
+  });
+</script>
+
 
       <!-- Kartu Akad Nikah -->
       <div class="event-card">
