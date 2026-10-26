@@ -16,327 +16,215 @@
     html, body {
       width: 100%;
       min-height: 100vh;
-      background-color: #343B32;
+      background-color: #1a1e19;
       font-family: 'Inter', sans-serif;
-      color: #39362E;
+      color: #FFFCF5;
       overflow-x: hidden;
     }
 
-    /* Container Utama Berbasis Mobile Frame */
-    .invitation-container {
+    /* Container Utama Bergaya Mobile Frame */
+    .hero-section {
       position: relative;
       width: 100%;
       max-width: 430px;
+      height: 100vh;
+      min-height: 700px;
       margin: 0 auto;
-      min-height: 100vh;
-      background: #F8F5EE;
+      background-color: #343B32;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      isolation: isolate;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Romantic garden portrait (Background Foto Utama) */
+    .romantic-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0px;
+      top: 0px;
+      background-image: url('{{ photo_url if photo_url else "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1200&fit=crop" }}');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    /* Photographic scrim (Efek Gradasi Gelap untuk Teks) */
+    .photographic-scrim {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0px;
+      top: 0px;
+      background: linear-gradient(180deg, rgba(24, 32, 23, 0.533) 0%, rgba(24, 32, 23, 0) 40%, rgba(24, 32, 23, 0.266) 65%, rgba(24, 32, 23, 0.902) 100%);
+      z-index: 1;
+    }
+
+    /* Portrait frame */
+    .portrait-frame {
+      box-sizing: border-box;
+      position: absolute;
+      width: calc(100% - 36px);
+      height: calc(100% - 36px);
+      left: 18px;
+      top: 18px;
+      opacity: 0.6;
+      border: 0.7px solid #E6D9BF;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Hero content */
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 52px 36px 48px;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+    }
+
+    /* Wedding heading */
+    .wedding-heading {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 58px 32px 32px;
-      isolation: isolate;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      padding: 0px;
+      gap: 12px;
+      width: 100%;
     }
 
-    /* Fine frame */
-    .fine-frame {
-      box-sizing: border-box;
-      position: absolute;
-      width: calc(100% - 32px);
-      height: calc(100% - 32px);
-      left: 16px;
-      top: 16px;
-      border: 1px solid #D7C9AE;
-      pointer-events: none;
-      z-index: 0;
+    .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 34px;
+      line-height: 41px;
+      color: #E6D9BF;
     }
 
     .section-label {
       width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
       font-size: 10px;
       line-height: 150%;
       text-align: center;
-      color: #927442;
-      z-index: 1;
-      margin-bottom: 8px;
+      color: #E6D9BF;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    .opening-sentiment {
+    /* Wedding introduction */
+    .wedding-introduction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0px;
+      gap: 18px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .couple-names {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 400;
-      font-size: 30px;
-      line-height: 115%;
+      font-size: 52px;
+      line-height: 100%;
       text-align: center;
-      color: #39362E;
-      z-index: 2;
-      margin-bottom: 24px;
+      color: #FFFCF5;
     }
 
-    /* Envelope composition */
-    .envelope-box {
-      position: relative;
-      width: 366px;
-      height: 386px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 3;
-      margin-bottom: 20px;
-    }
-
-    .envelope-body {
-      position: absolute;
-      width: 358px;
-      height: 247px;
-      left: 4px;
-      top: 125px;
-      background: #E0D0AE;
-      border: 1px solid #D7C9AE;
-      box-shadow: 0px 16px 30px rgba(86, 69, 42, 0.125);
-      border-radius: 2px;
-      z-index: 0;
-    }
-
-    .invitation-card {
-      position: absolute;
-      width: 310px;
-      height: 290px;
-      left: 28px;
-      top: 45px;
-      background: #FFFCF5;
-      box-shadow: 0px 1px 10px rgba(88, 74, 44, 0.06);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 12px;
-      z-index: 1;
-    }
-
-    .card-border {
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 25px 12px 0px;
-      gap: 7px;
-      width: 100%;
-      height: 100%;
-      border: 0.7px solid #D7C9AE;
-    }
-
-    .card-monogram {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 42px;
-      color: #927442;
-    }
-
-    .card-dedication {
-      font-size: 8px;
-      color: #766E60;
-      text-transform: uppercase;
+    .date-and-city {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      color: #E6D9BF;
       letter-spacing: 1px;
     }
 
-    .couple-names-preview {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      color: #39362E;
-      text-align: center;
-    }
-
-    .wedding-date {
-      font-size: 10px;
-      color: #927442;
-    }
-
-    .envelope-lower-fold {
-      position: absolute;
-      width: 358px;
-      height: 136px;
-      left: 4px;
-      top: 236px;
-      background: #EDE3CF;
-      border: 0.7px solid #D7C9AE;
-      z-index: 3;
-    }
-
-    .envelope-flap {
-      position: absolute;
-      width: 358px;
-      height: 145px;
-      left: 4px;
-      top: 125px;
-      background: #E6D9BF;
-      border: 0.8px solid #D8C299;
-      z-index: 4;
-    }
-
-    .wax-seal {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      left: 153px;
-      top: 233px;
-      background: #AE8951;
-      box-shadow: 0px 3px 5px rgba(102, 80, 46, 0.25);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 5;
-    }
-
-    .seal-monogram {
+    .wedding-sentiment {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 23px;
-      color: #E6D9BF;
-    }
-
-    /* Recipient Section */
-    .recipient {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 0px;
-      gap: 8px;
-      width: 100%;
-      z-index: 4;
-    }
-
-    .salutation {
-      font-size: 12px;
-      color: #766E60;
-    }
-
-    .guest-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      color: #39362E;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 25px;
       text-align: center;
+      color: #F8F5EE;
     }
 
-    .personal-invitation {
-      font-size: 12px;
-      color: #766E60;
-      text-align: center;
-    }
-
-    /* Action Button */
-    .action-btn {
+    /* Scroll cue */
+    .scroll-cue {
       display: flex;
       flex-direction: row;
-      justify-content: center;
       align-items: center;
-      gap: 12px;
-      width: 100%;
-      height: 50px;
-      background: #927442;
-      border: 1px solid #927442;
-      color: #FFFCF5;
-      font-size: 12px;
-      font-weight: 500;
-      border-radius: 4px;
-      cursor: pointer;
+      padding: 14px 0px 0px;
+      gap: 10px;
       text-decoration: none;
-      z-index: 5;
-      margin-top: 10px;
-      transition: background 0.3s ease;
+      animation: bounce 2s infinite;
     }
 
-    .action-btn:hover {
-      background: #7a6035;
-    }
-
-    /* Closing Ornament */
-    .closing-ornament {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 20px 0 10px;
-      z-index: 6;
-    }
-
-    .fine-rule {
-      width: 48px;
-      height: 1px;
-      background: #D7C9AE;
-    }
-
-    .diamond {
-      width: 5px;
-      height: 5px;
-      background: #927442;
-      transform: rotate(45deg);
-    }
-
-    .opening-footer {
+    .scroll-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
       font-size: 9px;
-      color: #927442;
-      z-index: 7;
+      line-height: 11px;
+      color: #E6D9BF;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+      60% { transform: translateY(-3px); }
     }
   </style>
 </head>
 <body>
 
-  <div class="invitation-container">
-    <!-- Fine frame dekoratif -->
-    <div class="fine-frame"></div>
+  <div class="hero-section">
+    <!-- Background Gambar Pasangan -->
+    <div class="romantic-bg"></div>
 
-    <!-- Section label -->
-    <div class="section-label">The Wedding Invitation</div>
+    <!-- Efek Lapisan Gelap (Scrim) -->
+    <div class="photographic-scrim"></div>
 
-    <!-- Opening sentiment -->
-    <div class="opening-sentiment">Kepada Yang Terhormat</div>
+    <!-- Bingkai Estetik Tipis -->
+    <div class="portrait-frame"></div>
 
-    <!-- Envelope composition -->
-    <div class="envelope-box">
-      <div class="envelope-body"></div>
+    <!-- Konten Utama di Atas Background -->
+    <div class="hero-content">
       
-      <div class="invitation-card">
-        <div class="card-border">
-          <div class="card-monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
-          <div class="card-dedication">The Wedding Of</div>
-          <div class="couple-names-preview">{{ bride_name|default('Anissa') }} &amp; {{ groom_name|default('Hamzah') }}</div>
-          <div class="wedding-date">{{ event_date|default('31 Oktober 2026') }}</div>
+      <!-- Bagian Atas: Monogram & Label -->
+      <div class="wedding-heading">
+        <div class="monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
+        <div class="section-label">The Wedding Of</div>
+      </div>
+
+      <!-- Bagian Tengah: Nama Pengantin & Tanggal -->
+      <div class="wedding-introduction">
+        <div class="couple-names">
+          {{ bride_name|default('Anissa') }}<br>
+          <span style="font-size: 36px; font-style: italic; color: #E6D9BF;">&amp;</span><br>
+          {{ groom_name|default('Hamzah') }}
         </div>
+        <div class="date-and-city">{{ event_date|default('Sabtu, 31 Oktober 2026') }}</div>
+        <div class="wedding-sentiment">"{{ quote_text|default('Maha Suci Allah yang telah menciptakan pasangan-pasangan semuanya') }}"</div>
       </div>
 
-      <div class="envelope-lower-fold"></div>
-      <div class="envelope-flap"></div>
+      <!-- Bagian Bawah: Penunjuk Gulir / Scroll Cue -->
+      <a href="#details" class="scroll-cue">
+        <div class="scroll-label">Gulir Ke Bawah</div>
+      </a>
 
-      <div class="wax-seal">
-        <div class="seal-monogram">{{ bride_initial|default('A') }}</div>
-      </div>
     </div>
-
-    <!-- Recipient -->
-    <div class="recipient">
-      <div class="salutation">Bapak/Ibu/Saudara/i</div>
-      <div class="guest-name">{{ guest_name | default('Tamu Undangan') }}</div>
-      <div class="personal-invitation">Tanpa mengurangi rasa hormat, kami mengundang Anda</div>
-    </div>
-
-    <!-- Action Button (Buka Undangan) -->
-    <a href="#detil-acara" class="action-btn">
-      <span>Buka Undangan</span>
-    </a>
-
-    <!-- Closing ornament -->
-    <div class="closing-ornament">
-      <div class="fine-rule"></div>
-      <div class="diamond"></div>
-      <div class="fine-rule"></div>
-    </div>
-
-    <div class="opening-footer">Digital Wedding Invitation</div>
   </div>
 
 </body>
