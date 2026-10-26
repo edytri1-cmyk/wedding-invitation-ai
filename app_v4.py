@@ -784,6 +784,7 @@ else:
             st.session_state["agreed_terms"] = False
             st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
 
+    #TAHAP2 DESAIN & PREVIEW UNDANGAN
     elif "Desain & Preview Undangan" in active_step:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
@@ -810,9 +811,15 @@ else:
                     bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
 
                 # =========================================================
-                # HALAMAN 2: DETAIL FOTO & ORANG TUA MEMPELAI
+                # HALAMAN 2: DETAIL FOTO, ORANG TUA & NARASI PENGANTAR
                 # =========================================================
-                with st.expander("📌 Halaman 2: Foto Personal & Orang Tua", expanded=False):
+                with st.expander("📌 Halaman 2: Foto Personal, Orang Tua & Narasi", expanded=False):
+                    intro_greeting = st.text_area(
+                        "Narasi Pengantar Halaman 2", 
+                        "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:",
+                        disabled=is_session_active
+                    )
+
                     col_p1, col_p2 = st.columns(2)
                     with col_p1:
                         b_photo = st.file_uploader("Foto Mempelai Wanita (Sendiri)", type=["jpg", "jpeg", "png"], key="b_photo_file", disabled=is_session_active)
@@ -844,16 +851,29 @@ else:
                     resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
 
                 # =========================================================
-                # HALAMAN 4: OUR STORY (TIMELINE)
+                # HALAMAN 4: OUR STORY (TIMELINE EDITABLE)
                 # =========================================================
                 with st.expander("📌 Halaman 4: Our Story (Perjalanan Cinta)", expanded=False):
                     story_img = st.file_uploader("Foto Ilustrasi Our Story", type=["jpg", "jpeg", "png"], key="story_img_file", disabled=is_session_active)
                     story_photo = file_to_base64(story_img) if story_img else st.text_input("URL Foto Story", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop", disabled=is_session_active)
                     
-                    st.markdown("Cerita perjalanan waktu penting otomatis ditampilkan sesuai template (Pertama Bertemu, Komitmen, Menuju Halal).")
+                    st.markdown("#### Babak 1")
+                    story_date_1 = st.text_input("Tanggal/Bulan Babak 1", "Januari 2021", disabled=is_session_active)
+                    story_title_1 = st.text_input("Judul Babak 1", "Pertama Bertemu", disabled=is_session_active)
+                    story_desc_1 = st.text_area("Narasi Babak 1", "Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.", disabled=is_session_active)
+
+                    st.markdown("#### Babak 2")
+                    story_date_2 = st.text_input("Tanggal/Bulan Babak 2", "Maret 2024", disabled=is_session_active)
+                    story_title_2 = st.text_input("Judul Babak 2", "Komitmen Bersama", disabled=is_session_active)
+                    story_desc_2 = st.text_area("Narasi Babak 2", "Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.", disabled=is_session_active)
+
+                    st.markdown("#### Babak 3")
+                    story_date_3 = st.text_input("Tanggal/Bulan Babak 3", "Oktober 2026", disabled=is_session_active)
+                    story_title_3 = st.text_input("Judul Babak 3", "Menuju Halal", disabled=is_session_active)
+                    story_desc_3 = st.text_area("Narasi Babak 3", "Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.", disabled=is_session_active)
 
                 # =========================================================
-                # HALAMAN 5: GALERI FOTO PREWEDDING
+                # HALAMAN 5: GALERI FOTO PREWEDDING (DINAMIS)
                 # =========================================================
                 with st.expander("📌 Halaman 5: Galeri Foto Prewedding", expanded=False):
                     uploaded_gallery = st.file_uploader(
@@ -864,18 +884,16 @@ else:
                         key="gallery_uploader"
                     )
                     
-                    gallery_slots = {}
+                    gallery_list = []
                     if uploaded_gallery:
-                        for idx, f in enumerate(uploaded_gallery[:5]):
-                            b64_img = file_to_base64(f)
-                            gallery_slots[f"gallery_{idx+1}"] = b64_img
-                    
-                    # Fallback default gallery keys jika kosong
-                    gallery_main = gallery_slots.get("gallery_1", "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop")
-                    gal_1 = gallery_slots.get("gallery_2", "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop")
-                    gal_2 = gallery_slots.get("gallery_3", "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop")
-                    gal_3 = gallery_slots.get("gallery_4", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=500&fit=crop")
-                    gal_4 = gallery_slots.get("gallery_5", "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=500&fit=crop")
+                        for f in uploaded_gallery[:5]:
+                            gallery_list.append(file_to_base64(f))
+                    else:
+                        gallery_list = [
+                            "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop",
+                            "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop",
+                            "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop"
+                        ]
 
                 # =========================================================
                 # HALAMAN 6: RSVP & UCAPAN DOA
@@ -884,9 +902,12 @@ else:
                     st.info("Formulir RSVP dan daftar ucapan tamu otomatis aktif dan terhubung ke backend Google Sheets.")
 
                 # =========================================================
-                # HALAMAN 7: PENUTUP & AYAT AL-QURAN
+                # HALAMAN 7: PENUTUP, FOTO BACKGROUND & AYAT AL-QURAN
                 # =========================================================
                 with st.expander("📌 Halaman 7: Penutup & Ayat Pernikahan", expanded=False):
+                    c_photo = st.file_uploader("Foto Background Penutup", type=["jpg", "jpeg", "png"], key="closing_img_file", disabled=is_session_active)
+                    closing_photo = file_to_base64(c_photo) if c_photo else st.text_input("Atau URL Foto Background Penutup", cover_photo_url, disabled=is_session_active)
+                    
                     quote_text = st.text_area(
                         "Ayat Al-Quran / Kutipan Pernikahan",
                         "Maha Suci Allah yang telah menciptakan pasangan-pasangan semuanya, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka maupun dari apa yang tidak mereka ketahui.",
@@ -945,6 +966,7 @@ else:
                                 groom_photo=groom_photo,
                                 bride_parents=bride_parents,
                                 groom_parents=groom_parents,
+                                intro_greeting=intro_greeting,
                                 akad_date=akad_date.strftime("%d %B %Y"),
                                 raw_event_date=akad_date.strftime("%Y-%m-%d"),
                                 akad_time=akad_time,
@@ -956,13 +978,20 @@ else:
                                 resep_venue=resep_venue,
                                 resep_address=resep_address,
                                 resep_maps_url=resep_maps_url,
+                                event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
                                 story_photo=story_photo,
-                                gallery_main=gallery_main,
-                                gallery_1=gal_1,
-                                gallery_2=gal_2,
-                                gallery_3=gal_3,
-                                gallery_4=gal_4,
+                                story_date_1=story_date_1,
+                                story_title_1=story_title_1,
+                                story_desc_1=story_desc_1,
+                                story_date_2=story_date_2,
+                                story_title_2=story_title_2,
+                                story_desc_2=story_desc_2,
+                                story_date_3=story_date_3,
+                                story_title_3=story_title_3,
+                                story_desc_3=story_desc_3,
+                                gallery_list=gallery_list,
                                 quote_text=quote_text,
+                                closing_photo=closing_photo,
                                 photo_url=cover_photo_url,
                                 music_url=final_music_url,
                                 guest_name=test_guest_name,
