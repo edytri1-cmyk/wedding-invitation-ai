@@ -9,7 +9,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Italianno&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,213 +18,381 @@
       min-height: 100vh;
       background-color: #1a1e19;
       font-family: 'Inter', sans-serif;
-      color: #FFFCF5;
+      color: #39362E;
       overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
-    /* Container Utama Bergaya Mobile Frame */
-    .hero-section {
+    /* Container Utama Mobile Frame (Max Width 430px) */
+    .invitation-wrapper {
       position: relative;
       width: 100%;
       max-width: 430px;
-      height: 100vh;
-      min-height: 700px;
       margin: 0 auto;
-      background-color: #343B32;
+      background: #F8F5EE;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    /* UMUM SECTION STYLING */
+    .section-page {
+      position: relative;
+      width: 100%;
+      min-height: 900px;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      isolation: isolate;
+      align-items: center;
+      padding: 64px 32px;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
-
-    /* Romantic garden portrait (Background Foto Utama) */
-    .romantic-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0px;
-      top: 0px;
-      background-image: url('{{ photo_url if photo_url else "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1200&fit=crop" }}');
-      background-size: cover;
-      background-position: center;
-      z-index: 0;
-    }
-
-    /* Photographic scrim (Efek Gradasi Gelap untuk Teks) */
-    .photographic-scrim {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0px;
-      top: 0px;
-      background: linear-gradient(180deg, rgba(24, 32, 23, 0.533) 0%, rgba(24, 32, 23, 0) 40%, rgba(24, 32, 23, 0.266) 65%, rgba(24, 32, 23, 0.902) 100%);
-      z-index: 1;
-    }
-
-    /* Portrait frame */
-    .portrait-frame {
-      box-sizing: border-box;
-      position: absolute;
-      width: calc(100% - 36px);
-      height: calc(100% - 36px);
-      left: 18px;
-      top: 18px;
-      opacity: 0.6;
-      border: 0.7px solid #E6D9BF;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* Hero content */
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      padding: 52px 36px 48px;
-      width: 100%;
-      height: 100%;
-      z-index: 3;
-    }
-
-    /* Wedding heading */
-    .wedding-heading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0px;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .monogram {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: 34px;
-      line-height: 41px;
-      color: #E6D9BF;
     }
 
     .section-label {
-      width: 100%;
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
       font-size: 10px;
       line-height: 150%;
       text-align: center;
-      color: #E6D9BF;
-      letter-spacing: 2px;
+      color: #927442;
       text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
     }
 
-    /* Wedding introduction */
-    .wedding-introduction {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0px;
-      gap: 18px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .couple-names {
+    .section-title {
       font-family: 'Cormorant Garamond', serif;
-      font-weight: 400;
-      font-size: 52px;
-      line-height: 100%;
+      font-size: 42px;
+      line-height: 105%;
       text-align: center;
-      color: #FFFCF5;
+      color: #39362E;
+      margin-bottom: 16px;
     }
 
-    .date-and-city {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 11px;
-      line-height: 13px;
-      color: #E6D9BF;
-      letter-spacing: 1px;
-    }
-
-    .wedding-sentiment {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 25px;
+    .section-desc {
+      font-size: 14px;
+      line-height: 185%;
       text-align: center;
-      color: #F8F5EE;
+      color: #766E60;
+      margin-bottom: 24px;
     }
 
-    /* Scroll cue */
-    .scroll-cue {
+    .fine-ornament {
       display: flex;
       flex-direction: row;
+      justify-content: center;
       align-items: center;
-      padding: 14px 0px 0px;
-      gap: 10px;
-      text-decoration: none;
-      animation: bounce 2s infinite;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .fine-rule { width: 48px; height: 1px; background: #D7C9AE; }
+    .diamond { width: 5px; height: 5px; background: #927442; transform: rotate(45deg); }
+
+    /* HALAMAN 1: COVER UTAMA */
+    #page-cover {
+      background: #343B32;
+      justify-content: space-between;
+      padding: 52px 36px 48px;
+      height: 900px;
+    }
+    .romantic-bg {
+      position: absolute; width: 100%; height: 100%; left: 0; top: 0;
+      background-image: url('{{ photo_url if photo_url else "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1200&fit=crop" }}');
+      background-size: cover; background-position: center; z-index: 0;
+    }
+    .photographic-scrim {
+      position: absolute; width: 100%; height: 100%; left: 0; top: 0;
+      background: linear-gradient(180deg, rgba(24, 32, 23, 0.533) 0%, rgba(24, 32, 23, 0) 40%, rgba(24, 32, 23, 0.266) 65%, rgba(24, 32, 23, 0.902) 100%);
+      z-index: 1;
+    }
+    .portrait-frame {
+      box-sizing: border-box; position: absolute; width: calc(100% - 36px); height: calc(100% - 36px);
+      left: 18px; top: 18px; opacity: 0.6; border: 0.7px solid #E6D9BF; pointer-events: none; z-index: 2;
+    }
+    .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: 100%; text-align: center; }
+    .monogram { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 34px; color: #E6D9BF; }
+    .couple-names-cover { font-family: 'Cormorant Garamond', serif; font-size: 56px; line-height: 95%; color: #FFFCF5; margin: 15px 0; }
+    .date-and-city { font-size: 11px; color: #E6D9BF; letter-spacing: 1px; }
+    .wedding-sentiment { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; color: #F8F5EE; }
+
+    /* HALAMAN 2: KEDUA MEMPELAI & ORANG TUA */
+    #page-couple { background: #F8F5EE; gap: 20px; }
+    .mempelai-card {
+      display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 366px; margin-bottom: 10px;
+    }
+    .portrait {
+      width: 180px; height: 220px; background-size: cover; background-position: center;
+      border-radius: 90px 90px 0px 0px; border: 1px solid #D7C9AE;
+    }
+    .full-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #39362E; text-align: center; }
+    .family-intro { font-size: 11px; line-height: 170%; text-align: center; color: #766E60; }
+    .union { font-family: 'Italianno', cursive; font-size: 48px; color: #927442; margin: -5px 0; }
+
+    /* HALAMAN 3: WAKTU, LOKASI & COUNTDOWN */
+    #page-schedule { background: #EDE3CF; }
+    .wedding-date-main { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: #927442; text-align: center; margin-bottom: 10px; }
+    .event-card {
+      box-sizing: border-box; display: flex; flex-direction: column; align-items: center; padding: 24px 20px; gap: 12px;
+      width: 100%; max-width: 366px; background: #FFFCF5; border: 0.8px solid #D7C9AE; margin-bottom: 16px; border-radius: 4px;
+    }
+    .event-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; color: #39362E; }
+    .event-schedule { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; }
+    .event-date-text { color: #39362E; }
+    .event-time-text { color: #927442; font-weight: 500; }
+    .venue-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #39362E; text-align: center; }
+    .venue-address { font-size: 12px; line-height: 160%; text-align: center; color: #766E60; }
+    .btn-action {
+      display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; max-width: 318px; height: 44px;
+      border: 1px solid #927442; color: #927442; font-size: 12px; font-weight: 500; text-decoration: none; border-radius: 4px; transition: 0.2s;
+    }
+    .btn-action:hover { background: #927442; color: #FFFCF5; }
+    .btn-primary-action { background: #927442; color: #FFFCF5; }
+
+    /* HALAMAN 4: OUR STORY (TIMELINE) */
+    #page-story { background: #F8F5EE; }
+    .story-photo { width: 100%; max-width: 366px; height: 220px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 20px; }
+    .relationship-timeline { display: flex; flex-direction: column; width: 100%; max-width: 366px; gap: 24px; }
+    .story-chapter { display: flex; flex-direction: row; gap: 16px; width: 100%; }
+    .timeline-marker { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 12px; }
+    .diamond-marker { width: 6px; height: 6px; background: #927442; transform: rotate(45deg); }
+    .timeline-rule { width: 1px; flex-grow: 1; background: #D7C9AE; min-height: 80px; }
+    .chapter-content { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+    .chapter-date { font-size: 9px; color: #927442; text-transform: uppercase; letter-spacing: 1px; }
+    .chapter-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #39362E; }
+    .chapter-narrative { font-size: 12px; line-height: 170%; color: #766E60; }
+
+    /* HALAMAN 5: GALERI FOTO */
+    #page-gallery { background: #FFFCF5; }
+    .gallery-main-photo { width: 100%; max-width: 382px; height: 280px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 12px; }
+    .gallery-pair { display: flex; flex-direction: row; gap: 12px; width: 100%; max-width: 382px; margin-bottom: 12px; }
+    .gallery-item { width: 50%; height: 200px; background-size: cover; background-position: center; border-radius: 4px; }
+
+    /* HALAMAN 6: RSVP & FORMULIR */
+    #page-rsvp { background: #F8F5EE; }
+    .form-card { width: 100%; max-width: 366px; display: flex; flex-direction: column; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; text-align: left; width: 100%; }
+    .form-group label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #766E60; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 14px; background: #FFFCF5; border: 1px solid #D7C9AE; border-radius: 4px; font-family: inherit; font-size: 13px; color: #39362E; outline: none;
+    }
+    .btn-submit {
+      width: 100%; height: 46px; background: #927442; color: #FFFCF5; border: none; border-radius: 4px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-top: 8px;
     }
 
-    .scroll-label {
-      font-family: 'Inter', sans-serif;
-      font-weight: 400;
-      font-size: 9px;
-      line-height: 11px;
-      color: #E6D9BF;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-6px); }
-      60% { transform: translateY(-3px); }
-    }
+    /* HALAMAN 7: PENUTUP */
+    #page-closing { background: #343B32; justify-content: center; text-align: center; height: 900px; }
+    .closing-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 366px; }
+    .closing-thanks { font-family: 'Cormorant Garamond', serif; font-size: 48px; color: #E6D9BF; }
+    .closing-names { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #FFFCF5; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-  <div class="hero-section">
-    <!-- Background Gambar Pasangan -->
-    <div class="romantic-bg"></div>
+  <div class="invitation-wrapper">
 
-    <!-- Efek Lapisan Gelap (Scrim) -->
-    <div class="photographic-scrim"></div>
-
-    <!-- Bingkai Estetik Tipis -->
-    <div class="portrait-frame"></div>
-
-    <!-- Konten Utama di Atas Background -->
-    <div class="hero-content">
+    <!-- ================= HALAMAN 1: COVER ================= -->
+    <section class="section-page" id="page-cover">
+      <div class="romantic-bg"></div>
+      <div class="photographic-scrim"></div>
+      <div class="portrait-frame"></div>
       
-      <!-- Bagian Atas: Monogram & Label -->
-      <div class="wedding-heading">
-        <div class="monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
-        <div class="section-label">The Wedding Of</div>
-      </div>
-
-      <!-- Bagian Tengah: Nama Pengantin & Tanggal -->
-      <div class="wedding-introduction">
-        <div class="couple-names">
-          {{ bride_name|default('Anissa') }}<br>
-          <span style="font-size: 36px; font-style: italic; color: #E6D9BF;">&amp;</span><br>
-          {{ groom_name|default('Hamzah') }}
+      <div class="hero-content">
+        <div class="wedding-heading">
+          <div class="monogram">{{ bride_initial|default('A') }} &amp; {{ groom_initial|default('H') }}</div>
+          <div class="section-label" style="color: #E6D9BF;">The Wedding Of</div>
         </div>
-        <div class="date-and-city">{{ event_date|default('Sabtu, 31 Oktober 2026') }}</div>
-        <div class="wedding-sentiment">"{{ quote_text|default('Maha Suci Allah yang telah menciptakan pasangan-pasangan semuanya') }}"</div>
+
+        <div class="wedding-introduction">
+          <div class="couple-names-cover">
+            {{ bride_name|default('Aruna Kirana Putri') }}<br>
+            <span style="font-family: 'Italianno'; font-size: 48px; color: #E6D9BF;">&amp;</span><br>
+            {{ groom_name|default('Aditya Pratama') }}
+          </div>
+          <div class="date-and-city">{{ event_date|default('Sabtu, 31 Oktober 2026') }} — Bandung</div>
+        </div>
+
+        <div class="scroll-cue" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+          <div class="wedding-sentiment">"{{ quote_text|default('Maha Suci Allah yang menciptakan pasangan-pasangan') }}"</div>
+          <span style="font-size: 10px; color: #E6D9BF; letter-spacing: 1px; margin-top: 8px;">↓ GULIR KE BAWAH</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 2: KEDUA MEMPELAI & ORANG TUA ================= -->
+    <section class="section-page" id="page-couple">
+      <div class="fine-ornament">
+        <div class="fine-rule"></div><div class="diamond"></div><div class="fine-rule"></div>
+      </div>
+      <div class="section-label">Bahagia Kami</div>
+      <div class="section-title">Mempelai &amp; Keluarga</div>
+      <div class="section-desc">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:</div>
+
+      <!-- Mempelai Wanita -->
+      <div class="mempelai-card">
+        <div class="portrait" style="background-image: url('{{ bride_photo|default("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop") }}');"></div>
+        <div class="full-name">{{ bride_name|default('Aruna Kirana Putri, S.Arch') }}</div>
+        <div class="family-intro">Putri tercinta dari<br>Bapak H. Darmawan Putri &amp; Ibu Hj. Siti Aminah</div>
       </div>
 
-      <!-- Bagian Bawah: Penunjuk Gulir / Scroll Cue -->
-      <a href="#details" class="scroll-cue">
-        <div class="scroll-label">Gulir Ke Bawah</div>
-      </a>
+      <div class="union">&amp;</div>
 
-    </div>
+      <!-- Mempelai Pria -->
+      <div class="mempelai-card">
+        <div class="portrait" style="background-image: url('{{ groom_photo|default("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop") }}');"></div>
+        <div class="full-name">{{ groom_name|default('Aditya Pratama, S.T') }}</div>
+        <div class="family-intro">Putra tercinta dari<br>Bapak H. Hendra Pratama &amp; Ibu Hj. Rina Marlina</div>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 3: WAKTU, LOKASI & COUNTDOWN ================= -->
+    <section class="section-page" id="page-schedule">
+      <div class="section-label">Save The Date</div>
+      <div class="section-title">Waktu &amp; Tempat</div>
+      <div class="section-desc">Rangkaian acara pernikahan kami akan diselenggarakan pada:</div>
+      <div class="wedding-date-main">{{ event_date|default('Sabtu, 31 Oktober 2026') }}</div>
+
+      <!-- Kartu Akad Nikah -->
+      <div class="event-card">
+        <div class="event-title">Akad Nikah</div>
+        <div class="event-schedule">
+          <span class="event-date-text">📅 {{ akad_date|default('Sabtu, 31 Oktober 2026') }}</span>
+          <span class="event-time-text">⏰ Pukul {{ akad_time|default('08.00 WIB s/d Selesai') }}</span>
+        </div>
+        <div class="fine-rule" style="width: 40px; margin: 4px 0;"></div>
+        <div class="venue-name">{{ akad_venue|default('Masjid Agung Trans Studio') }}</div>
+        <div class="venue-address">{{ akad_address|default('Jl. Gatot Subroto No.289, Cibangkong, Batununggal, Kota Bandung') }}</div>
+        <a href="{{ akad_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
+          📍 Lihat Lokasi Akad (Google Maps)
+        </a>
+      </div>
+
+      <!-- Kartu Resepsi -->
+      <div class="event-card">
+        <div class="event-title">Resepsi</div>
+        <div class="event-schedule">
+          <span class="event-date-text">📅 {{ resep_date|default('Sabtu, 31 Oktober 2026') }}</span>
+          <span class="event-time-text">⏰ Pukul {{ resep_time|default('11.00 - 14.00 WIB') }}</span>
+        </div>
+        <div class="fine-rule" style="width: 40px; margin: 4px 0;"></div>
+        <div class="venue-name">{{ resep_venue|default('The Trans Luxury Hotel Ballroom') }}</div>
+        <div class="venue-address">{{ resep_address|default('Jl. Gatot Subroto No.289, Bandung') }}</div>
+        <a href="{{ resep_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
+          📍 Lihat Lokasi Resepsi (Google Maps)
+        </a>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 4: OUR STORY ================= -->
+    <section class="section-page" id="page-story">
+      <div class="section-label">Perjalanan Kami</div>
+      <div class="section-title">Our Story</div>
+      <div class="story-photo" style="background-image: url('{{ story_photo|default("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop") }}');"></div>
+
+      <div class="relationship-timeline">
+        <!-- Chapter 1 -->
+        <div class="story-chapter">
+          <div class="timeline-marker">
+            <div class="diamond-marker"></div>
+            <div class="timeline-rule"></div>
+          </div>
+          <div class="chapter-content">
+            <div class="chapter-date">Januari 2021</div>
+            <div class="chapter-title">Pertama Bertemu</div>
+            <div class="chapter-narrative">Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.</div>
+          </div>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div class="story-chapter">
+          <div class="timeline-marker">
+            <div class="diamond-marker"></div>
+            <div class="timeline-rule"></div>
+          </div>
+          <div class="chapter-content">
+            <div class="chapter-date">Maret 2024</div>
+            <div class="chapter-title">Komitmen Bersama</div>
+            <div class="chapter-narrative">Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.</div>
+          </div>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div class="story-chapter">
+          <div class="timeline-marker">
+            <div class="diamond-marker"></div>
+          </div>
+          <div class="chapter-content">
+            <div class="chapter-date">Oktober 2026</div>
+            <div class="chapter-title">Menuju Halal</div>
+            <div class="chapter-narrative">Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 5: GALERI FOTO ================= -->
+    <section class="section-page" id="page-gallery">
+      <div class="section-label">Momen Indah</div>
+      <div class="section-title">Galeri Pre-Wedding</div>
+      <div class="section-desc" style="font-style: italic; font-family: 'Cormorant Garamond'; font-size: 18px; margin-top: -10px;">"A moment that lasts forever"</div>
+
+      <div class="gallery-main-photo" style="background-image: url('{{ gallery_main|default("https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop") }}');"></div>
+
+      <div class="gallery-pair">
+        <div class="gallery-item" style="background-image: url('{{ gallery_1|default("https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop") }}');"></div>
+        <div class="gallery-item" style="background-image: url('{{ gallery_2|default("https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop") }}');"></div>
+      </div>
+
+      <div class="gallery-pair">
+        <div class="gallery-item" style="background-image: url('{{ gallery_3|default("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop") }}');"></div>
+        <div class="gallery-item" style="background-image: url('{{ gallery_4|default("https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=500&fit=crop") }}');"></div>
+      </div>
+      <div class="section-label" style="margin-top: 10px;">Aruna &amp; Aditya Gallery</div>
+    </section>
+
+    <!-- ================= HALAMAN 6: RSVP & FORMULIR ================= -->
+    <section class="section-page" id="page-rsvp">
+      <div class="section-label">Konfirmasi Kehadiran</div>
+      <div class="section-title">RSVP &amp; Doa Restu</div>
+      <div class="section-desc">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir memberikan doa restu.</div>
+
+      <form class="form-card" id="rsvpForm" action="#" method="POST">
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <input type="text" name="nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required />
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Kehadiran</label>
+          <select name="status" required>
+            <option value="Hadir">Hadir (InsyaAllah)</option>
+            <option value="Ragu">Masih Ragu-ragu</option>
+            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Tamu</label>
+          <input type="number" name="jumlah" min="1" max="5" value="1" />
+        </div>
+        <div class="form-group">
+          <label>Ucapan &amp; Doa Restu</label>
+          <textarea name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Kirim Konfirmasi</button>
+      </form>
+    </section>
+
+    <!-- ================= HALAMAN 7: HALAMAN PENUTUP ================= -->
+    <section class="section-page" id="page-closing">
+      <div class="romantic-bg"></div>
+      <div class="photographic-scrim"></div>
+      <div class="portrait-frame"></div>
+
+      <div class="closing-content">
+        <div class="section-label" style="color: #E6D9BF;">Terima Kasih</div>
+        <div class="closing-thanks">Merupakan Suatu Kehormatan &amp; Kebahagiaan Bagi Kami</div>
+        <div class="fine-ornament" style="margin: 10px 0;">
+          <div class="fine-rule" style="background: #E6D9BF;"></div><div class="diamond" style="background: #E6D9BF;"></div><div class="fine-rule" style="background: #E6D9BF;"></div>
+        </div>
+        <div class="closing-names">{{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}</div>
+        <div style="font-size: 11px; color: #E6D9BF; margin-top: 20px;">Digital Wedding Invitation Powered by Undanganku.com</div>
+      </div>
+    </section>
+
   </div>
 
 </body>
