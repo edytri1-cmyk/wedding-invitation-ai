@@ -617,7 +617,7 @@ else:
                 color: #4A3728;
                 padding: 18px 16px;
                 border-radius: 16px;
-                border: 1px solid #E8C39E;
+                border: 1px solid #B8860B;
                 box-shadow: 0 6px 18px rgba(139, 90, 43, 0.1);
                 height: 100%;
             }
@@ -634,7 +634,7 @@ else:
                 color: #fff;
                 padding: 22px 24px;
                 border-radius: 16px;
-                border: 1px solid #D4AF37;
+                border: 1px solid #B8860B;
                 margin-top: 24px;
             }
             </style>
