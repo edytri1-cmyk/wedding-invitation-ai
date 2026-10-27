@@ -599,7 +599,7 @@ else:
         st.markdown("""
             <style>
             .hero-title {
-                color: #5C4033;
+                color: #B8860B;
                 font-family: 'Playfair Display', serif;
                 font-size: 36px;
                 font-weight: 700;
@@ -614,7 +614,7 @@ else:
             }
             .feature-box-pink {
                 background: rgba(255, 249, 240, 0.9);
-                color: #4A3728;
+                color: #B8860B;
                 padding: 18px 16px;
                 border-radius: 16px;
                 border: 1px solid #B8860B;
@@ -623,7 +623,7 @@ else:
             }
             .section-heading {
                 text-align: center;
-                color: #5C4033;
+                color: #B8860B;
                 font-family: 'Playfair Display', serif;
                 font-size: 24px;
                 font-weight: 600;
@@ -726,7 +726,7 @@ else:
             st.markdown("""
                 <div class="feature-box-pink">
                     <h4 style="color: #B8860B; font-size: 15px; margin-bottom: 6px;">🌐 Multi Create Link Undangan</h4>
-                    <p style="font-size: 12.5px; color: #6B4E31; margin: 0;">Buat Undangan Digital tanpa batasan jumlah undangan.</p>
+                    <p style="font-size: 12.5px; color: #6B4E31; margin: 0;">Buat Undangan Digital Sebanyak tamu yang diundang tanpa batasan jumlah undangan.</p>
                 </div>
             """, unsafe_allow_html=True)
     
