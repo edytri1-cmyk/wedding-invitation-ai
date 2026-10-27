@@ -468,68 +468,11 @@ if app_mode == "🔑 Admin":
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
 # =========================================================
 else:
-    # Masukkan URL gambar background (bisa berupa link gambar online, path file lokal, atau string base64)
-    bg_image_url = "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=1000&fit=crop" 
-    # Jika menggunakan file lokal, Anda bisa mengganti URL di atas dengan path file lokal Anda, misalnya "background_mawar.jpg"
-
-    # Styling CSS Kustom untuk Background Dashboard & Kartu Navigasi
-    st.markdown(f"""
-        <style>
-        /* Mengatur Background Utama Aplikasi Streamlit */
-        .stApp {{
-            background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url("{bg_image_url}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-
-        /* Memberikan latar belakang semi-transparan pada kontainer utama agar teks mudah dibaca */
-        div.block-container {{
-            background-color: rgba(248, 245, 238, 0.92);
-            padding: 2.5rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }}
-
-        .step-nav-card {{
-            background: #FFF9F0;
-            border: 2px solid #E8C39E;
-            border-radius: 16px;
-            padding: 15px 10px;
-            text-align: center;
-            box-shadow: 0 4px 14px rgba(139, 90, 43, 0.12);
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }}
-        .step-circle {{
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 8px;
-            box-shadow: 0 3px 8px rgba(184, 134, 11, 0.35);
-        }}
-        .step-title {{
-            color: #5C4033;
-            font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }}
-        .step-desc {{
-            color: #8B7355;
-            font-size: 10px;
-            line-height: 1.3;
-        }}
-        </style>
-    """, unsafe_allow_html=True)
+#    st.markdown("""
+#    <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
+#        💍 Wedding AI Invitation Generator
+#    </h3>
+#""", unsafe_allow_html=True)
 
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
@@ -540,9 +483,49 @@ else:
 
     is_session_active = st.session_state.get("is_session_active", False)
 
-    st.markdown("<p style='color: #B8860B; font-weight: bold;'>🧭 Alur Pembuatan Undangan Digital:</p>", unsafe_allow_html=True)
+    # Styling CSS Kustom untuk Kartu Alur Navigasi ala Gambar 2
+    st.markdown("""
+        <style>
+        .step-nav-card {
+            background: #ffffff;
+            border: 2px solid #fda4af;
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.08);
+            margin-bottom: 10px;
+        }
+        .step-circle {
+            background: #be123c;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(190, 18, 60, 0.3);
+        }
+        .step-title {
+            color: #881337;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        .step-desc {
+            color: #78716c;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    # Daftar tahapan alur beserta deskripsinya
+    st.markdown("<p style='color: #f43f5e; font-weight: bold;'>🧭 Alur Pembuatan Undangan Digital:</p>", unsafe_allow_html=True)
+
+# Daftar tahapan alur beserta deskripsinya
     steps_info = [
         {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & tekan centang (v) untuk setujui syarat."},
         {"num": "2", "title": "Desain & Preview Undangan", "desc": "Isi data mempelai, tanggal pernikahan, tema, upload foto & pilihan music latar."},
@@ -568,7 +551,7 @@ else:
         with col:
             # Tampilan visual kartu
             st.markdown(f"""
-                <div class="step-nav-card" style="border-color: {'#B8860B' if st.session_state['active_step_idx'] == real_idx else '#E8C39E'};">
+                <div class="step-nav-card" style="border-color: {'#be123c' if st.session_state['active_step_idx'] == real_idx else '#fda4af'};">
                     <div class="step-circle">{info['num']}</div>
                     <div class="step-title">{info['title']}</div>
                     <div class="step-desc">{info['desc']}</div>
@@ -583,6 +566,8 @@ else:
             if st.button(btn_label, key=f"nav_btn_{real_idx}", type=btn_type, use_container_width=True):
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
+
+    #st.markdown("---")
 
     # Tentukan string active_step agar kompatibel dengan logika kode di bawahnya
     full_menu_list = [
