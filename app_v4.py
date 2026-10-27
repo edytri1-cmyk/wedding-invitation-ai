@@ -474,6 +474,10 @@ else:
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
 
+    # Inisialisasi state untuk pilihan template jika belum ada
+    if "selected_template" not in st.session_state:
+        st.session_state["selected_template"] = "template01"
+
     # Inisialisasi state untuk alur navigasi aktif jika belum ada
     if "active_step_idx" not in st.session_state:
         st.session_state["active_step_idx"] = 0
@@ -538,7 +542,7 @@ else:
 
     # Daftar tahapan alur beserta deskripsinya
     steps_info = [
-        {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & tekan centang (v) untuk setujui syarat."},
+        {"num": "1", "title": "Panduan & Pilih Template", "desc": "Baca ketentuan, pilih template (01-20), & setujui syarat."},
         {"num": "2", "title": "Desain & Preview Undangan", "desc": "Isi data mempelai, tanggal pernikahan, tema, upload foto & pilihan music latar."},
         {"num": "3", "title": "Buat Link Undangan", "desc": "Aktivasi Layanan, Desain Narasi, Upload data CSV, Download Link Undangan."},
         {"num": "4", "title": "Manajemen RSVP", "desc": "Pantau kehadiran Undangan & cek ucapan dari para tamu, statistik kehadiran."}
@@ -593,7 +597,7 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: PANDUAN APLIKASI
+    # TAHAP 1: PANDUAN APLIKASI & PEMILIHAN TEMPLATE
     # =========================================================
     if "Panduan Aplikasi" in active_step:
         st.markdown("""
@@ -636,6 +640,7 @@ else:
                 border-radius: 16px;
                 border: 1px solid #B8860B;
                 margin-top: 24px;
+                margin-bottom: 24px;
             }
             </style>
         """, unsafe_allow_html=True)
@@ -660,14 +665,6 @@ else:
                     </p>
                 </div>
             """, unsafe_allow_html=True)
-            
-            btn_c1, btn_c2 = st.columns(2)
-            with btn_c1:
-                # Ketika tombol Klik "Lihat Demo" ditekan, langsung ubah persetujuan dan alihkan ke Tahap 2 (indeks 1)
-                if st.button("🌸 Lihat Demo", type="primary", use_container_width=True):
-                    st.session_state["agreed_terms"] = True
-                    st.session_state["active_step_idx"] = 1
-                    st.rerun()
 
         with hero_col2:
             st.markdown("""
@@ -740,22 +737,267 @@ else:
                 </p>
             </div>
         """, unsafe_allow_html=True)
-    
+
+        # PEMILIHAN TEMPLATE (Diletakkan di bawah Jaminan Keamanan)
+        st.markdown("---")
+        st.markdown("<h3 style='color: #B8860B;'>🎨 Pilih Template Undangan (template01 - template20)</h3>", unsafe_allow_html=True)
+        
+        template_options = [f"template{i:02d}" for i in range(1, 21)]
+        selected_tpl = st.selectbox(
+            "Pilih Template Undangan yang Tersedia:",
+            template_options,
+            index=template_options.index(st.session_state["selected_template"]) if st.session_state["selected_template"] in template_options else 0,
+            help="Pilih salah satu template dari template01 sampai template20"
+        )
+        st.session_state["selected_template"] = selected_tpl
+        st.info(f"✨ Anda memilih: **{selected_tpl}**")
+
         st.markdown('</div>', unsafe_allow_html=True)
         st.markdown("---")
         
-        # Checkbox Persetujuan
+        # Checkbox Persetujuan Syarat & Ketentuan
         agreement = st.checkbox(
-            "Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", 
+            "Saya telah membaca informasi, memilih template, dan menyetujui syarat serta kebijakan keamanan data platform.", 
             value=st.session_state.get("agreed_terms", False)
         )
           
         if agreement:
             st.session_state["agreed_terms"] = True
-            st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** di atas untuk mulai merancang!")
+            st.success(f"✅ Syarat disetujui & template **{selected_tpl}** terpilih!")
+            
+            # Tombol otomatis yang langsung mengarahkan ke Tahap 2
+            if st.button("🚀 Lanjutkan ke Tahap 2 (Isi Formulir & Upload Foto)", type="primary", use_container_width=True):
+                st.session_state["active_step_idx"] = 1  # Langsung pindah ke index Tahap 2
+                st.rerun()
         else:
             st.session_state["agreed_terms"] = False
-            st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
+            st.warning("⚠️ Harap pilih template dan centang kotak persetujuan di atas untuk otomatis membuka akses ke Tahap 2.")
+
+    # =========================================================
+    # TAHAP 2: DESAIN & PREVIEW UNDANGAN
+    # =========================================================
+    elif "Desain & Preview Undangan" in active_step:
+        if not st.session_state.get("agreed_terms", False):
+            st.warning("⚠️ Mohon pilih template dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
+        else:
+            st.subheader(f"🎨 2. Pengisian Data Pernikahan & Upload Foto (Template Aktif: {st.session_state.get('selected_template', 'template01')})")
+            
+            col_form, col_preview = st.columns([1, 1])
+
+            with col_form:
+                st.subheader("📋 Form Isian Premium (7 Halaman)")
+                
+                if is_session_active:
+                    st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
+
+                # HALAMAN 1: COVER UTAMA & IDENTITAS MEMPELAI
+                with st.expander("📌 Halaman 1: Cover & Identitas Utama", expanded=True):
+                    cover_photo = st.file_uploader("Foto Cover Halaman Pertama", type=["jpg", "jpeg", "png"], key="cover_img", disabled=is_session_active)
+                    cover_photo_url = file_to_base64(cover_photo) if cover_photo else st.text_input("Atau URL Foto Cover", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
+                    
+                    couple_initials = st.text_input("Singkatan Nama Kedua Mempelai", "A & A", disabled=is_session_active, help="Contoh: A & A atau A & H")
+                    groom_name = st.text_input("Nama Lengkap Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
+                    bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
+
+                # HALAMAN 2: DETAIL FOTO, ORANG TUA & NARASI PENGANTAR
+                with st.expander("📌 Halaman 2: Foto Personal, Orang Tua & Narasi", expanded=False):
+                    intro_greeting = st.text_area(
+                        "Narasi Pengantar Halaman 2", 
+                        "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:",
+                        disabled=is_session_active
+                    )
+
+                    col_p1, col_p2 = st.columns(2)
+                    with col_p1:
+                        b_photo = st.file_uploader("Foto Mempelai Wanita (Sendiri)", type=["jpg", "jpeg", "png"], key="b_photo_file", disabled=is_session_active)
+                        bride_photo = file_to_base64(b_photo) if b_photo else st.text_input("URL Foto Wanita", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop", disabled=is_session_active)
+                    with col_p2:
+                        g_photo = st.file_uploader("Foto Mempelai Pria (Sendiri)", type=["jpg", "jpeg", "png"], key="g_photo_file", disabled=is_session_active)
+                        groom_photo = file_to_base64(g_photo) if g_photo else st.text_input("URL Foto Pria", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop", disabled=is_session_active)
+
+                    bride_parents = st.text_input("Nama Orang Tua Mempelai Wanita", "Bapak H. Darmawan Putri & Ibu Hj. Siti Aminah", disabled=is_session_active)
+                    groom_parents = st.text_input("Nama Orang Tua Mempelai Pria", "Bapak H. Hendra Pratama & Ibu Hj. Rina Marlina", disabled=is_session_active)
+
+                # HALAMAN 3: AKAD, RESEPSI & COUNTDOWN
+                with st.expander("📌 Halaman 3: Jadwal Acara & Lokasi", expanded=False):
+                    st.markdown("#### 💍 Akad Nikah")
+                    akad_date = st.date_input("Tanggal Akad Nikah", disabled=is_session_active, key="akad_date")
+                    akad_time = st.text_input("Waktu / Jam Akad", "08.00 WIB s/d Selesai", disabled=is_session_active, key="akad_time")
+                    akad_venue = st.text_input("Nama Tempat Akad", "Masjid Agung Trans Studio", disabled=is_session_active, key="akad_venue")
+                    akad_address = st.text_area("Alamat Lengkap Akad", "Jl. Gatot Subroto No.289, Bandung", disabled=is_session_active, key="akad_addr")
+                    akad_maps_url = st.text_input("URL Google Maps Akad", "https://maps.google.com", disabled=is_session_active, key="akad_maps")
+
+                    st.markdown("---")
+                    st.markdown("#### 🥳 Resepsi Pernikahan")
+                    resep_date = st.date_input("Tanggal Resepsi", disabled=is_session_active, key="resep_date")
+                    resep_time = st.text_input("Waktu / Jam Resepsi", "11.00 - 14.00 WIB", disabled=is_session_active, key="resep_time")
+                    resep_venue = st.text_input("Nama Tempat Resepsi", "The Trans Luxury Hotel Ballroom", disabled=is_session_active, key="resep_venue")
+                    resep_address = st.text_area("Alamat Lengkap Resepsi", "Jl. Gatot Subroto No.289, Bandung", disabled=is_session_active, key="resep_addr")
+                    resep_maps_url = st.text_input("URL Google Maps Resepsi", "https://maps.google.com", disabled=is_session_active, key="resep_maps")
+
+                # HALAMAN 4: OUR STORY (TIMELINE EDITABLE)
+                with st.expander("📌 Halaman 4: Our Story (Perjalanan Cinta)", expanded=False):
+                    story_img = st.file_uploader("Foto Ilustrasi Our Story", type=["jpg", "jpeg", "png"], key="story_img_file", disabled=is_session_active)
+                    story_photo = file_to_base64(story_img) if story_img else st.text_input("URL Foto Story", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop", disabled=is_session_active)
+                    
+                    st.markdown("#### Babak 1")
+                    story_date_1 = st.text_input("Tanggal/Bulan Babak 1", "Januari 2021", disabled=is_session_active)
+                    story_title_1 = st.text_input("Judul Babak 1", "Pertama Bertemu", disabled=is_session_active)
+                    story_desc_1 = st.text_area("Narasi Babak 1", "Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.", disabled=is_session_active)
+
+                    st.markdown("#### Babak 2")
+                    story_date_2 = st.text_input("Tanggal/Bulan Babak 2", "Maret 2024", disabled=is_session_active)
+                    story_title_2 = st.text_input("Judul Babak 2", "Komitmen Bersama", disabled=is_session_active)
+                    story_desc_2 = st.text_area("Narasi Babak 2", "Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.", disabled=is_session_active)
+
+                    st.markdown("#### Babak 3")
+                    story_date_3 = st.text_input("Tanggal/Bulan Babak 3", "Oktober 2026", disabled=is_session_active)
+                    story_title_3 = st.text_input("Judul Babak 3", "Menuju Halal", disabled=is_session_active)
+                    story_desc_3 = st.text_area("Narasi Babak 3", "Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.", disabled=is_session_active)
+
+                # HALAMAN 5: GALERI FOTO PREWEDDING (DINAMIS)
+                with st.expander("📌 Halaman 5: Galeri Foto Prewedding", expanded=False):
+                    uploaded_gallery = st.file_uploader(
+                        "Upload Galeri (Maksimal 5 Foto)",
+                        type=["jpg", "jpeg", "png"],
+                        accept_multiple_files=True,
+                        disabled=is_session_active,
+                        key="gallery_uploader"
+                    )
+                    
+                    gallery_list = []
+                    if uploaded_gallery:
+                        for f in uploaded_gallery[:5]:
+                            gallery_list.append(file_to_base64(f))
+                    else:
+                        gallery_list = [
+                            "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop",
+                            "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=500&fit=crop",
+                            "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=500&fit=crop"
+                        ]
+
+                # HALAMAN 6: RSVP & UCAPAN DOA
+                with st.expander("📌 Halaman 6: RSVP & Buku Tamu", expanded=False):
+                    st.info("Formulir RSVP dan daftar ucapan tamu otomatis aktif dan terhubung ke backend Google Sheets.")
+
+                # HALAMAN 7: PENUTUP, FOTO BACKGROUND & AYAT AL-QURAN
+                with st.expander("📌 Halaman 7: Penutup & Ayat Pernikahan", expanded=False):
+                    c_photo = st.file_uploader("Foto Background Penutup", type=["jpg", "jpeg", "png"], key="closing_img_file", disabled=is_session_active)
+                    closing_photo = file_to_base64(c_photo) if c_photo else st.text_input("Atau URL Foto Background Penutup", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
+                    
+                    quote_text = st.text_area(
+                        "Ayat Al-Quran / Kutipan Pernikahan",
+                        "Maha Suci Allah yang telah menciptakan pasangan-pasangan semuanya, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka maupun dari apa yang tidak mereka ketahui.",
+                        disabled=is_session_active
+                    )
+
+                # PENGATURAN MUSIK LATAR BELAKANG
+                st.markdown("---")
+                st.subheader("🎵 Background Music Player")
+                music_option = st.radio("Sumber Musik Background:", ["Preset Musik", "Upload File MP3", "URL MP3 Eksternal"], disabled=is_session_active)
+                
+                final_music_url = ""
+                if music_option == "Preset Musik":
+                    preset_choice = st.selectbox("Pilih Lagu Preset:", ["Acoustic Romantic (Instrumental)", "Piano Marriage D'Amour", "Violin Modern Love"], disabled=is_session_active)
+                    preset_urls = {
+                        "Acoustic Romantic (Instrumental)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                        "Piano Marriage D'Amour": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                        "Violin Modern Love": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+                    }
+                    final_music_url = preset_urls[preset_choice]
+                elif music_option == "Upload File MP3":
+                    uploaded_audio = st.file_uploader("Upload Musik Latar (MP3/WAV/OGG)", type=["mp3", "wav", "ogg"], disabled=is_session_active)
+                    if uploaded_audio:
+                        final_music_url = file_to_base64(uploaded_audio)
+                        st.success("✅ File musik berhasil dimuat!")
+                else:
+                    final_music_url = st.text_input("Masukkan Direct URL File MP3", "", disabled=is_session_active)
+
+                st.markdown("---")
+                test_guest_name = st.text_input("Nama Tamu Uji Coba (Untuk Preview)", "Budi Sudarsono", disabled=True)
+                
+                btn_generate = st.button("🚀 Generate & Kunci Undangan 7 Halaman", type="primary", use_container_width=True, disabled=is_session_active)
+
+                if btn_generate:
+                    with st.spinner(f"Merangkai 7 halaman undangan menggunakan [{st.session_state.get('selected_template')}]..."):
+                        st.session_state["design_ready"] = True
+                        st.session_state["groom_name"] = groom_name
+                        st.session_state["bride_name"] = bride_name
+
+                        try:
+                            # Memuat file template berdasarkan pilihan template user (misal: template02.html atau fallback ke template.html)
+                            selected_tpl_name = st.session_state.get('selected_template', 'template01')
+                            target_tpl_file = f"{selected_tpl_name}.html"
+                            template_filename = target_tpl_file if os.path.exists(target_tpl_file) else "template.html"
+
+                            if os.path.exists(template_filename):
+                                with open(template_filename, "r", encoding="utf-8") as f:
+                                    template_content = f.read()
+                            else:
+                                st.error(f"⚠️ File template `{template_filename}` tidak ditemukan di direktori project!")
+                                template_content = "<h1>Template tidak ditemukan</h1>"
+
+                            jinja_template = Template(template_content)
+                            rendered_html = jinja_template.render(
+                                couple_initials=couple_initials,
+                                groom_name=groom_name,
+                                bride_name=bride_name,
+                                bride_photo=bride_photo,
+                                groom_photo=groom_photo,
+                                bride_parents=bride_parents,
+                                groom_parents=groom_parents,
+                                intro_greeting=intro_greeting,
+                                akad_date=akad_date.strftime("%d %B %Y"),
+                                raw_event_date=akad_date.strftime("%Y-%m-%d"),
+                                akad_time=akad_time,
+                                akad_venue=akad_venue,
+                                akad_address=akad_address,
+                                akad_maps_url=akad_maps_url,
+                                resep_date=resep_date.strftime("%d %B %Y"),
+                                resep_time=resep_time,
+                                resep_venue=resep_venue,
+                                resep_address=resep_address,
+                                resep_maps_url=resep_maps_url,
+                                event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
+                                story_photo=story_photo,
+                                story_date_1=story_date_1,
+                                story_title_1=story_title_1,
+                                story_desc_1=story_desc_1,
+                                story_date_2=story_date_2,
+                                story_title_2=story_title_2,
+                                story_desc_2=story_desc_2,
+                                story_date_3=story_date_3,
+                                story_title_3=story_title_3,
+                                story_desc_3=story_desc_3,
+                                gallery_list=gallery_list,
+                                quote_text=quote_text,
+                                closing_photo=closing_photo,
+                                photo_url=cover_photo_url,
+                                music_url=final_music_url,
+                                guest_name=test_guest_name,
+                                current_user_id=current_user
+                            )
+
+                            invitation_payload = {
+                                "rendered_html": rendered_html,
+                                "groom_name": groom_name,
+                                "bride_name": bride_name,
+                                "template_used": selected_tpl_name,
+                                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            }
+                            save_json(INVITATION_DATA_FILE, invitation_payload)
+
+                            st.session_state["rendered_html"] = rendered_html
+                            st.success(f"✅ Undangan 7 Halaman dengan [{selected_tpl_name}] Berhasil Dibuat!")
+                        except Exception as e:
+                            st.error(f"Gagal merender template HTML: {e}")
+
+            with col_preview:
+                st.subheader("👁️ Preview Tampilan di HP")
+                if "rendered_html" in st.session_state:
+                    st.components.v1.html(st.session_state["rendered_html"], height=800, scrolling=True)
+                else:
+                    st.info("Atur form di sebelah kiri lalu klik tombol generate untuk melihat pratinjau.")
 
     # =========================================================
     # TAHAP 2: DESAIN & PREVIEW UNDANGAN
