@@ -230,57 +230,73 @@
 
         /* HALAMAN 2: COVER */
         #cover {
-            background: linear-gradient(160deg, #E8F5E9 0%, #C8E6C9 50%, #A5D6A7 100%);
-            color: var(--text-dark);
+            background: linear-gradient(rgba(27, 94, 32, 0.75), rgba(27, 94, 32, 0.85)), 
+                        url('{{ photo_url }}') center/cover no-repeat;
+            color: white;
+            min-height: 100vh;
+        }
+
+        #cover .section-title {
+            color: white;
         }
 
         .couple-names {
             font-family: 'Great Vibes', cursive;
-            font-size: 3.8rem;
-            color: var(--hijau-gelap);
-            margin: 20px 0;
+            font-size: 3rem;
+            color: #FFF8E7;
+            margin: 15px 0;
             line-height: 1.2;
         }
 
+        .couple-initials {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: #A5D6A7;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
         .and {
-            font-size: 2rem;
-            color: var(--hijau-tua);
+            font-size: 1.8rem;
+            color: #A5D6A7;
         }
 
         .wedding-info {
-            margin: 25px 0;
-            font-size: 1.1rem;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #F1F8E9;
         }
 
+        /* Countdown diperkecil agar rapi di HP */
         .countdown {
             display: flex;
-            gap: 15px;
+            gap: 8px;
             justify-content: center;
-            margin-top: 30px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .countdown-item {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(8px);
-            padding: 15px 20px;
-            border-radius: 16px;
-            min-width: 90px;
-            box-shadow: 0 8px 20px rgba(46,125,50,0.1);
-            border: 1px solid rgba(129,199,132,0.4);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            padding: 8px 10px;
+            border-radius: 10px;
+            min-width: 65px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .countdown-number {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: var(--hijau-gelap);
+            color: #ffffff;
         }
 
         .countdown-label {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--hijau-tua);
+            color: #C8E6C9;
         }
 
         /* HALAMAN 3: MEMPELAI */
@@ -610,10 +626,14 @@
     <!-- ==================== MAIN CONTENT ==================== -->
     <div id="main-content">
 
-        <!-- ==================== HALAMAN 2: COVER (MEMPELAI, WAKTU, TEMPAT & COUNTDOWN) ==================== -->
+<!-- ==================== HALAMAN 2: COVER (MEMPELAI, WAKTU, TEMPAT & COUNTDOWN) ==================== -->
         <section id="cover">
             <div class="container animate">
-                <p style="letter-spacing: 3px; font-size: 0.6rem; color: var(--hijau-tua);">THE WEDDING OF</p>
+                <p style="letter-spacing: 3px; font-size: 0.75rem; color: #A5D6A7; margin-bottom: 5px;">THE WEDDING OF</p>
+                
+                <!-- Menampilkan singkatan nama mempelai dari variabel couple_initials -->
+                <div class="couple-initials">{{ couple_initials }}</div>
+
                 <div class="couple-names">
                     {{ groom_name }}<br><span class="and">&</span><br>{{ bride_name }}
                 </div>
