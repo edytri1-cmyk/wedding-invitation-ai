@@ -6,6 +6,27 @@
     <title>Undangan Pernikahan - {{ groom_name }} & {{ bride_name }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+          width: 100%;
+          min-height: 100vh;
+          background-color: #1a1e19;
+          font-family: 'Inter', sans-serif;
+          color: #39362E;
+          overflow-x: hidden;
+          scroll-behavior: smooth;
+        }
+    
+        /* Container Utama Mobile Frame (Max Width 430px) */
+        .invitation-wrapper {
+          position: relative;
+          width: 100%;
+          max-width: 430px;
+          margin: 0 auto;
+          background: #F8F5EE;
+          box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        
         :root {
             --hijau-muda: #E8F5E9;
             --hijau-soft: #C8E6C9;
