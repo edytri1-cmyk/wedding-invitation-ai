@@ -1161,70 +1161,72 @@ else:
                 btn_generate = st.button("🚀 Generate & Kunci Undangan 7 Halaman", type="primary", use_container_width=True, disabled=is_session_active)
 
                 if btn_generate:
-                    with st.spinner("Merangkai 7 halaman undangan eksklusif..."):
+                    with st.spinner(f"Merangkai undangan menggunakan [{st.session_state.get('selected_template')}]..."):
                         st.session_state["design_ready"] = True
                         st.session_state["groom_name"] = groom_name
                         st.session_state["bride_name"] = bride_name
-
+                
                         try:
-                            if os.path.exists("template.html"):
-                                with open("template.html", "r", encoding="utf-8") as f:
-                                    template_content = f.read()
+                            # Ambil nama template yang dipilih user (contoh: template02)
+                            selected_tpl_name = st.session_state.get('selected_template', 'template01')
+                            target_tpl_file = f"{selected_tpl_name}.html"
+                            
+                            # Cek apakah file spesifik ada, jika tidak ada baru fallback ke template.html biasa
+                            if os.path.exists(target_tpl_file):
+                                template_filename = target_tpl_file
+                            elif os.path.exists("template.html"):
+                                template_filename = "template.html"
                             else:
-                                st.error("⚠️ File `template.html` tidak ditemukan di direktori project!")
-                                template_content = "<h1>Template tidak ditemukan</h1>"
-
-                            jinja_template = Template(template_content)
-                            rendered_html = jinja_template.render(
-                                couple_initials=couple_initials,
-                                groom_name=groom_name,
-                                bride_name=bride_name,
-                                bride_photo=bride_photo,
-                                groom_photo=groom_photo,
-                                bride_parents=bride_parents,
-                                groom_parents=groom_parents,
-                                intro_greeting=intro_greeting,
-                                akad_date=akad_date.strftime("%d %B %Y"),
-                                raw_event_date=akad_date.strftime("%Y-%m-%d"),
-                                akad_time=akad_time,
-                                akad_venue=akad_venue,
-                                akad_address=akad_address,
-                                akad_maps_url=akad_maps_url,
-                                resep_date=resep_date.strftime("%d %B %Y"),
-                                resep_time=resep_time,
-                                resep_venue=resep_venue,
-                                resep_address=resep_address,
-                                resep_maps_url=resep_maps_url,
-                                event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
-                                story_photo=story_photo,
-                                story_date_1=story_date_1,
-                                story_title_1=story_title_1,
-                                story_desc_1=story_desc_1,
-                                story_date_2=story_date_2,
-                                story_title_2=story_title_2,
-                                story_desc_2=story_desc_2,
-                                story_date_3=story_date_3,
-                                story_title_3=story_title_3,
-                                story_desc_3=story_desc_3,
-                                gallery_list=gallery_list,
-                                quote_text=quote_text,
-                                closing_photo=closing_photo,
-                                photo_url=cover_photo_url,
-                                music_url=final_music_url,
-                                guest_name=test_guest_name,
-                                current_user_id=current_user
-                            )
-
-                            invitation_payload = {
-                                "rendered_html": rendered_html,
-                                "groom_name": groom_name,
-                                "bride_name": bride_name,
-                                "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                            }
-                            save_json(INVITATION_DATA_FILE, invitation_payload)
-
-                            st.session_state["rendered_html"] = rendered_html
-                            st.success(f"✅ Undangan 7 Halaman Berhasil Dibuat!")
+                                st.error("⚠️ File template HTML tidak ditemukan di direktori project!")
+                                template_filename = ""
+                
+                            if template_filename:
+                                with open(template_filename, "r", encoding="utf-8") as f:
+                                    template_content = f.read()
+                
+                                jinja_template = Template(template_content)
+                                rendered_html = jinja_template.render(
+                                    couple_initials=couple_initials,
+                                    groom_name=groom_name,
+                                    bride_name=bride_name,
+                                    bride_photo=bride_photo,
+                                    groom_photo=groom_photo,
+                                    bride_parents=bride_parents,
+                                    groom_parents=groom_parents,
+                                    intro_greeting=intro_greeting,
+                                    akad_date=akad_date.strftime("%d %B %Y"),
+                                    raw_event_date=akad_date.strftime("%Y-%m-%d"),
+                                    akad_time=akad_time,
+                                    akad_venue=akad_venue,
+                                    akad_address=akad_address,
+                                    akad_maps_url=akad_maps_url,
+                                    resep_date=resep_date.strftime("%d %B %Y"),
+                                    resep_time=resep_time,
+                                    resep_venue=resep_venue,
+                                    resep_address=resep_address,
+                                    resep_maps_url=resep_maps_url,
+                                    event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
+                                    story_photo=story_photo,
+                                    story_date_1=story_date_1,
+                                    story_title_1=story_title_1,
+                                    story_desc_1=story_desc_1,
+                                    story_date_2=story_date_2,
+                                    story_title_2=story_title_2,
+                                    story_desc_2=story_desc_2,
+                                    story_date_3=story_date_3,
+                                    story_title_3=story_title_3,
+                                    story_desc_3=story_desc_3,
+                                    gallery_list=gallery_list,
+                                    quote_text=quote_text,
+                                    closing_photo=closing_photo,
+                                    photo_url=cover_photo_url,
+                                    music_url=final_music_url,
+                                    guest_name=test_guest_name,
+                                    current_user_id=current_user
+                                )
+                
+                                st.session_state["rendered_html"] = rendered_html
+                                st.success(f"✅ Berhasil merender template: **{template_filename}**!")
                         except Exception as e:
                             st.error(f"Gagal merender template HTML: {e}")
 
