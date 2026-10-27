@@ -499,7 +499,7 @@ else:
         }}
         .step-nav-card {{
             background: #ffffff;
-            border: 2px solid #fda4af;
+            border: 2px solid #B8860B;
             border-radius: 16px;
             padding: 15px 10px;
             text-align: center;
@@ -507,7 +507,7 @@ else:
             margin-bottom: 10px;
         }}
         .step-circle {{
-            background: #be123c;
+            background: #B8860B;
             color: white;
             width: 32px;
             height: 32px;
@@ -521,20 +521,20 @@ else:
             box-shadow: 0 2px 6px rgba(190, 18, 60, 0.3);
         }}
         .step-title {{
-            color: #881337;
+            color: #B8860B;
             font-weight: bold;
             font-size: 13px;
             margin-bottom: 4px;
         }}
         .step-desc {{
-            color: #78716c;
+            color: #B8860B;
             font-size: 10px;
             line-height: 1.3;
         }}
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("<p style='color: #f43f5e; font-weight: bold;'>🧭 Alur Pembuatan Undangan Digital:</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #B8860B; font-weight: bold;'>🧭 Alur Pembuatan Undangan Digital:</p>", unsafe_allow_html=True)
 
     # Daftar tahapan alur beserta deskripsinya
     steps_info = [
