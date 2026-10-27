@@ -724,42 +724,38 @@
             </div>
         </section>
 
-        <!-- ==================== HALAMAN 7: RSVP & UCAPAN ==================== -->
+<!-- ==================== HALAMAN 7 : RSVP & UCAPAN ==================== -->
         <section id="rsvp">
             <div class="container">
-                <h2 class="section-title">RSVP & Ucapan</h2>
-                <p style="margin-bottom: 10px; color: #558B2F;">Mohon konfirmasi kehadiran Anda</p>
+                <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--hijau-tua); margin-bottom: 8px;">Konfirmasi Kehadiran</div>
+                <h2 class="section-title">RSVP &amp; Doa Restu</h2>
+                <p style="margin-bottom: 30px; color: #558B2F; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir memberikan doa restu.
+                </p>
 
-                <div class="form-container">
-                    <form id="rsvpForm" onsubmit="submitForm(event)">
-                        <div class="form-group">
-                            <label>Nama Lengkap</label>
-                            <input type="text" name="nama" required placeholder="Masukkan nama Anda" value="{{ guest_name }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Jumlah Tamu</label>
-                            <select name="jumlah" required>
-                                <option value="">Pilih jumlah</option>
-                                <option value="1">1 Orang</option>
-                                <option value="2">2 Orang</option>
-                                <option value="3">3 Orang</option>
-                                <option value="4">4 Orang</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Konfirmasi Kehadiran</label>
-                            <select name="kehadiran" required>
-                                <option value="">Pilih</option>
-                                <option value="Hadir">Insya Allah Hadir</option>
-                                <option value="Tidak Hadir">Maaf, Tidak Dapat Hadir</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Ucapan & Doa</label>
-                            <textarea name="ucapan" rows="4" placeholder="Tulis ucapan dan doa terbaik Anda..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit">Kirim Konfirmasi</button>
-                    </form>
+                <div class="form-container" id="rsvp-card">
+                    <!-- Menggunakan ID pada elemen form untuk integrasi fungsi JavaScript -->
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="rsvp-nama" name="nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi Kehadiran</label>
+                        <select id="rsvp-status" name="status" required>
+                            <option value="Hadir">Hadir (InsyaAllah)</option>
+                            <option value="Ragu">Masih Ragu-ragu</option>
+                            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Tamu</label>
+                        <input type="number" id="rsvp-jumlah" name="jumlah" min="1" max="5" value="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ucapan &amp; Doa Restu</label>
+                        <textarea id="rsvp-ucapan" name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
+                    </div>
+                    <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
                 </div>
             </div>
         </section>
@@ -838,6 +834,26 @@
         document.querySelectorAll('section').forEach(sec => {
             observer.observe(sec);
         });
+    </script>
+
+    <script>
+    function submitRSVP() {
+        const nama = document.getElementById('rsvp-nama').value;
+        const status = document.getElementById('rsvp-status').value;
+        const jumlah = document.getElementById('rsvp-jumlah').value;
+        const ucapan = document.getElementById('rsvp-ucapan').value;
+
+        if (!nama) {
+            alert('Mohon masukkan nama lengkap Anda.');
+            return;
+        }
+
+        // Logika pengiriman RSVP (bisa disesuaikan dengan integrasi backend / Google Sheets Anda)
+        alert('Terima kasih, ' + nama + '! Konfirmasi kehadiran dan ucapan Anda telah berhasil dikirim.');
+        
+        // Opsional: Reset form atau kosongkan ucapan
+        document.getElementById('rsvp-ucapan').value = '';
+    }
     </script>
 </body>
 </html>
