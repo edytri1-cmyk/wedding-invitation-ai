@@ -756,6 +756,8 @@
                         <textarea id="rsvp-ucapan" name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
                     </div>
                     <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
+                    <!-- Elemen penampung pesan teks -->
+                    <div id="rsvp-success-message" style="margin-top: 15px; font-weight: 500; font-size: 0.95rem; text-align: center; display: none;"></div>
                 </div>
             </div>
         </section>
@@ -843,15 +845,26 @@
         const jumlah = document.getElementById('rsvp-jumlah').value;
         const ucapan = document.getElementById('rsvp-ucapan').value;
 
+        // Ambil elemen penampung pesan sukses
+        let successMsg = document.getElementById('rsvp-success-message');
+
         if (!nama) {
-            alert('Mohon masukkan nama lengkap Anda.');
+            if (successMsg) {
+                successMsg.style.display = 'block';
+                successMsg.style.color = '#D32F2F'; // Warna merah untuk peringatan
+                successMsg.innerHTML = '⚠️ Mohon masukkan nama lengkap Anda terlebih dahulu.';
+            }
             return;
         }
 
-        // Logika pengiriman RSVP (bisa disesuaikan dengan integrasi backend / Google Sheets Anda)
-        alert('Terima kasih, ' + nama + '! Konfirmasi kehadiran dan ucapan Anda telah berhasil dikirim.');
+        // Tampilkan pesan sukses langsung di dalam elemen HTML
+        if (successMsg) {
+            successMsg.style.display = 'block';
+            successMsg.style.color = '#2E7D32'; // Warna hijau untuk sukses
+            successMsg.innerHTML = `✨ Terima kasih, ${nama}! Konfirmasi kehadiran (${status}, ${jumlah} Orang) dan ucapan Anda telah berhasil dikirim.`;
+        }
         
-        // Opsional: Reset form atau kosongkan ucapan
+        // Kosongkan kolom ucapan setelah dikirim (opsional)
         document.getElementById('rsvp-ucapan').value = '';
     }
     </script>
