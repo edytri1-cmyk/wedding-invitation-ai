@@ -561,7 +561,7 @@ else:
         
         with col:
             st.markdown(f"""
-                <div class="step-nav-card" style="border-color: {'#B8860B' if st.session_state['active_step_idx'] == real_idx else '#fda4af'};">
+                <div class="step-nav-card" style="border-color: {'#B8860B' if st.session_state['active_step_idx'] == real_idx else '#B8860B'};">
                     <div class="step-circle">{info['num']}</div>
                     <div class="step-title">{info['title']}</div>
                     <div class="step-desc">{info['desc']}</div>
