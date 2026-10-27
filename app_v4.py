@@ -468,11 +468,8 @@ if app_mode == "🔑 Admin":
 # KONDISI 2: KLIEN (WEDDING GENERATOR)
 # =========================================================
 else:
-#    st.markdown("""
-#    <h3 style='color: #db2777; font-size: 22px; font-weight: bold; margin-bottom: 0px;'>
-#        💍 Wedding AI Invitation Generator
-#    </h3>
-#""", unsafe_allow_html=True)
+    # URL Background Dashboard
+    bg_image_url = "https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=1000&fit=crop"
 
     if "agreed_terms" not in st.session_state:
         st.session_state["agreed_terms"] = False
@@ -483,10 +480,24 @@ else:
 
     is_session_active = st.session_state.get("is_session_active", False)
 
-    # Styling CSS Kustom untuk Kartu Alur Navigasi ala Gambar 2
-    st.markdown("""
+    # Styling CSS Kustom untuk Background & Kartu Alur Navigasi
+    st.markdown(f"""
         <style>
-        .step-nav-card {
+        .stApp {{
+            background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url("{bg_image_url}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        div.block-container {{
+            background-color: rgba(248, 245, 238, 0.92);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }}
+        .step-nav-card {{
             background: #ffffff;
             border: 2px solid #fda4af;
             border-radius: 16px;
@@ -494,8 +505,8 @@ else:
             text-align: center;
             box-shadow: 0 4px 12px rgba(225, 29, 72, 0.08);
             margin-bottom: 10px;
-        }
-        .step-circle {
+        }}
+        .step-circle {{
             background: #be123c;
             color: white;
             width: 32px;
@@ -508,24 +519,24 @@ else:
             font-size: 14px;
             margin-bottom: 8px;
             box-shadow: 0 2px 6px rgba(190, 18, 60, 0.3);
-        }
-        .step-title {
+        }}
+        .step-title {{
             color: #881337;
             font-weight: bold;
             font-size: 13px;
             margin-bottom: 4px;
-        }
-        .step-desc {
+        }}
+        .step-desc {{
             color: #78716c;
             font-size: 10px;
             line-height: 1.3;
-        }
+        }}
         </style>
     """, unsafe_allow_html=True)
 
     st.markdown("<p style='color: #f43f5e; font-weight: bold;'>🧭 Alur Pembuatan Undangan Digital:</p>", unsafe_allow_html=True)
 
-# Daftar tahapan alur beserta deskripsinya
+    # Daftar tahapan alur beserta deskripsinya
     steps_info = [
         {"num": "1", "title": "Panduan Aplikasi", "desc": "Baca ketentuan & tekan centang (v) untuk setujui syarat."},
         {"num": "2", "title": "Desain & Preview Undangan", "desc": "Isi data mempelai, tanggal pernikahan, tema, upload foto & pilihan music latar."},
@@ -549,7 +560,6 @@ else:
         info = subset_steps[idx]
         
         with col:
-            # Tampilan visual kartu
             st.markdown(f"""
                 <div class="step-nav-card" style="border-color: {'#be123c' if st.session_state['active_step_idx'] == real_idx else '#fda4af'};">
                     <div class="step-circle">{info['num']}</div>
@@ -558,7 +568,6 @@ else:
                 </div>
             """, unsafe_allow_html=True)
             
-            # Tombol pilih menu dengan warna dinamis (Primary jika aktif, Secondary jika tidak)
             btn_label = f"Tahap {info['num']}"
             is_active = (st.session_state["active_step_idx"] == real_idx)
             btn_type = "primary" if is_active else "secondary"
@@ -567,9 +576,6 @@ else:
                 st.session_state["active_step_idx"] = real_idx
                 st.rerun()
 
-    #st.markdown("---")
-
-    # Tentukan string active_step agar kompatibel dengan logika kode di bawahnya
     full_menu_list = [
         "1️⃣ Panduan Aplikasi ➡️",
         "2️⃣ Desain & Preview Undangan ➡️",
@@ -581,25 +587,17 @@ else:
     else:
         menu_steps_mapping = full_menu_list
 
-    active_step = menu_steps_mapping[st.session_state["active_step_idx"] if not is_session_active else (st.session_state["active_step_idx"] - 2)]
+    # Penanganan index aman
+    current_idx = st.session_state["active_step_idx"] if not is_session_active else (st.session_state["active_step_idx"] - 2)
+    current_idx = max(0, min(current_idx, len(menu_steps_mapping) - 1))
+    active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # 2. PENCOCOKAN KONTEN BERDASARKAN KATA KUNCI (Tanpa Indeks)
+    # TAHAP 1: PANDUAN APLIKASI
     # =========================================================
-    
     if "Panduan Aplikasi" in active_step:
-        # Style CSS Kustom - Luxury Gold + Sakura Theme
         st.markdown("""
             <style>
-            .landing-wrapper::before {
-                content: "🌸";
-                position: absolute;
-                font-size: 120px;
-                opacity: 0.07;
-                top: -20px;
-                right: 20px;
-                transform: rotate(15deg);
-            }
             .hero-title {
                 color: #5C4033;
                 font-family: 'Playfair Display', serif;
@@ -613,34 +611,14 @@ else:
                 font-size: 15px;
                 line-height: 1.65;
                 margin-bottom: 22px;
-                opacity: 0.92;
             }
             .feature-box-pink {
                 background: rgba(255, 249, 240, 0.9);
-                backdrop-filter: blur(8px);
                 color: #4A3728;
                 padding: 18px 16px;
                 border-radius: 16px;
                 border: 1px solid #E8C39E;
                 box-shadow: 0 6px 18px rgba(139, 90, 43, 0.1);
-                height: 100%;
-                transition: all 0.3s ease;
-            }
-            .feature-box-pink:hover {
-                transform: translateY(-5px);
-                background: #FFF9F0;
-                box-shadow: 0 12px 24px rgba(184, 134, 11, 0.18);
-                border-color: #D4AF37;
-            }
-            .step-card-pink {
-                background: rgba(255, 249, 240, 0.9);
-                backdrop-filter: blur(6px);
-                color: #4A3728;
-                padding: 20px 14px;
-                border-radius: 16px;
-                border: 1px solid #E8C39E;
-                text-align: center;
-                box-shadow: 0 6px 16px rgba(139, 90, 43, 0.09);
                 height: 100%;
             }
             .section-heading {
@@ -650,7 +628,6 @@ else:
                 font-size: 24px;
                 font-weight: 600;
                 margin: 32px 0 18px 0;
-                letter-spacing: 0.3px;
             }
             .security-box {
                 background: linear-gradient(135deg, #5C4033 0%, #8B6914 50%, #B8860B 100%);
@@ -659,21 +636,18 @@ else:
                 border-radius: 16px;
                 border: 1px solid #D4AF37;
                 margin-top: 24px;
-                box-shadow: 0 8px 22px rgba(92, 64, 51, 0.25);
             }
             </style>
         """, unsafe_allow_html=True)
     
-        # Buka wrapper utama landing page
         st.markdown('<div class="landing-wrapper">', unsafe_allow_html=True)
     
-        # 1. HERO SECTION
+        # HERO SECTION
         hero_col1, hero_col2 = st.columns([1.35, 1])
-        
         with hero_col1:
             st.markdown("""
                 <div style="padding-top: 10px;">
-                    <span style="background: #FFF0D6; color: #8B6914; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; letter-spacing: 0.8px; border: 1px solid #E8C39E;">
+                    <span style="background: #FFF0D6; color: #8B6914; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; border: 1px solid #E8C39E;">
                         🌸 Wedding Invitation AI Generator
                     </span>
                     <h1 class="hero-title" style="margin-top: 18px; color: #B8860B;">
@@ -681,7 +655,7 @@ else:
                     </h1>
                     <p class="hero-desc">
                         Buat undangan pernikahan digital yang elegan, berkesan, dan mudah dibagikan. 
-                        aplikasi ini membantu anda membuat undangan pernikahan digital yang cepat, praktis, indah, modern, 
+                        Aplikasi ini membantu anda membuat undangan pernikahan digital yang cepat, praktis, indah, modern, 
                         dan berkesan. Tanpa perlu coding, tanpa ribet — fokus saja pada rencana pernikahan kalian.
                     </p>
                 </div>
@@ -689,12 +663,12 @@ else:
             
             btn_c1, btn_c2 = st.columns(2)
             with btn_c1:
+                # Ketika tombol Klik "Lihat Demo" ditekan, langsung ubah persetujuan dan alihkan ke Tahap 2 (indeks 1)
                 if st.button("🌸 Lihat Demo", type="primary", use_container_width=True):
                     st.session_state["agreed_terms"] = True
+                    st.session_state["active_step_idx"] = 1
                     st.rerun()
-            #with btn_c2:
-            #    st.button("▶ Lihat Demo", use_container_width=True)
-    
+
         with hero_col2:
             st.markdown("""
                 <div style="border-radius: 20px; overflow: hidden; border: 3px solid #D4AF37; box-shadow: 0 14px 32px rgba(184, 134, 11, 0.2);">
@@ -705,7 +679,7 @@ else:
     
         st.markdown("<br>", unsafe_allow_html=True)
     
-        # 2. FITUR UTAMA
+        # FITUR UTAMA
         st.markdown('<h2 class="section-heading">✨ Fitur Aplikasi</h2>', unsafe_allow_html=True)
         
         f_col1, f_col2, f_col3 = st.columns(3)
@@ -756,7 +730,7 @@ else:
                 </div>
             """, unsafe_allow_html=True)
     
-        # 3. JAMINAN KEAMANAN
+        # JAMINAN KEAMANAN
         st.markdown("""
             <div class="security-box">
                 <h4 style="color: #FFECB3; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Data Privacy</h4>
@@ -767,9 +741,7 @@ else:
             </div>
         """, unsafe_allow_html=True)
     
-        # Tutup wrapper
         st.markdown('</div>', unsafe_allow_html=True)
-    
         st.markdown("---")
         
         # Checkbox Persetujuan
@@ -777,7 +749,7 @@ else:
             "Saya telah membaca dan menyetujui syarat serta kebijakan keamanan data platform.", 
             value=st.session_state.get("agreed_terms", False)
         )
-         
+          
         if agreement:
             st.session_state["agreed_terms"] = True
             st.success("✅ Anda telah menyetujui ketentuan. Silakan lanjutkan ke menu **'Desain & Preview Undangan'** di atas untuk mulai merancang!")
@@ -785,22 +757,9 @@ else:
             st.session_state["agreed_terms"] = False
             st.warning("⚠️ Harap centang kotak persetujuan di atas untuk membuka akses penuh ke tahap berikutnya.")
 
-    #TAHAP2 DESAIN & PREVIEW UNDANGAN
-    elif "Desain & Preview Undangan" in active_step:
-        if not st.session_state.get("agreed_terms", False):
-            st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
-        else:
-            st.subheader("🎨 2. Data Pernikahan, Tema Visual, Musik & Preview Undangan")
-            
-            col_form, col_preview = st.columns([1, 1])
-
-            with col_form:
-                st.subheader("📋 Form Isian Premium (7 Halaman)")
-                
-                if is_session_active:
-                    st.info("🔒 **Mode Terkunci:** Lisensi Anda aktif. Seluruh form isian dan pengaturan desain dikunci untuk menjaga stabilitas undangan yang sudah disebar.")
-
-    #TAHAP2 DESAIN & PREVIEW UNDANGAN
+    # =========================================================
+    # TAHAP 2: DESAIN & PREVIEW UNDANGAN
+    # =========================================================
     elif "Desain & Preview Undangan" in active_step:
         if not st.session_state.get("agreed_terms", False):
             st.warning("⚠️ Mohon selesaikan dan setujui Syarat & Ketentuan di **Tahap 1** terlebih dahulu.")
