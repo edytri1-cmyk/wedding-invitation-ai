@@ -881,35 +881,22 @@
 
   </div>
 
-  <script>
-    function openEnvelope() {
-      const envelope = document.getElementById('envelope');
-      const overlay = document.getElementById('envelope-overlay');
-      const mainWrapper = document.getElementById('main-invitation');
-  
-      // 1. Jalankan animasi buka amplop (menaikkan flap)
-      envelope.classList.add('open');
-  
-      // 2. Putar musik otomatis jika elemen audio tersedia
-      const music = document.getElementById('bg-music');
-      if (music) {
-        music.play().then(() => {
-          const musicBtn = document.getElementById('music-btn');
-          if (musicBtn) musicBtn.classList.add('playing');
-        }).catch(err => {
-          console.log("Audio autoplay dicegah oleh browser:", err);
-        });
-      }
-  
-      // 3. Hilangkan layar amplop dan tampilkan konten utama undangan setelah animasi selesai
-      setTimeout(() => {
-        overlay.classList.add('hide');
-        if (mainWrapper) {
-          mainWrapper.classList.add('show');
+    <script>
+        // Buka undangan
+        function openInvitation() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                document.getElementById('envelope-page').classList.add('hide');
+                const main = document.getElementById('main-content');
+                main.classList.add('show');
+                
+                // Mulai countdown setelah dibuka
+                startCountdown();
+            }, 900);
         }
-      }, 850); // Waktu disesuaikan dengan durasi transisi CSS
-    }
-  </script>
+    </script>
 
 </body>
 </html>
