@@ -159,6 +159,56 @@
             box-shadow: 0 12px 30px rgba(46, 125, 50, 0.45);
         }
 
+        /* ========== MAIN CONTENT ========== */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        #main-content.show {
+            display: block;
+            opacity: 1;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            color: var(--hijau-gelap);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--hijau-medium);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
     /* ========== HALAMAN COVER (setelah amplop) ========== */
     #page-cover {
       background: #880E4F;
