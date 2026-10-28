@@ -398,6 +398,17 @@
             margin-bottom: 5px;
         }
 
+        .story-photo {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin: 0 auto 30px auto;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
         /* HALAMAN 5: ACARA */
         #acara {
             background: var(--cream);
@@ -689,7 +700,10 @@
         <section id="story">
             <div class="container">
                 <h2 class="section-title">Our Story</h2>
-                <div class="story-photo" style="background-image: url('{{ story_photo|default("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop") }}');"></div>
+                
+                <!-- Elemen foto yang membaca variabel story_photo dari app.py -->
+                <div class="story-photo" style="background-image: url('{{ story_photo if story_photo else "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop" }}');"></div>
+                
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
@@ -709,7 +723,7 @@
                 </div>
             </div>
         </section>
-
+        
         <!-- DETAIL ACARA -->
         <section id="acara">
             <div class="container">
