@@ -1,724 +1,897 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#343B32" />
-  <title>Undangan Pernikahan — {{ groom_name }} &amp; {{ bride_name }}</title>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Italianno&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - {{ groom_name }} & {{ bride_name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+          width: 100%;
+          min-height: 100vh;
+          background-color: #0A1F2E;
+          font-family: 'Poppins', sans-serif;
+          color: #0D3B4C;
+          overflow-x: hidden;
+          scroll-behavior: smooth;
+        }
+    
+        /* Container Utama Mobile Frame */
+        .invitation-wrapper {
+          position: relative;
+          width: 100%;
+          max-width: 430px;
+          margin: 0 auto;
+          background: #F0FDFF;
+          box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        
+        :root {
+            --biru-muda: #E0F7FA;
+            --biru-soft: #B2EBF2;
+            --biru-medium: #4DD0E1;
+            --biru-tua: #00ACC1;
+            --biru-gelap: #00838F;
+            --cream: #F0FDFF;
+            --text-dark: #0D3B4C;
+            --gold: #26C6DA;
+        }
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%;
-      min-height: 100vh;
-      background-color: #1a1e19;
-      font-family: 'Inter', sans-serif;
-      color: #39362E;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--biru-muda);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    /* Container Utama Mobile Frame (Max Width 430px) */
-    .invitation-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 430px;
-      margin: 0 auto;
-      background: #F8F5EE;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
+        /* ========== HALAMAN 1: AMPLOP ========== */
+        #envelope-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #E0F7FA, #B2EBF2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
 
-    /* UMUM SECTION STYLING */
-    .section-page {
-      position: relative;
-      width: 100%;
-      min-height: 900px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 64px 32px;
-      overflow: hidden;
-    }
+        #envelope-page.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
 
-    .section-label {
-      font-size: 10px;
-      line-height: 150%;
-      text-align: center;
-      color: #927442;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
+        .envelope {
+            width: 320px;
+            height: 220px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
 
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 42px;
-      line-height: 105%;
-      text-align: center;
-      color: #39362E;
-      margin-bottom: 16px;
-    }
+        .envelope:hover {
+            transform: scale(1.03);
+        }
 
-    .section-desc {
-      font-size: 14px;
-      line-height: 185%;
-      text-align: center;
-      color: #766E60;
-      margin-bottom: 24px;
-    }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 110px;
+            background: linear-gradient(135deg, #4DD0E1, #00ACC1);
+            clip-path: polygon(0 0, 50% 70%, 100% 0);
+            z-index: 3;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+        }
 
-    .fine-ornament {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    .fine-rule { width: 48px; height: 1px; background: #D7C9AE; }
-    .diamond { width: 5px; height: 5px; background: #927442; transform: rotate(45deg); }
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
 
-    /* HALAMAN 1: COVER UTAMA & COUNTDOWN STYLING */
-    #page-cover {
-      background: #343B32;
-      justify-content: space-between;
-      padding: 52px 36px 48px;
-      height: 900px;
-    }
-    .romantic-bg {
-      position: absolute; width: 100%; height: 100%; left: 0; top: 0;
-      background-image: url('{{ photo_url if photo_url else "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1200&fit=crop" }}');
-      background-size: cover; background-position: center; z-index: 0;
-    }
-    .photographic-scrim {
-      position: absolute; width: 100%; height: 100%; left: 0; top: 0;
-      background: linear-gradient(180deg, rgba(24, 32, 23, 0.533) 0%, rgba(24, 32, 23, 0) 40%, rgba(24, 32, 23, 0.266) 65%, rgba(24, 32, 23, 0.902) 100%);
-      z-index: 1;
-    }
-    .portrait-frame {
-      box-sizing: border-box; position: absolute; width: calc(100% - 36px); height: calc(100% - 36px);
-      left: 18px; top: 18px; opacity: 0.6; border: 0.7px solid #E6D9BF; pointer-events: none; z-index: 2;
-    }
-    .hero-content { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: 100%; text-align: center; }
-    .monogram { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 34px; color: #E6D9BF; }
-    .couple-names-cover { font-family: 'Cormorant Garamond', serif; font-size: 56px; line-height: 95%; color: #FFFCF5; margin: 15px 0; }
-    .date-and-city { font-size: 11px; color: #E6D9BF; letter-spacing: 1px; }
-    .wedding-sentiment { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 19px; color: #F8F5EE; }
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(to bottom, #B2EBF2, #80DEEA);
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 15px 40px rgba(0, 131, 143, 0.25);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    /* Dynamic Countdown Grid Styling */
-    .cover-countdown {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-top: 18px;
-    }
-    .cd-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-width: 52px;
-      padding: 6px 8px;
-      background: rgba(26, 30, 25, 0.45);
-      border: 0.8px solid rgba(230, 217, 191, 0.5);
-      border-radius: 4px;
-      backdrop-filter: blur(2px);
-    }
-    .cd-number {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      font-weight: 600;
-      color: #FFFCF5;
-      line-height: 100%;
-    }
-    .cd-unit {
-      font-size: 8px;
-      color: #E6D9BF;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 4px;
-    }
+        .envelope-seal {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00BCD4, #0097A7);
+            border-radius: 50%;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(0, 151, 167, 0.5);
+            transition: opacity 0.5s;
+        }
 
-    /* HALAMAN 2: KEDUA MEMPELAI & ORANG TUA */
-    #page-couple { background: #F8F5EE; gap: 20px; }
-    .mempelai-card {
-      display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 366px; margin-bottom: 10px;
-    }
-    .portrait {
-      width: 180px; height: 220px; background-size: cover; background-position: center;
-      border-radius: 90px 90px 0px 0px; border: 1px solid #D7C9AE;
-    }
-    .full-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: #39362E; text-align: center; }
-    .family-intro { font-size: 11px; line-height: 170%; text-align: center; color: #766E60; }
-    .union { font-family: 'Italianno', cursive; font-size: 48px; color: #927442; margin: -5px 0; }
+        .envelope.open .envelope-seal {
+            opacity: 0;
+        }
 
-    /* HALAMAN 3: WAKTU, LOKASI & COUNTDOWN */
-    #page-schedule { background: #EDE3CF; }
-    .wedding-date-main { font-family: 'Cormorant Garamond', serif; font-size: 24px; color: #927442; text-align: center; margin-bottom: 10px; }
-    .event-card {
-      box-sizing: border-box; display: flex; flex-direction: column; align-items: center; padding: 24px 20px; gap: 12px;
-      width: 100%; max-width: 366px; background: #FFFCF5; border: 0.8px solid #D7C9AE; margin-bottom: 16px; border-radius: 4px;
-    }
-    .event-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; color: #39362E; }
-    .event-schedule { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; }
-    .event-date-text { color: #39362E; }
-    .event-time-text { color: #927442; font-weight: 500; }
-    .venue-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #39362E; text-align: center; }
-    .venue-address { font-size: 12px; line-height: 160%; text-align: center; color: #766E60; }
-    .btn-action {
-      display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; max-width: 318px; height: 44px;
-      border: 1px solid #927442; color: #927442; font-size: 12px; font-weight: 500; text-decoration: none; border-radius: 4px; transition: 0.2s;
-    }
-    .btn-action:hover { background: #927442; color: #FFFCF5; }
-    .btn-primary-action { background: #927442; color: #FFFCF5; }
+        .guest-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 32px;
+            color: var(--biru-gelap);
+            margin-top: 30px;
+            text-align: center;
+        }
 
-    /* HALAMAN 4: OUR STORY (TIMELINE) */
-    #page-story { background: #F8F5EE; }
-    .story-photo { width: 100%; max-width: 366px; height: 220px; background-size: cover; background-position: center; border-radius: 4px; margin-bottom: 20px; }
-    .relationship-timeline { display: flex; flex-direction: column; width: 100%; max-width: 366px; gap: 24px; }
-    .story-chapter { display: flex; flex-direction: row; gap: 16px; width: 100%; }
-    .timeline-marker { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 12px; }
-    .diamond-marker { width: 6px; height: 6px; background: #927442; transform: rotate(45deg); }
-    .timeline-rule { width: 1px; flex-grow: 1; background: #D7C9AE; min-height: 80px; }
-    .chapter-content { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
-    .chapter-date { font-size: 9px; color: #927442; text-transform: uppercase; letter-spacing: 1px; }
-    .chapter-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #39362E; }
-    .chapter-narrative { font-size: 12px; line-height: 170%; color: #766E60; }
+        .envelope-text {
+            font-size: 13px;
+            color: var(--biru-gelap);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
 
-    /* HALAMAN 5: GALERI FOTO */
-    #page-gallery { background: #FFFCF5; }
-    .gallery-main-photo { 
-      width: 100%; 
-      max-width: 382px; 
-      height: 320px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center; 
-      background-color: #F7F2EB; 
-      border-radius: 4px; 
-      margin-bottom: 12px; 
-    }
-    .gallery-pair { 
-      display: flex; 
-      flex-direction: row; 
-      gap: 12px; 
-      width: 100%; 
-      max-width: 382px; 
-      margin-bottom: 12px; 
-    }
-    .gallery-item { 
-      width: 50%; 
-      height: 220px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center; 
-      background-color: #F7F2EB; 
-      border-radius: 4px; 
-    }
+        .btn-open {
+            margin-top: 40px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #00ACC1, #00838F);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 131, 143, 0.35);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
 
-    /* HALAMAN 6: RSVP & FORMULIR */
-    #page-rsvp { background: #F8F5EE; }
-    .form-card { width: 100%; max-width: 366px; display: flex; flex-direction: column; gap: 14px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; text-align: left; width: 100%; }
-    .form-group label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #766E60; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 12px 14px; background: #FFFCF5; border: 1px solid #D7C9AE; border-radius: 4px; font-family: inherit; font-size: 13px; color: #39362E; outline: none;
-    }
-    .btn-submit {
-      width: 100%; height: 46px; background: #927442; color: #FFFCF5; border: none; border-radius: 4px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-top: 8px;
-    }
+        .btn-open:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 131, 143, 0.45);
+        }
 
-    /* HALAMAN 7: PENUTUP */
-    #page-closing { background: #343B32; justify-content: center; text-align: center; height: 900px; }
-    .closing-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 366px; }
-    .closing-thanks { font-family: 'Cormorant Garamond', serif; font-size: 48px; color: #E6D9BF; }
-    .closing-names { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #FFFCF5; margin-top: 10px; }
+        /* ========== MAIN CONTENT ========== */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
 
-    /* FLOATING MUSIC PLAYER BUTTON */
-    .music-player-float {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 9999;
-      background: #927442;
-      color: #FFFCF5;
-      border: 1px solid #E6D9BF;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: transform 0.2s ease;
-    }
-    .music-player-float:hover {
-      transform: scale(1.1);
-    }
-    .music-player-float.playing svg {
-      animation: spin 3s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+        #main-content.show {
+            display: block;
+            opacity: 1;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .section-title {
+            font-size: 2.4rem;
+            color: var(--biru-gelap);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--biru-medium);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        /* HALAMAN 2: COVER */
+        #cover {
+            background: linear-gradient(rgba(0, 96, 100, 0.65), rgba(0, 96, 100, 0.75)), 
+                        url('{{ photo_url }}') center/cover no-repeat;
+            color: white;
+            min-height: 100vh;
+        }
+
+        #cover .section-title {
+            color: white;
+        }
+
+        .couple-names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #E0F7FA;
+            margin: 15px 0;
+            line-height: 1.2;
+        }
+
+        .couple-initials {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: #80DEEA;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .and {
+            font-size: 1.8rem;
+            color: #80DEEA;
+        }
+
+        .wedding-info {
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: #E0F7FA;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            padding: 8px 10px;
+            border-radius: 10px;
+            min-width: 65px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .countdown-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #B2EBF2;
+        }
+
+        /* HALAMAN 3: MEMPELAI */
+        #mempelai {
+            background: var(--cream);
+        }
+
+        .ucapan {
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #006064;
+            font-size: 1.05rem;
+        }
+
+        .mempelai-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 700px) {
+            .mempelai-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mempelai-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 131, 143, 0.1);
+            border: 1px solid var(--biru-soft);
+            transition: transform 0.3s ease;
+        }
+
+        .mempelai-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .mempelai-photo {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--biru-soft);
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .mempelai-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--biru-gelap);
+            margin-bottom: 8px;
+        }
+
+        .ortu {
+            font-size: 0.9rem;
+            color: #00838F;
+        }
+
+        /* HALAMAN 4: OUR STORY */
+        #story {
+            background: linear-gradient(to bottom, #E0F7FA, #B2EBF2);
+        }
+
+        .timeline {
+            max-width: 600px;
+            margin: 40px auto 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--biru-medium);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 11px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: var(--biru-tua);
+            border-radius: 50%;
+            border: 4px solid var(--biru-muda);
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: var(--biru-gelap);
+            margin-bottom: 5px;
+        }
+
+        /* HALAMAN 5: ACARA */
+        #acara {
+            background: var(--cream);
+        }
+
+        .acara-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 700px) {
+            .acara-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .acara-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 12px 30px rgba(0, 131, 143, 0.12);
+            border-top: 5px solid var(--biru-tua);
+            transition: all 0.3s ease;
+        }
+
+        .acara-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .acara-type {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--biru-tua);
+            margin-bottom: 10px;
+        }
+
+        .acara-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--biru-gelap);
+            margin-bottom: 8px;
+        }
+
+        .btn-maps {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 10px 22px;
+            background: var(--biru-tua);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-maps:hover {
+            background: var(--biru-gelap);
+            transform: scale(1.05);
+        }
+
+        /* HALAMAN 6: GALLERY */
+        #gallery {
+            background: linear-gradient(135deg, #B2EBF2, #E0F7FA);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            height: 280px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* HALAMAN 7: RSVP */
+        #rsvp, #page-rsvp {
+            background: var(--cream);
+        }
+
+        .form-container, .form-card {
+            max-width: 550px;
+            margin: 30px auto 0;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 131, 143, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--biru-gelap);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--biru-soft);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border 0.3s;
+            background: #F0FDFF;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--biru-tua);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00ACC1, #00838F);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 131, 143, 0.3);
+        }
+
+        /* HALAMAN 8: PENUTUP */
+        #penutup {
+            background: linear-gradient(rgba(0, 96, 100, 0.65), rgba(0, 96, 100, 0.75)), 
+                        url('{{ closing_photo }}') center/cover no-repeat;
+            color: white;
+            min-height: 100vh;
+        }
+
+        #penutup .section-title {
+            color: white;
+        }
+
+        #penutup .section-title::after {
+            background: #80DEEA;
+        }
+
+        .thankyou {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+
+        .footer-names {
+            font-size: 0.8rem;
+            margin-top: 30px;
+            letter-spacing: 2px;
+        }
+
+        /* Animasi ringan */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Audio Background Element -->
-  {% if music_url %}
-  <audio id="bg-music" loop preload="auto">
-    <source src="{{ music_url }}" type="audio/mpeg">
-    Browser Anda tidak mendukung elemen audio.
-  </audio>
+    <!-- ==================== HALAMAN 1: AMPLOP ==================== -->
+    <div id="envelope-page">
+        <div class="envelope" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-seal">💌</div>
+            <div class="envelope-body">
+                <div class="envelope-text">Kepada Yth.</div>
+                <div class="guest-name" id="guestName">{{ guest_name }}</div>
+                <div class="envelope-text">Di Tempat</div>
+            </div>
+        </div>
+        <button class="btn-open" onclick="openInvitation()">Buka Undangan</button>
+    </div>
 
-  <!-- Tombol Kontrol Musik Mengapung -->
-  <div class="music-player-float" id="music-btn" onclick="toggleMusic()" title="Putar/Jeda Musik">
-    <svg id="music-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 18V5l12-2v13"></path>
-      <circle cx="6" cy="18" r="3"></circle>
-      <circle cx="18" cy="16" r="3"></circle>
-    </svg>
-  </div>
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <div id="main-content">
 
-  <script>
-    const music = document.getElementById('bg-music');
-    const musicBtn = document.getElementById('music-btn');
-    let isPlaying = false;
+        <!-- COVER -->
+        <section id="cover">
+            <div class="container animate">
+                <p style="letter-spacing: 3px; font-size: 0.75rem; color: #80DEEA; margin-bottom: 5px;">THE WEDDING OF</p>
+                
+                <div class="couple-initials">{{ couple_initials }}</div>
 
-    function toggleMusic() {
-      if (isPlaying) {
-        music.pause();
-        musicBtn.classList.remove('playing');
-        isPlaying = false;
-      } else {
-        music.play().then(() => {
-          musicBtn.classList.add('playing');
-          isPlaying = true;
-        }).catch(error => {
-          console.log("Autoplay diblokir oleh browser:", error);
+                <div class="couple-names">
+                    {{ groom_name }}<br><span class="and">&</span><br>{{ bride_name }}
+                </div>
+                <div class="wedding-info">
+                    <p>{{ akad_date }}</p>
+                    <p>{{ resep_venue }} • {{ event_city }}</p>
+                </div>
+
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">00</div>
+                        <div class="countdown-label">Hari</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div class="countdown-label">Jam</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div class="countdown-label">Menit</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div class="countdown-label">Detik</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMPELAI -->
+        <section id="mempelai">
+            <div class="container">
+                <h2 class="section-title">Kami yang berbahagia</h2>
+                <p class="ucapan">
+                    “{{ intro_greeting }}”
+                </p>
+
+                <div class="mempelai-grid">
+                    <div class="mempelai-card">
+                        <img src="{{ bride_photo }}" alt="Mempelai Wanita" class="mempelai-photo">
+                        <div class="mempelai-name">{{ bride_name }}</div>
+                        <div class="ortu">
+                            Putri dari<br>
+                            {{ bride_parents }}
+                        </div>
+                    </div>
+
+                    <div class="mempelai-card">
+                        <img src="{{ groom_photo }}" alt="Mempelai Pria" class="mempelai-photo">
+                        <div class="mempelai-name">{{ groom_name }}</div>
+                        <div class="ortu">
+                            Putra dari<br>
+                            {{ groom_parents }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUR STORY -->
+        <section id="story">
+            <div class="container">
+                <h2 class="section-title">Our Story</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">{{ story_title_1 }} ({{ story_date_1 }})</div>
+                        <p>{{ story_desc_1 }}</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">{{ story_title_2 }} ({{ story_date_2 }})</div>
+                        <p>{{ story_desc_2 }}</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">{{ story_title_3 }} ({{ story_date_3 }})</div>
+                        <p>{{ story_desc_3 }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DETAIL ACARA -->
+        <section id="acara">
+            <div class="container">
+                <h2 class="section-title">Detail Acara</h2>
+                <div class="acara-cards">
+                    <div class="acara-card">
+                        <div class="acara-type">Akad Nikah</div>
+                        <div class="acara-date">{{ akad_date }}</div>
+                        <p>Pukul {{ akad_time }}</p>
+                        <p style="margin-top: 12px; font-size: 0.95rem;">
+                            <strong>{{ akad_venue }}</strong><br>
+                            {{ akad_address }}
+                        </p>
+                        <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
+                    </div>
+
+                    <div class="acara-card">
+                        <div class="acara-type">Resepsi</div>
+                        <div class="acara-date">{{ resep_date }}</div>
+                        <p>Pukul {{ resep_time }}</p>
+                        <p style="margin-top: 12px; font-size: 0.95rem;">
+                            <strong>{{ resep_venue }}</strong><br>
+                            {{ resep_address }}
+                        </p>
+                        <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERI -->
+        <section id="gallery">
+            <div class="container">
+                <h2 class="section-title">Foto Kami Berdua</h2>
+                <div class="gallery-grid">
+                    {% for img in gallery_list %}
+                    <div class="gallery-item">
+                        <img src="{{ img }}" alt="Prewedding Photo">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section id="rsvp">
+            <div class="container">
+                <h2 class="section-title">RSVP & Doa Restu</h2>
+                <p style="margin-bottom: 20px; color: #006064;">Merupakan suatu kehormatan apabila Bapak/Ibu/Saudara/i berkenan hadir.</p>
+
+                <div class="form-container" id="rsvp-card">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="rsvp-nama" name="nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required />
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi Kehadiran</label>
+                        <select id="rsvp-status" name="status" required>
+                            <option value="Hadir">Hadir (InsyaAllah)</option>
+                            <option value="Ragu">Masih Ragu-ragu</option>
+                            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Tamu</label>
+                        <input type="number" id="rsvp-jumlah" name="jumlah" min="1" max="5" value="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ucapan & Doa Restu</label>
+                        <textarea id="rsvp-ucapan" name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
+                    </div>
+                    <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCRIPT RSVP -->
+        <script>
+          function submitRSVP() {
+              var nama = document.getElementById('rsvp-nama').value;
+              var status = document.getElementById('rsvp-status').value;
+              var ucapan = document.getElementById('rsvp-ucapan').value;
+              var jumlah = document.getElementById('rsvp-jumlah') ? document.getElementById('rsvp-jumlah').value : 1;
+          
+              if (!nama || nama.trim() === "") {
+                  alert("Mohon isi nama Anda terlebih dahulu.");
+                  return;
+              }
+          
+              var card = document.getElementById('rsvp-card');
+              card.innerHTML = `
+                  <div style="text-align: center; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                      <p style="font-size: 32px; margin-bottom: 4px;">✅</p>
+                      <p style="font-size: 15px; font-weight: bold; color: #00838F;">Terima Kasih, ${nama}!</p>
+                      <p style="font-size: 12px; color: #006064; line-height: 150%;">Konfirmasi kehadiran dan doa restu Anda berhasil dikirim.</p>
+                  </div>
+              `;
+          
+              var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
+              const urlParams = new URLSearchParams(window.location.search);
+              const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
+              
+              var payload = {
+                  user_id: currentUserId,
+                  nama: nama,
+                  status: status,
+                  jumlah: jumlah,
+                  ucapan: ucapan
+              };
+          
+              fetch(scriptUrl, {
+                  method: "POST",
+                  mode: "no-cors",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(payload)
+              }).catch(error => {
+                  console.error("Gagal mengirim RSVP:", error);
+              });
+          }
+        </script>
+
+        <!-- PENUTUP -->
+        <section id="penutup">
+            <div class="container">
+                <h2 class="section-title">Terima Kasih</h2>
+                <div class="thankyou">Merupakan suatu kehormatan<br>dan kebahagiaan bagi kami</div>
+                <div class="footer-names">
+                    {{ groom_name }} & {{ bride_name }}
+                </div>
+                <p style="margin-top: 40px; margin-bottom: 40px; font-size: 0.75rem; opacity: 0.7;">
+                    Kami yang berbahagia<br>Keluarga Besar Kedua Mempelai
+                </p>
+                <p style="max-width: 400px; margin-top: 0px; font-size: 0.75rem;">
+                    {{ quote_text }}
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function openInvitation() {
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                document.getElementById('envelope-page').classList.add('hide');
+                const main = document.getElementById('main-content');
+                main.classList.add('show');
+                startCountdown();
+            }, 900);
+        }
+
+        function startCountdown() {
+            const weddingDate = new Date('{{ raw_event_date }}T09:00:00').getTime();
+
+            const timer = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.getElementById('countdown').innerHTML = '<p style="font-size:1.3rem;color:#E0F7FA">Hari Bahagia Telah Tiba!</p>';
+                    return;
+                }
+
+                document.getElementById('days').textContent = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                document.getElementById('hours').textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                document.getElementById('minutes').textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                document.getElementById('seconds').textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+            }, 1000);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('section').forEach(sec => {
+            observer.observe(sec);
         });
-      }
-    }
-
-    // Coba putar otomatis saat halaman diklik pertama kali oleh pengguna
-    document.addEventListener('click', function initAudio() {
-      if (!isPlaying) {
-        music.play().then(() => {
-          musicBtn.classList.add('playing');
-          isPlaying = true;
-        }).catch(e => {});
-      }
-    }, { once: true });
-  </script>
-  {% endif %}
-
-  <div class="invitation-wrapper">
-
-    <!-- ================= HALAMAN 1: COVER ================= -->
-    <section class="section-page" id="page-cover">
-      <div class="romantic-bg" style="background-image: url('{{ photo_url }}');"></div>
-      <div class="photographic-scrim"></div>
-      <div class="portrait-frame"></div>
-      
-      <div class="hero-content" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100%; padding: 40px 20px; z-index: 3;">
-        
-        <!-- Bagian Atas: Label / Judul & Singkatan Nama Mempelai -->
-        <div class="wedding-heading" style="text-align: center; margin-top: 20px;">
-          <div class="section-label" style="color: #E6D9BF; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">The Wedding Of</div>
-          <div class="couple-initials-cover" style="font-family: 'Italianno', cursive; font-size: 30px; color: #FFFCF5; margin-top: 8px; letter-spacing: 2px;">
-            {{ couple_initials|default('A & A') }}
-          </div>
-        </div>
-
-        <!-- Bagian Tengah: Nama Mempelai, Tanggal, Kota & Countdown Timer -->
-        <div class="wedding-introduction" style="text-align: center; width: 100%;">
-          <div class="couple-names-cover" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-            
-            <!-- Nama Mempelai Wanita -->
-            <div style="font-family: 'Italianno', cursive; font-size: 42px; line-height: 120%; color: #FFFCF5;">
-              {{ bride_name|default('Aruna Kirana Putri') }}
-            </div>
-            
-            <!-- Simbol & -->
-            <span style="font-family: 'Italianno', cursive; font-size: 46px; color: #FFFCF5; line-height: 80%; margin: 2px 0;">&amp;</span>
-            
-            <!-- Nama Mempelai Pria -->
-            <div style="font-family: 'Italianno', cursive; font-size: 42px; line-height: 120%; color: #FFFCF5;">
-              {{ groom_name|default('Aditya Pratama') }}
-            </div>
-
-          </div>
-
-          <!-- Tanggal & Kota -->
-          <div class="date-and-city" style="font-size: 13px; color: #E6D9BF; margin-top: 20px; letter-spacing: 1px;">
-            {{ akad_date|default('Sabtu, 31 Oktober 2026') }} — {{ resep_address|default('Bandung') }}
-          </div>
-          <span style="font-size: 9px; color: #E6D9BF; letter-spacing: 1.5px; margin-top: 6px; opacity: 0.8;">↓ Hari Menjelang Acara Pernikahan</span>
-
-          <!-- PENGHITUNG WAKTU MUNDUR (COUNTDOWN TIMER) -->
-          <div class="cover-countdown" id="cover-countdown" data-target="{{ raw_event_date|default('2026-10-31') }}">
-            <div class="cd-box">
-              <span class="cd-number" id="cd-days">00</span>
-              <span class="cd-unit">Hari</span>
-            </div>
-            <div class="cd-box">
-              <span class="cd-number" id="cd-hours">00</span>
-              <span class="cd-unit">Jam</span>
-            </div>
-            <div class="cd-box">
-              <span class="cd-number" id="cd-minutes">00</span>
-              <span class="cd-unit">Menit</span>
-            </div>
-            <div class="cd-box">
-              <span class="cd-number" id="cd-seconds">00</span>
-              <span class="cd-unit">Detik</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bagian Bawah: Quote & Gulir -->
-        <div class="scroll-cue" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 20px;">
-          <div class="wedding-sentiment" style="font-size: 12px; font-style: italic; color: #E6D9BF; max-width: 280px; text-align: center;">
-            "{{ quote_text|default('Maha Suci Allah yang menciptakan pasangan-pasangan') }}"
-          </div>
-          <span style="font-size: 9px; color: #E6D9BF; letter-spacing: 1.5px; margin-top: 6px; opacity: 0.8;">↓ GULIR KE BAWAH</span>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SCRIPT PENGLOGIKAAN COUNTDOWN TIMER COVER -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const countdownContainer = document.getElementById("cover-countdown");
-        if (countdownContainer) {
-          const rawDateStr = countdownContainer.dataset.target; // Format YYYY-MM-DD
-          const targetDate = new Date(rawDateStr + "T08:00:00").getTime();
-
-          function updateCountdown() {
-            const now = new Date().getTime();
-            const difference = targetDate - now;
-
-            if (difference > 0) {
-              const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-              const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-              const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-              const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-              document.getElementById("cd-days").textContent = String(days).padStart(2, '0');
-              document.getElementById("cd-hours").textContent = String(hours).padStart(2, '0');
-              document.getElementById("cd-minutes").textContent = String(minutes).padStart(2, '0');
-              document.getElementById("cd-seconds").textContent = String(seconds).padStart(2, '0');
-            } else {
-              document.getElementById("cd-days").textContent = "00";
-              document.getElementById("cd-hours").textContent = "00";
-              document.getElementById("cd-minutes").textContent = "00";
-              document.getElementById("cd-seconds").textContent = "00";
-            }
-          }
-
-          updateCountdown();
-          setInterval(updateCountdown, 1000);
-        }
-      });
     </script>
-
-    <!-- ================= HALAMAN 2: KEDUA MEMPELAI & ORANG TUA ================= -->
-    <section class="section-page" id="page-couple">
-      <div class="fine-ornament">
-        <div class="fine-rule"></div><div class="diamond"></div><div class="fine-rule"></div>
-      </div>
-      <div class="section-label">Kami yang Berbahagia</div>
-      <div class="section-title">Mempelai &amp; Keluarga</div>
-      
-      <!-- Narasi pengantar dinamis dari formulir -->
-      <div class="section-desc">
-        {{ intro_greeting|default('Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:') }}
-      </div>
-
-      <!-- Mempelai Wanita -->
-      <div class="mempelai-card">
-        <div class="portrait" style="background-image: url('{{ bride_photo|default("https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop") }}');"></div>
-        <div class="full-name">{{ bride_name|default('Aruna Kirana Putri, S.Arch') }}</div>
-        <div class="family-intro">
-          Putri tercinta dari<br>
-          {{ bride_parents|default('Bapak H. Darmawan Putri &amp; Ibu Hj. Siti Aminah') }}
-        </div>
-      </div>
-
-      <div class="union">&amp;</div>
-
-      <!-- Mempelai Pria -->
-      <div class="mempelai-card">
-        <div class="portrait" style="background-image: url('{{ groom_photo|default("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop") }}');"></div>
-        <div class="full-name">{{ groom_name|default('Aditya Pratama, S.T') }}</div>
-        <div class="family-intro">
-          Putra tercinta dari<br>
-          {{ groom_parents|default('Bapak H. Hendra Pratama &amp; Ibu Hj. Rina Marlina') }}
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= HALAMAN 3: WAKTU, LOKASI & COUNTDOWN ================= -->
-    <section class="section-page" id="page-schedule">
-      <div class="section-label">Save The Date</div>
-      <div class="section-title">Waktu &amp; Tempat</div>
-      <div class="section-desc">
-        Rangkaian acara pernikahan kami akan diselenggarakan pada:
-      </div>
-    
-      <!-- Menggunakan raw_event_date berformat YYYY-MM-DD agar aman dibaca JavaScript -->
-      <div
-        class="wedding-date-main"
-        id="wedding-date"
-        data-date="{{ raw_event_date|default('2026-10-31') }}"
-      >
-        {{ akad_date|default('Sabtu, 31 Oktober 2026') }}
-      </div>
-
-      <!-- Kartu Akad Nikah -->
-      <div class="event-card" style="margin-top: 20px;">
-        <div class="event-title">Akad Nikah</div>
-        <div class="event-schedule">
-          <span class="event-date-text">📅 {{ akad_date|default('Sabtu, 31 Oktober 2026') }}</span>
-          <span class="event-time-text">⏰ Pukul {{ akad_time|default('08.00 WIB s/d Selesai') }}</span>
-        </div>
-        <div class="fine-rule" style="width: 40px; margin: 4px auto;"></div>
-        <div class="venue-name">{{ akad_venue|default('Masjid Agung Trans Studio') }}</div>
-        <div class="venue-address">{{ akad_address|default('Jl. Gatot Subroto No.289, Cibangkong, Batununggal, Kota Bandung') }}</div>
-        <a href="{{ akad_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
-          📍 Lihat Lokasi Akad (Google Maps)
-        </a>
-      </div>
-
-      <!-- Kartu Resepsi -->
-      <div class="event-card">
-        <div class="event-title">Resepsi</div>
-        <div class="event-schedule">
-          <span class="event-date-text">📅 {{ resep_date|default('Sabtu, 31 Oktober 2026') }}</span>
-          <span class="event-time-text">⏰ Pukul {{ resep_time|default('11.00 - 14.00 WIB') }}</span>
-        </div>
-        <div class="fine-rule" style="width: 40px; margin: 4px auto;"></div>
-        <div class="venue-name">{{ resep_venue|default('The Trans Luxury Hotel Ballroom') }}</div>
-        <div class="venue-address">{{ resep_address|default('Jl. Gatot Subroto No.289, Bandung') }}</div>
-        <a href="{{ resep_maps_url|default('https://maps.google.com') }}" target="_blank" class="btn-action">
-          📍 Lihat Lokasi Resepsi (Google Maps)
-        </a>
-      </div>
-    </section>
-    
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const dateElement = document.getElementById("wedding-date");
-        if (dateElement) {
-          const akad_date = dateElement.dataset.date;
-          
-          const date = new Date(akad_date + "T00:00:00");
-    
-          if (!isNaN(date.getTime())) {
-            const formattedDate = new Intl.DateTimeFormat("id-ID", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            }).format(date);
-    
-            dateElement.textContent = formattedDate;
-          }
-        }
-      });
-    </script>
-
-    <!-- ================= HALAMAN 4: OUR STORY ================= -->
-    <section class="section-page" id="page-story">
-      <div class="section-label">Perjalanan Kami</div>
-      <div class="section-title">Our Story</div>
-      <div class="story-photo" style="background-image: url('{{ story_photo|default("https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop") }}');"></div>
-
-      <div class="relationship-timeline">
-        <!-- Chapter 1 -->
-        <div class="story-chapter">
-          <div class="timeline-marker">
-            <div class="diamond-marker"></div>
-            <div class="timeline-rule"></div>
-          </div>
-          <div class="chapter-content">
-            <div class="chapter-date">{{ story_date_1|default('Januari 2021') }}</div>
-            <div class="chapter-title">{{ story_title_1|default('Pertama Bertemu') }}</div>
-            <div class="chapter-narrative">{{ story_desc_1|default('Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.') }}</div>
-          </div>
-        </div>
-
-        <!-- Chapter 2 -->
-        <div class="story-chapter">
-          <div class="timeline-marker">
-            <div class="diamond-marker"></div>
-            <div class="timeline-rule"></div>
-          </div>
-          <div class="chapter-content">
-            <div class="chapter-date">{{ story_date_2|default('Maret 2024') }}</div>
-            <div class="chapter-title">{{ story_title_2|default('Komitmen Bersama') }}</div>
-            <div class="chapter-narrative">{{ story_desc_2|default('Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.') }}</div>
-          </div>
-        </div>
-
-        <!-- Chapter 3 -->
-        <div class="story-chapter">
-          <div class="timeline-marker">
-            <div class="diamond-marker"></div>
-          </div>
-          <div class="chapter-content">
-            <div class="chapter-date">{{ story_date_3|default('Oktober 2026') }}</div>
-            <div class="chapter-title">{{ story_title_3|default('Menuju Halal') }}</div>
-            <div class="chapter-narrative">{{ story_desc_3|default('Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.') }}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= HALAMAN 5: GALERI FOTO PREWEDDING ================= -->
-    <section class="section-page" id="page-gallery">
-      <div class="section-label">Momen Indah</div>
-      <div class="section-title">Galeri Pre-Wedding</div>
-      <div class="section-desc" style="font-style: italic; font-family: 'Cormorant Garamond'; font-size: 18px; margin-top: -10px;">"A moment that lasts forever"</div>
-    
-      {% if gallery_list and gallery_list|length > 0 %}
-        <!-- Foto Utama (Foto pertama) -->
-        <div class="gallery-main-photo" style="background-image: url('{{ gallery_list[0] }}');"></div>
-    
-        <!-- Sisa foto ditampilkan dinamis -->
-        {% if gallery_list|length > 1 %}
-          {% set remaining_photos = gallery_list[1:] %}
-          {% for pair in remaining_photos | batch(2) %}
-            <div class="gallery-pair">
-              {% for img_url in pair %}
-                <div class="gallery-item" style="background-image: url('{{ img_url }}');"></div>
-              {% endfor %}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endif %}
-    
-      <div class="section-label" style="margin-top: 10px;">Galeri Prewedding</div>
-    </section>
-
-<!-- ================= HALAMAN 6: RSVP & FORMULIR ================= -->
-    <section class="section-page" id="page-rsvp">
-      <div class="section-label">Konfirmasi Kehadiran</div>
-      <div class="section-title">RSVP &amp; Doa Restu</div>
-      <div class="section-desc">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir memberikan doa restu.</div>
-
-      <div class="form-card" id="rsvp-card">
-        <div class="form-group">
-          <label>Nama Lengkap</label>
-          <input type="text" id="rsvp-nama" name="nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required />
-        </div>
-        <div class="form-group">
-          <label>Konfirmasi Kehadiran</label>
-          <select id="rsvp-status" name="status" required>
-            <option value="Hadir">Hadir (InsyaAllah)</option>
-            <option value="Ragu">Masih Ragu-ragu</option>
-            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Jumlah Tamu</label>
-          <input type="number" id="rsvp-jumlah" name="jumlah" min="1" max="5" value="1" />
-        </div>
-        <div class="form-group">
-          <label>Ucapan &amp; Doa Restu</label>
-          <textarea id="rsvp-ucapan" name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
-        </div>
-        <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
-      </div>
-    </section>
-
-    <!-- SCRIPT PENANGANAN PENGIRIMAN RSVP KE GOOGLE SHEETS -->
-    <script>
-      function submitRSVP() {
-          var nama = document.getElementById('rsvp-nama').value;
-          var status = document.getElementById('rsvp-status').value;
-          var ucapan = document.getElementById('rsvp-ucapan').value;
-          var jumlah = document.getElementById('rsvp-jumlah') ? document.getElementById('rsvp-jumlah').value : 1;
-      
-          if (!nama || nama.trim() === "") {
-              alert("Mohon isi nama Anda terlebih dahulu.");
-              return;
-          }
-      
-          // Ubah tampilan card menjadi pesan sukses
-          var card = document.getElementById('rsvp-card');
-          card.innerHTML = `
-              <div style="text-align: center; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                  <p style="font-size: 32px; margin-bottom: 4px;">✅</p>
-                  <p style="font-size: 15px; font-weight: bold; color: #927442;">Terima Kasih, ${nama}!</p>
-                  <p style="font-size: 12px; color: #766E60; line-height: 150%;">Konfirmasi kehadiran dan doa restu Anda berhasil dikirim.</p>
-              </div>
-          `;
-      
-          var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-          const urlParams = new URLSearchParams(window.location.search);
-          const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
-          
-          var payload = {
-              user_id: currentUserId,
-              nama: nama,
-              status: status,
-              jumlah: jumlah,
-              ucapan: ucapan
-          };
-      
-          // Kirim data secara asinkronus ke Google Sheets Webhook
-          fetch(scriptUrl, {
-              method: "POST",
-              mode: "no-cors",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-          }).catch(error => {
-              console.error("Gagal mengirim RSVP:", error);
-          });
-      }
-    </script>
-    
-    <!-- ================= HALAMAN 7: HALAMAN PENUTUP ================= -->
-    <section class="section-page" id="page-closing" style="justify-content: flex-end; padding-bottom: 60px;">
-      <div class="romantic-bg" style="background-image: url('{{ closing_photo }}');"></div>
-      <div class="photographic-scrim"></div>
-      <div class="portrait-frame"></div>
-    
-      <div class="closing-content" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 3;">
-        
-        <p class="fade-up" style="color: #F8F5EE; font-size: 13px; line-height: 170%; max-width: 340px; font-family: 'Inter', sans-serif;">
-            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
-        </p>
-
-        <div class="fade-up" style="font-family: 'Italianno', cursive; font-size: 52px; line-height: 100%; color: #E6D9BF; margin: 10px 0;">
-          Terima Kasih
-        </div>
-
-        <div class="fine-ornament" style="margin: 4px 0; width: 80px;">
-          <div class="fine-rule" style="background: #E6D9BF;"></div><div class="diamond" style="background: #E6D9BF;"></div><div class="fine-rule" style="background: #E6D9BF;"></div>
-        </div>
-
-        <div class="closing-names" style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: #FFFCF5;">
-          {{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}
-        </div>
-        
-        <div style="font-size: 9px; color: #E6D9BF; margin-top: 10px; letter-spacing: 1.5px; text-transform: uppercase;">Digital Wedding Invitation</div>
-      </div>
-    </section>
-
-  </div>
-
 </body>
 </html>
