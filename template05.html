@@ -76,15 +76,33 @@
 
     /* ========== COVER ========== */
     .cover {
-      min-height: 720px;
-      background: linear-gradient(180deg, #F8F4EC 0%, #EDE8DC 100%);
+      min-height: 880px;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 40px 28px 36px;
       position: relative;
     }
-
+    
+    /* Overlay tipis supaya tulisan lebih terbaca */
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(245, 240, 230, 0.35);
+      z-index: 0;
+    }
+    
+    /* Pastikan konten berada di atas overlay */
+    .cover > * {
+      position: relative;
+      z-index: 1;
+    }
+    
     .cover-header {
       display: flex;
       justify-content: space-between;
@@ -547,7 +565,7 @@
         <div class="couple-initials">{{ couple_initials }}</div>
         <div>{{ akad_date }}</div>
       </div>
-
+    
       <div>
         <p class="section-label">Undangan Pernikahan</p>
         <h1 class="couple-names">
@@ -558,7 +576,7 @@
         <p class="date-small">{{ akad_date }}</p>
         <p class="tagline">Bersama dan setia merajut bahtera rumah tangga.</p>
       </div>
-
+    
       <div>
         <div class="recipient">
           <p class="recipient-label">Kepada Yth. Bapak/Ibu/Saudara/i</p>
