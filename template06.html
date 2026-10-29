@@ -557,48 +557,94 @@
                             <strong>{{ resep_venue }}</strong><br>
                             {{ resep_address }}</p>
 
-      <div class="countdown">
-        <div class="countdown-item">
-          <span class="countdown-number">00</span>
-          <span class="countdown-label">Hari</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number">00</span>
-          <span class="countdown-label">Jam</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number">00</span>
-          <span class="countdown-label">Menit</span>
-        </div>
-        <div class="countdown-item">
-          <span class="countdown-number">00</span>
-          <span class="countdown-label">Detik</span>
-        </div>
+		<div class="countdown" id="countdown">
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="days">00</span>
+		    <span class="countdown-label">Hari</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="hours">00</span>
+		    <span class="countdown-label">Jam</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="minutes">00</span>
+		    <span class="countdown-label">Menit</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="seconds">00</span>
+		    <span class="countdown-label">Detik</span>
+		  </div>
+		</div>>
       </div>
     </section>
 	<!-- Script untuk memformat tanggal otomatis menampilkan Nama Hari -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const dateElement = document.getElementById("main-wedding-date");
-        const subDateElement = document.getElementById("sub-wedding-date");
-        
-        if (dateElement) {
-          // Mengambil string tanggal (misal dari data-date atau teks bawaan)
-          let rawDate = dateElement.getAttribute("data-date") || dateElement.textContent.trim();
-          let targetDate = new Date(rawDate);
-          
-          if (!isNaN(targetDate.getTime())) {
-            // Format menggunakan bahasa Indonesia untuk memunculkan nama hari (Sabtu, Minggu, dll)
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = targetDate.toLocaleDateString('id-ID', options);
-            
-            // Terapkan ke elemen utama & sub elemen
-            dateElement.textContent = formattedDate;
-            if (subDateElement) subDateElement.textContent = formattedDate;
-          }
-        }
-      });
-    </script>
+	// ========== COUNTDOWN PERNIKAHAN ==========
+	document.addEventListener("DOMContentLoaded", function () {
+	  const countdown = document.getElementById("countdown");
+	  const dateElement = document.getElementById("main-wedding-date");
+	
+	  if (!countdown || !dateElement) {
+	    console.error("Elemen countdown atau tanggal pernikahan tidak ditemukan.");
+	    return;
+	  }
+	
+	  // Gunakan tanggal yang sama dengan bagian hero.
+	  // Format tanggal wajib YYYY-MM-DD.
+	  const rawDate = dateElement.getAttribute("data-date");
+	
+	  if (!rawDate || !/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
+	    console.error("Tanggal pernikahan tidak valid:", rawDate);
+	    countdown.textContent = "Tanggal pernikahan belum diatur.";
+	    return;
+	  }
+	
+	  // Waktu acara pukul 08.00 WIB.
+	  const weddingDate = new Date(rawDate + "T08:00:00+07:00").getTime();
+	
+	  if (Number.isNaN(weddingDate)) {
+	    console.error("Gagal membaca tanggal pernikahan.");
+	    return;
+	  }
+	
+	  const daysEl = document.getElementById("days");
+	  const hoursEl = document.getElementById("hours");
+	  const minutesEl = document.getElementById("minutes");
+	  const secondsEl = document.getElementById("seconds");
+	
+	  function updateCountdown() {
+	    const now = Date.now();
+	    const distance = weddingDate - now;
+	
+	    if (distance <= 0) {
+	      clearInterval(timer);
+	      countdown.innerHTML =
+	        '<p style="font-size:18px;">Hari Bahagia Telah Tiba!</p>';
+	      return;
+	    }
+	
+	    daysEl.textContent = String(
+	      Math.floor(distance / (1000 * 60 * 60 * 24))
+	    ).padStart(2, "0");
+	
+	    hoursEl.textContent = String(
+	      Math.floor((distance / (1000 * 60 * 60)) % 24)
+	    ).padStart(2, "0");
+	
+	    minutesEl.textContent = String(
+	      Math.floor((distance / (1000 * 60)) % 60)
+	    ).padStart(2, "0");
+	
+	    secondsEl.textContent = String(
+	      Math.floor((distance / 1000) % 60)
+	    ).padStart(2, "0");
+	  }
+	
+	  updateCountdown();
+	  const timer = setInterval(updateCountdown, 1000);
+	});
 
     <!-- SALAM & COUPLE -->
     <section class="salam">
