@@ -131,7 +131,7 @@
 
     .recipient {
       margin-top: 36px;
-      text-align: left;
+      text-align: center;
     }
 
     .recipient-label {
@@ -142,6 +142,7 @@
 
     .guest-name {
       font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
       font-size: 26px;
       color: var(--text);
     }
@@ -617,7 +618,7 @@
         <p style="margin-top: 12px; font-size: 0.95rem;">
                             <strong>{{ akad_venue }}</strong><br>
                             {{ akad_address }}</p>
-        <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
+        <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi Google Maps</a>
       </div>
 
       <div class="event-card">
@@ -627,7 +628,7 @@
         <p style="margin-top: 12px; font-size: 0.95rem;">
                             <strong>{{ resep_venue }}</strong><br>
                             {{ resep_address }}</p>
-        <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
+        <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi Google Maps</a>
       </div>
 
       <button class="btn-save" onclick="saveDate()">Simpan Tanggal</button>
