@@ -1,563 +1,789 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan — {{ groom_name }} &amp; {{ bride_name }}</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #2A1A1F;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-        .invitation-container {
-            max-width: 430px;
-            margin: 0 auto;
-            background: #FFF5F7;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            position: relative;
-        }
-        /* ========== GALERI CAROUSEL ========== */
-        #page-gallery { background: #FFF0F5; }
-        .carousel-container {
-          width: 100%;
-          max-width: 382px;
-          overflow: hidden;
-          position: relative;
-          border-radius: 8px;
-          margin-bottom: 16px;
-        }
-        .carousel-track {
-          display: flex;
-          transition: transform 0.5s ease;
-        }
-        .carousel-slide {
-          min-width: 100%;
-          height: 320px;
-          background-size: cover;
-          background-position: center;
-          background-color: #FCE4EC;
-        }
-        .carousel-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(236, 64, 122, 0.75);
-          color: white;
-          border: none;
-          width: 36px; height: 36px;
-          border-radius: 50%;
-          font-size: 18px;
-          cursor: pointer;
-          z-index: 5;
-        }
-        .carousel-btn.prev { left: 10px; }
-        .carousel-btn.next { right: 10px; }
-        .carousel-dots {
-          display: flex;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 12px;
-        }
-        .carousel-dot {
-          width: 8px; height: 8px;
-          border-radius: 50%;
-          background: #F8BBD0;
-          cursor: pointer;
-        }
-        .carousel-dot.active { background: #EC407A; }
-    
-        /* ========== RSVP ========== */
-        #page-rsvp { background: #FFF5F7; }
-        .form-card { width: 100%; max-width: 366px; display: flex; flex-direction: column; gap: 14px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; text-align: left; width: 100%; }
-        .form-group label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #8D6E7A; }
-        .form-group input, .form-group select, .form-group textarea {
-          width: 100%; padding: 12px 14px; background: #FFF0F5; border: 1px solid #F8BBD0; border-radius: 4px; font-family: inherit; font-size: 13px; color: #4A2C3A; outline: none;
-        }
-        .btn-submit {
-          width: 100%; height: 46px; background: #EC407A; color: #FFF5F7; border: none; border-radius: 4px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-top: 8px;
-        }
-    
-        /* ========== PENUTUP ========== */
-        #page-closing { background: #880E4F; justify-content: center; text-align: center; height: 900px; }
-        .closing-content { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 366px; }
-        .closing-thanks { font-family: 'Cormorant Garamond', serif; font-size: 48px; color: #F8BBD0; }
-        .closing-names { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #FFF5F7; margin-top: 10px; }
-    
-        /* MUSIC BUTTON */
-        .music-player-float {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          z-index: 9999;
-          background: #EC407A;
-          color: #FFF5F7;
-          border: 1px solid #F8BBD0;
-          border-radius: 50%;
-          width: 45px;
-          height: 45px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-          transition: transform 0.2s ease;
-        }
-        .music-player-float:hover { transform: scale(1.1); }
-        .music-player-float.playing svg { animation: spin 3s linear infinite; }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Undangan Pernikahan — {{ groom_name }} & {{ bride_name }}</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #F5F0E6;
+      --bg-soft: #EDE8DC;
+      --card: #FFFdf8;
+      --text: #2F3B2F;
+      --text-muted: #6B736B;
+      --accent: #8A9A7B;
+      --accent-dark: #5C6B54;
+      --border: #D9D2C3;
+      --gold: #B8A17A;
+      --dark: #3A4A3A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #2A2F2A;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .invitation {
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--bg);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+
+    /* ========== SECTION UMUM ========== */
+    section {
+      padding: 48px 28px;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 20px auto;
+    }
+
+    /* ========== COVER ========== */
+    .cover {
+      min-height: 720px;
+      background: linear-gradient(180deg, #F8F4EC 0%, #EDE8DC 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 28px 36px;
+      position: relative;
+    }
+
+    .cover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .couple-initials {
+      font-size: 15px;
+      letter-spacing: 2px;
+      font-weight: 500;
+      color: var(--accent-dark);
+    }
+
+    .couple-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 58px;
+      line-height: 1.1;
+      color: var(--text);
+      margin: 24px 0 12px;
+    }
+
+    .couple-names .and {
+      font-size: 32px;
+      color: var(--gold);
+      display: block;
+      margin: 4px 0;
+    }
+
+    .date-small {
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: var(--accent-dark);
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--text-muted);
+    }
+
+    .recipient {
+      margin-top: 36px;
+      text-align: left;
+    }
+
+    .recipient-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .guest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      color: var(--text);
+    }
+
+    .scroll-hint {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      margin-top: 28px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    /* ========== QUOTE ========== */
+    .quote-section {
+      background: var(--bg-soft);
+    }
+
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 21px;
+      line-height: 1.5;
+      color: var(--text);
+      max-width: 320px;
+      margin: 0 auto 12px;
+    }
+
+    /* ========== COUPLE ========== */
+    .couple-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+
+    .mempelai-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+    }
+
+    .mempelai-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .ortu {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .and-symbol {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      color: var(--gold);
+      margin: 8px 0 18px;
+    }
+
+    .ucapan {
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 320px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    /* ========== DATE & COUNTDOWN ========== */
+    .date-section {
+      background: var(--dark);
+      color: #F5F0E6;
+    }
+
+    .date-section .section-label {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .big-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 52px;
+      letter-spacing: -1px;
+      margin: 10px 0 8px;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 28px 0;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 12px 8px;
+      min-width: 68px;
+    }
+
+    .countdown-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .event-card {
+      background: rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .event-type {
+      font-size: 12px;
+      letter-spacing: 1px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .event-date {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .event-time {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .btn-save {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 32px;
+      background: #F5F0E6;
+      color: var(--dark);
+      border: none;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ========== STORY ========== */
+    .story-section {
+      background: var(--bg);
+    }
+
+    .timeline {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .timeline-year {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-dark);
+      min-width: 42px;
+      padding-top: 3px;
+    }
+
+    .timeline-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .timeline-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ========== GALLERY ========== */
+    .gallery-section {
+      background: var(--bg-soft);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .gallery-item {
+      border-radius: 12px;
+      overflow: hidden;
+      height: 180px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    /* ========== RSVP ========== */
+    .rsvp-section {
+      background: var(--bg);
+    }
+
+    .form-container {
+      max-width: 340px;
+      margin: 28px auto 0;
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent-dark);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #4A5A44;
+    }
+
+    /* ========== GIFT ========== */
+    .gift-section {
+      background: var(--bg-soft);
+    }
+
+    .bank-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      text-align: left;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    }
+
+    .bank-name {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .bank-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .bank-holder {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ========== CLOSING ========== */
+    .closing {
+      background: var(--dark);
+      color: #F5F0E6;
+      padding: 60px 28px;
+    }
+
+    .closing .section-title {
+      color: #F5F0E6;
+    }
+
+    .closing-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      margin-top: 16px;
+    }
+
+    .thankyou {
+      font-family: 'Great Vibes', cursive;
+      font-size: 28px;
+      margin: 16px 0;
+    }
+  </style>
 </head>
 <body>
+  <div class="invitation">
 
-<div class="invitation-container">
+    <!-- ==================== COVER ==================== -->
+    <section class="cover">
+      <div class="cover-header">
+        <div class="couple-initials">{{ couple_initials }}</div>
+        <div>{{ akad_date }}</div>
+      </div>
 
-    <!-- ==================== HALAMAN 1: SAMPUL ==================== -->
-    <main class="flex flex-col h-[900px] items-start justify-between pt-7 pb-[30px] px-7 relative bg-[#303d32] overflow-hidden">
-        <img
-            class="absolute top-0 left-0 w-[430px] h-[900px] object-cover"
-            alt="Potret Sampul"
-            src="{{ photo_url if photo_url else 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1200&fit=crop' }}"
-        />
-        <div
-            class="absolute top-0 left-0 w-[430px] h-[900px] bg-[linear-gradient(0deg,rgba(23,35,29,0.6)_0%,rgba(23,35,29,0.04)_43%,rgba(23,35,29,0.85)_100%)]"
-            aria-hidden="true"
-        />
-        <header class="flex items-center justify-between relative self-stretch w-full z-10">
-            <div class="relative w-fit [font-family:'Cormorant_Garamond',serif] italic font-normal text-[#f7f4ed] text-[25px]">
-                {{ couple_initials | default('a / r') }}
-            </div>
-            <time class="relative w-fit font-normal text-[#f7f4ed] text-[10px] tracking-[0.20px]" datetime="2026-12-20">
-                {{ akad_date | default('20 . 12 . 2026') }}
-            </time>
-        </header>
-        
-        <section class="flex flex-col w-[calc(100%_-_28px)] items-start gap-[15px] absolute top-[130px] left-7 z-10">
-            <p class="relative w-fit font-normal text-[#f7f4ed] text-[10px] tracking-[0.30px] uppercase">
-                UNDANGAN PERNIKAHAN
-            </p>
-            <h1 class="w-[374px] text-[94px] tracking-[-2.82px] leading-[80.8px] font-normal text-[#f7f4ed]" style="font-family: 'Cormorant Garamond', serif;">
-                <span class="block">{{ bride_name | default('Alya') }} &amp;</span>
-                <span class="block">{{ groom_name | default('Raka') }}</span>
-            </h1>
-            <p class="relative w-fit font-normal italic text-[#f7f4ed] text-[22px]" style="font-family: 'Cormorant Garamond', serif;">
-                &quot;Bersamamu, menuju selamanya.&quot;
-            </p>
-        </section>
+      <div>
+        <p class="section-label">Undangan Pernikahan</p>
+        <h1 class="couple-names">
+          {{ bride_name }}
+          <span class="and">&</span>
+          {{ groom_name }}
+        </h1>
+        <p class="date-small">{{ akad_date }}</p>
+        <p class="tagline">Bersamamu, menuju selamanya.</p>
+      </div>
 
-        <footer class="flex flex-col items-start gap-5 relative self-stretch w-full z-10">
-            <div class="inline-flex flex-col items-start gap-2 relative">
-                <p class="relative w-fit font-normal text-[#e4e6dc] text-[11px]">
-                    Kepada Yth. Bapak/Ibu/Saudara/i
-                </p>
-                <p class="w-fit text-[28px] font-normal text-[#f7f4ed]" style="font-family: 'Cormorant Garamond', serif;">
-                    {{ guest_name | default('Nadia & Keluarga') }}
-                </p>
-            </div>
-            <div class="flex items-center justify-between pt-5 pb-0 px-0 relative self-stretch w-full border-t border-[#ffffff50]">
-                <button
-                    type="button"
-                    onclick="window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })"
-                    class="relative w-fit font-normal text-[#f7f4ed] text-[10px] tracking-[0.20px] cursor-pointer bg-transparent border-none"
-                >
-                    GULIR UNTUK CERITA KAMI
-                </button>
-                <button
-                    type="button"
-                    onclick="window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })"
-                    class="relative w-[22px] h-[22px] cursor-pointer bg-transparent border-none"
-                >
-                    ↓
-                </button>
-            </div>
-        </footer>
-    </main>
+      <div>
+        <div class="recipient">
+          <p class="recipient-label">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+          <p class="guest-name">{{ guest_name }}</p>
+        </div>
+        <div class="scroll-hint">
+          <span>GULIR UNTUK CERITA KAMI</span>
+          <span>↓</span>
+        </div>
+      </div>
+    </section>
 
-    <!-- ==================== HALAMAN 2: DOA & KEDUA MEMPELAI ==================== -->
-    <main class="flex flex-col items-start gap-[50px] pt-[65px] pb-[72px] px-7 relative bg-[#FFF5F7]">
-        <header class="flex flex-col items-center gap-6 relative self-stretch w-full">
-            <div class="relative w-fit italic text-[#303d32] text-[25px]" style="font-family: 'Cormorant Garamond', serif;">
-                Bismillahirrahmanirrahim
-            </div>
-            <div class="w-9 bg-[#b8a17a] relative h-px"></div>
-            <blockquote class="relative self-stretch text-[#303d32] text-[27px] text-center leading-[35.1px]" style="font-family: 'Cormorant Garamond', serif;">
-                &quot;Dan Dia menjadikan di antaramu rasa kasih dan sayang.&quot;
-            </blockquote>
-            <div class="relative w-fit font-medium text-[#74766b] text-[10px] tracking-[0.23px]">
-                QS. AR-RUM : 21
-            </div>
-            <p class="relative self-stretch font-normal text-[#74766b] text-[13px] text-center leading-[23.4px]">
-                Dengan memohon rahmat dan rida Allah SWT, kami mengundang Anda untuk menjadi bagian dari hari bahagia kami.
-            </p>
-        </header>
+    <!-- ==================== QUOTE ==================== -->
+    <section class="quote-section">
+      <p class="section-label">Bismillahirrahmanirrahim</p>
+      <div class="divider"></div>
+      <p class="quote-text">{{ quote_text }}</p>
+      <p style="margin-top: 18px; font-size: 14px; color: var(--text-muted); max-width: 320px; margin-left: auto; margin-right: auto;">
+        Dengan memohon rahmat dan rida Allah SWT, kami mengundang Anda untuk menjadi bagian dari hari bahagia kami.
+      </p>
+    </section>
 
-        <div class="self-stretch w-full bg-[#d9d5c9] relative h-px" role="separator"></div>
+    <!-- ==================== COUPLE ==================== -->
+    <section>
+      <p class="section-label">Dua hati, satu tujuan</p>
+      <p class="ucapan">“{{ intro_greeting }}”</p>
+      <h2 class="section-title">Kami yang<br>berbahagia</h2>
 
-        <section class="flex flex-col items-start gap-4 w-full relative self-stretch">
-            <div class="relative w-fit font-medium text-[#74766b] text-[10px] tracking-[0.23px]">
-                DUA HATI, SATU TUJUAN
-            </div>
-            <h2 class="font-normal text-[#303d32] text-5xl tracking-[-0.62px] leading-[47.0px] relative self-stretch" style="font-family: 'Cormorant Garamond', serif;">
-                Kami yang<br />berbahagia.
-            </h2>
-        </section>
+      <!-- Mempelai Wanita -->
+      <div class="couple-card">
+        <img src="{{ bride_photo }}" alt="{{ bride_name }}" class="mempelai-photo">
+        <h3 class="mempelai-name">{{ bride_name }}</h3>
+        <p class="ortu">
+          Putri dari<br>
+          {{ bride_parents }}
+        </p>
+      </div>
 
-        <!-- Mempelai Wanita -->
-        <article class="flex items-center gap-6 relative self-stretch w-full">
-            <img class="relative w-[174px] h-[245px] object-cover rounded-md" alt="Potret Mempelai Wanita" src="{{ bride_photo if bride_photo else 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop' }}" />
-            <div class="flex flex-col items-start gap-3.5 relative flex-1 grow">
-                <h3 class="font-normal text-[#303d32] text-4xl tracking-[-0.72px]" style="font-family: 'Cormorant Garamond', serif;">{{ bride_name | default('Alya') }}</h3>
-                <div class="font-medium text-[#30372e] text-xs leading-[19.2px]">{{ bride_full_name | default('Alya Putri Maharani') }}</div>
-                <p class="relative self-stretch font-normal text-[#74766b] text-[11px] leading-[20.9px]">
-                    Putri pertama dari<br />{{ bride_parents | default('Bapak Aditya Wijaya &amp; Ibu Ratna Sari') }}
-                </p>
-                <div class="relative w-fit text-[#303d32] text-[10px]">@alyaputri</div>
-            </div>
-        </article>
+      <div class="and-symbol">&</div>
 
-        <div class="relative self-stretch italic text-[#b8a17a] text-[42px] text-center" style="font-family: 'Cormorant Garamond', serif;">&amp;</div>
+      <!-- Mempelai Pria -->
+      <div class="couple-card">
+        <img src="{{ groom_photo }}" alt="{{ groom_name }}" class="mempelai-photo">
+        <h3 class="mempelai-name">{{ groom_name }}</h3>
+        <p class="ortu">
+          Putra dari<br>
+          {{ groom_parents }}
+        </p>
+      </div>
+    </section>
 
-        <!-- Mempelai Pria -->
-        <article class="flex items-center gap-6 relative self-stretch w-full">
-            <div class="flex flex-col items-start gap-3.5 relative flex-1 grow">
-                <h3 class="font-normal text-[#303d32] text-4xl tracking-[-0.72px]" style="font-family: 'Cormorant Garamond', serif;">{{ groom_name | default('Raka') }}</h3>
-                <div class="font-medium text-[#30372e] text-xs leading-[19.2px]">{{ groom_full_name | default('Raka Aditya Pradipta') }}</div>
-                <p class="relative self-stretch font-normal text-[#74766b] text-[11px] leading-[20.9px]">
-                    Putra kedua dari<br />{{ groom_parents | default('Bapak Bima Pradipta &amp; Ibu Dewi Lestari') }}
-                </p>
-                <div class="relative w-fit text-[#303d32] text-[10px]">@raka.pradipta</div>
-            </div>
-            <img class="relative w-[174px] h-[245px] object-cover rounded-md" alt="Potret Mempelai Pria" src="{{ groom_photo if groom_photo else 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop' }}" />
-        </article>
-    </main>
+    <!-- ==================== DATE & COUNTDOWN ==================== -->
+    <section class="date-section">
+      <p class="section-label">Hari bahagia kami</p>
+      <h2 class="big-date">{{ akad_date }}</h2>
+      <p style="font-size: 14px; opacity: 0.85;">{{ resep_date }}</p>
 
-    <!-- ==================== HALAMAN 3: TANGGAL & HITUNG MUNDUR ==================== -->
-    <main class="flex flex-col items-center gap-[30px] px-7 py-[60px] relative bg-[#303d32] overflow-hidden text-[#f7f4ed]">
-        <div class="absolute top-[45px] left-[-90px] w-[610px] h-[610px] rounded-[305px] border border-solid border-[#b8a17a30]" aria-hidden="true"></div>
-        <p class="relative w-fit font-medium text-[#e4e6dc] text-[10px] tracking-[0.23px]">AWAL DARI SELAMANYA</p>
-        <h1 class="relative self-stretch font-normal text-[83px] text-center tracking-[-2.49px] leading-[83px]" style="font-family: 'Cormorant Garamond', serif;">
-            20.12.26
-        </h1>
-        <p class="relative w-fit font-normal text-[#e4e6dc] text-xs tracking-[0.24px]">MINGGU, 20 DESEMBER 2026</p>
-        <div class="relative self-stretch w-full h-px bg-[#ffffff30]" aria-hidden="true"></div>
-        
-        <section class="flex items-start justify-between relative self-stretch w-full">
-            <div class="flex flex-col w-[76px] items-center gap-2 relative">
-                <p class="relative font-normal text-[43px]" style="font-family: 'Cormorant Garamond', serif;" id="days">53</p>
-                <p class="relative font-normal text-[#e4e6dc] text-[9px]">HARI</p>
-            </div>
-            <div class="flex flex-col w-[76px] items-center gap-2 relative">
-                <p class="relative font-normal text-[43px]" style="font-family: 'Cormorant Garamond', serif;" id="hours">08</p>
-                <p class="relative font-normal text-[#e4e6dc] text-[9px]">JAM</p>
-            </div>
-            <div class="flex flex-col w-[76px] items-center gap-2 relative">
-                <p class="relative font-normal text-[43px]" style="font-family: 'Cormorant Garamond', serif;" id="minutes">24</p>
-                <p class="relative font-normal text-[#e4e6dc] text-[9px]">MENIT</p>
-            </div>
-            <div class="flex flex-col w-[76px] items-center gap-2 relative">
-                <p class="relative font-normal text-[43px]" style="font-family: 'Cormorant Garamond', serif;" id="seconds">16</p>
-                <p class="relative font-normal text-[#e4e6dc] text-[9px]">DETIK</p>
-            </div>
-        </section>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-number" id="days">00</span>
+          <span class="countdown-label">Hari</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="hours">00</span>
+          <span class="countdown-label">Jam</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="minutes">00</span>
+          <span class="countdown-label">Menit</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="seconds">00</span>
+          <span class="countdown-label">Detik</span>
+        </div>
+      </div>
 
-        <p class="relative self-stretch font-normal text-[#e4e6dc] text-[13px] text-center leading-[23.4px]">
-            Setiap detik membawa kami lebih dekat pada hari yang ingin kami bagi bersama Anda.
-        </p>
-        
-        <button
-            type="button"
-            onclick="alert('Tanggal telah disimpan ke kalender!')"
-            class="flex h-[52px] items-center justify-between px-5 py-0 relative self-stretch w-full rounded overflow-hidden border border-solid border-[#ffffff60] text-left cursor-pointer bg-transparent text-[#f7f4ed]"
-        >
-            <span class="relative font-medium text-xs">Simpan tanggal</span>
-            <span class="relative w-[17px] h-[17px]">📅</span>
-        </button>
-    </main>
+      <div class="event-card">
+        <div class="event-type">Akad Nikah</div>
+        <div class="event-date">{{ akad_date }}</div>
+        <div class="event-time">Pukul {{ akad_time }} WIB</div>
+      </div>
 
-    <!-- ==================== HALAMAN 4: RANGKAIAN ACARA & LOKASI ==================== -->
-    <main class="flex flex-col items-start gap-[30px] px-7 py-[72px] relative bg-[#FFF5F7]">
-        <p class="relative font-medium text-[#74766b] text-[10px] tracking-[0.23px]">HARI ISTIMEWA KAMI</p>
-        <h1 class="relative self-stretch font-normal text-[#303d32] text-5xl tracking-[-0.62px] leading-[47.0px]" style="font-family: 'Cormorant Garamond', serif;">
-            Satu janji.<br />Sejuta bahagia.
-        </h1>
-        <p class="relative self-stretch font-normal text-[#74766b] text-[13px] leading-[23.4px]">
-            Kehadiran dan doa restu Anda akan menjadi bagian terindah dalam awal perjalanan kami.
-        </p>
-        <div class="relative self-stretch w-full h-px bg-[#d9d5c9]" aria-hidden="true"></div>
+      <div class="event-card">
+        <div class="event-type">Resepsi</div>
+        <div class="event-date">{{ resep_date }}</div>
+        <div class="event-time">Pukul {{ resep_time }} WIB</div>
+      </div>
 
-        <!-- Akad Nikah -->
-        <section class="contents">
-            <div class="flex flex-col items-start gap-[18px] relative self-stretch w-full">
-                <div class="flex items-center justify-between relative self-stretch w-full">
-                    <h2 class="relative font-normal text-[#303d32] text-[37px]" style="font-family: 'Cormorant Garamond', serif;">Akad nikah</h2>
-                </div>
-                <div class="flex items-start gap-6 relative self-stretch w-full">
-                    <div class="relative w-[170px] font-normal text-[#30372e] text-xs leading-[21.6px]">Minggu,<br />20 Desember 2026</div>
-                    <p class="relative flex-1 font-normal text-[#30372e] text-xs leading-[21.6px]">08.00 – 10.00<br />Waktu Indonesia Barat</p>
-                </div>
-            </div>
-            <div class="relative self-stretch w-full h-px bg-[#d9d5c9]" aria-hidden="true"></div>
-        </section>
+      <button class="btn-save" onclick="saveDate()">Simpan Tanggal</button>
+    </section>
 
-        <!-- Resepsi -->
-        <section class="contents">
-            <div class="flex flex-col items-start gap-[18px] relative self-stretch w-full">
-                <div class="flex items-center justify-between relative self-stretch w-full">
-                    <h2 class="relative font-normal text-[#303d32] text-[37px]" style="font-family: 'Cormorant Garamond', serif;">Resepsi</h2>
-                </div>
-                <div class="flex items-start gap-6 relative self-stretch w-full">
-                    <div class="relative w-[170px] font-normal text-[#30372e] text-xs leading-[21.6px]">Minggu,<br />20 Desember 2026</div>
-                    <p class="relative flex-1 font-normal text-[#30372e] text-xs leading-[21.6px]">11.00 – 14.00<br />Waktu Indonesia Barat</p>
-                </div>
-            </div>
-            <div class="relative self-stretch w-full h-px bg-[#d9d5c9]" aria-hidden="true"></div>
-        </section>
+    <!-- ==================== STORY ==================== -->
+    <section class="story-section">
+      <p class="section-label">Cerita tentang kita</p>
+      <h2 class="section-title">Dari pertemuan,<br>menjadi bersama</h2>
 
-        <figure class="relative self-stretch w-full h-[200px] m-0">
-            <img class="relative self-stretch w-full h-[200px] object-cover rounded-md" alt="Lokasi Pernikahan" src="{{ location_photo if location_photo else 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop' }}" />
-        </figure>
-        
-        <section class="flex flex-col items-start gap-2.5 relative self-stretch w-full">
-            <h2 class="relative font-normal text-[#303d32] text-[29px]" style="font-family: 'Cormorant Garamond', serif;">{{ venue_name | default('Padma Hotel Bandung') }}</h2>
-            <address class="relative self-stretch not-italic font-normal text-[#74766b] text-[13px] leading-[23.4px]">
-                {{ venue_address | default('Jl. Rancabentang No. 56–58, Ciumbuleuit, Kota Bandung, Jawa Barat') }}
-            </address>
-        </section>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_1 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_1 }}</h3>
+            <p>{{ story_desc_1 }}</p>
+          </div>
+        </div>
 
-        <a class="flex h-[52px] items-center justify-between px-5 py-0 relative self-stretch w-full bg-[#303d32] rounded overflow-hidden text-white no-underline" href="{{ venue_maps_url | default('https://www.google.com/maps') }}" target="_blank" rel="noreferrer">
-            <span class="relative font-medium text-xs">Lihat lokasi di Google Maps</span>
-            <span class="relative">📍</span>
-        </a>
-    </main>
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_2 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_2 }}</h3>
+            <p>{{ story_desc_2 }}</p>
+          </div>
+        </div>
 
-    <!-- ==================== HALAMAN 5: CERITA KITA (OUR STORY) ==================== -->
-    <main class="flex flex-col items-start gap-8 px-0 py-16 relative bg-[#efebe1]">
-        <header class="flex flex-col items-start gap-[18px] px-7 py-0 relative self-stretch w-full">
-            <p class="relative font-medium text-[#74766b] text-[10px] tracking-[0.23px]">CERITA TENTANG KITA</p>
-            <h1 class="text-5xl tracking-[-0.62px] leading-[47.0px] relative self-stretch font-normal text-[#303d32]" style="font-family: 'Cormorant Garamond', serif;">
-                Tak sengaja bertemu.<br />Sengaja bersama.
-            </h1>
-        </header>
-        
-        <figure class="relative self-stretch w-full h-[300px] px-7">
-            <img class="relative self-stretch w-full h-[300px] object-cover rounded-md" alt="Foto Kenangan" src="{{ story_photo if story_photo else 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop' }}" />
-        </figure>
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_3 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_3 }}</h3>
+            <p>{{ story_desc_3 }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section class="flex flex-col items-start px-7 py-0 relative self-stretch w-full gap-5">
-            <!-- Timeline Item 1 -->
-            <article class="flex items-start gap-5 relative self-stretch w-full">
-                <div class="flex flex-col w-12 items-center gap-3 relative self-stretch">
-                    <time class="relative font-normal text-[#303d32] text-[11px]">2021</time>
-                    <div class="relative w-1.5 h-1.5 bg-[#b8a17a] rounded-[3px]"></div>
-                    <div class="relative flex-1 w-px grow bg-[#d9d5c9]"></div>
-                </div>
-                <div class="flex flex-col items-start gap-2.5 pb-8 relative flex-1 grow">
-                    <h2 class="text-[27px] leading-[29.7px] font-normal text-[#303d32]" style="font-family: 'Cormorant Garamond', serif;">{{ story_title_1 | default('Pertemuan sederhana') }}</h2>
-                    <p class="relative self-stretch font-normal text-[#74766b] text-xs leading-[22.8px]">{{ story_desc_1 | default('Berawal dari secangkir kopi dan percakapan yang tak ingin selesai. Kami bertemu, tanpa tahu bahwa inilah awal cerita.') }}</p>
-                </div>
-            </article>
+    <!-- ==================== GALLERY ==================== -->
+    <section class="gallery-section">
+      <p class="section-label">Galeri</p>
+      <h2 class="section-title">Foto Kami Berdua</h2>
 
-            <!-- Timeline Item 2 -->
-            <article class="flex items-start gap-5 relative self-stretch w-full">
-                <div class="flex flex-col w-12 items-center gap-3 relative self-stretch">
-                    <time class="relative font-normal text-[#303d32] text-[11px]">2023</time>
-                    <div class="relative w-1.5 h-1.5 bg-[#b8a17a] rounded-[3px]"></div>
-                    <div class="relative flex-1 w-px grow bg-[#d9d5c9]"></div>
-                </div>
-                <div class="flex flex-col items-start gap-2.5 pb-8 relative flex-1 grow">
-                    <h2 class="text-[27px] leading-[29.7px] font-normal text-[#303d32]" style="font-family: 'Cormorant Garamond', serif;">{{ story_title_2 | default('Memilih untuk bersama') }}</h2>
-                    <p class="relative self-stretch font-normal text-[#74766b] text-xs leading-[22.8px]">{{ story_desc_2 | default('Dari banyak perjalanan dan hal-hal kecil, kami belajar: rumah bukanlah tempat, melainkan seseorang.') }}</p>
-                </div>
-            </article>
+      <div class="gallery-grid">
+        {% for img in gallery_list %}
+        <div class="gallery-item">
+          <img src="{{ img }}" alt="Prewedding">
+        </div>
+        {% endfor %}
+      </div>
+    </section>
 
-            <!-- Timeline Item 3 -->
-            <article class="flex items-start gap-5 relative self-stretch w-full">
-                <div class="flex flex-col w-12 items-center gap-3 relative self-stretch">
-                    <time class="relative font-normal text-[#303d32] text-[11px]">2026</time>
-                    <div class="relative w-1.5 h-1.5 bg-[#b8a17a] rounded-[3px]"></div>
-                </div>
-                <div class="flex flex-col items-start gap-2.5 relative flex-1 grow">
-                    <h2 class="text-[27px] leading-[29.7px] font-normal text-[#303d32]" style="font-family: 'Cormorant Garamond', serif;">{{ story_title_3 | default('Satu langkah, selamanya') }}</h2>
-                    <p class="relative self-stretch font-normal text-[#74766b] text-xs leading-[22.8px]">{{ story_desc_3 | default('Dengan restu keluarga, kami memilih melangkah lebih jauh. Bukan lagi aku dan kamu, tetapi kita.') }}</p>
-                </div>
-            </article>
-        </section>
-    </main>
+    <!-- ==================== RSVP ==================== -->
+    <section class="rsvp-section">
+      <p class="section-label">Konfirmasi Kehadiran</p>
+      <h2 class="section-title">Bersedia hadir?</h2>
+      <p style="font-size: 14px; color: var(--text-muted); max-width: 300px; margin: 0 auto 10px;">
+        Merupakan suatu kehormatan apabila Bapak/Ibu/Saudara/i berkenan hadir.
+      </p>
 
-    <!-- ================= HALAMAN 6: GALERI (CAROUSEL) ================= -->
-    <section class="section-page" id="page-gallery">
-      <div class="section-label">Momen Indah</div>
-      <div class="section-title">Galeri Pre-Wedding</div>
-      <div class="section-desc" style="font-style: italic; font-family: 'Cormorant Garamond'; font-size: 18px; margin-top: -10px;">"A moment that lasts forever"</div>
-    
-      {% if gallery_list and gallery_list|length > 0 %}
-      <div class="carousel-container">
-        <div class="carousel-track" id="carouselTrack">
-          {% for img_url in gallery_list %}
-            <div class="carousel-slide" style="background-image: url('{{ img_url }}');"></div>
-          {% endfor %}
-        </div>
-        <button class="carousel-btn prev" onclick="moveCarousel(-1)">‹</button>
-        <button class="carousel-btn next" onclick="moveCarousel(1)">›</button>
-      </div>
-      <div class="carousel-dots" id="carouselDots"></div>
-      {% endif %}
-    
-      <div class="section-label" style="margin-top: 10px;">Galeri Prewedding</div>
-    </section>
+      <div class="form-container" id="rsvp-card">
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required>
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Kehadiran</label>
+          <select id="rsvp-status" required>
+            <option value="Hadir">Hadir (InsyaAllah)</option>
+            <option value="Ragu">Masih Ragu-ragu</option>
+            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Tamu</label>
+          <input type="number" id="rsvp-jumlah" min="1" max="5" value="1">
+        </div>
+        <div class="form-group">
+          <label>Ucapan & Doa Restu</label>
+          <textarea id="rsvp-ucapan" rows="3" placeholder="Tuliskan ucapan atau doa..."></textarea>
+        </div>
+        <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
+      </div>
+    </section>
 
-    <script>
-      let currentSlide = 0;
-      function moveCarousel(direction) {
-        const track = document.getElementById('carouselTrack');
-        if (!track) return;
-        const slides = track.children;
-        const total = slides.length;
-        currentSlide = (currentSlide + direction + total) % total;
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        
-        // Update dots
-        const dots = document.querySelectorAll('.carousel-dot');
-        dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
-      }
+    <!-- ==================== GIFT ==================== -->
+    <section class="gift-section">
+      <p class="section-label">Tanda Kasih</p>
+      <h2 class="section-title">Tipan Kasih</h2>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px; max-width: 300px; margin-left: auto; margin-right: auto;">
+        Doa restu Anda adalah hadiah terindah. Namun jika ingin mengekspresikan kasih, berikut rekening kami.
+      </p>
 
-      document.addEventListener("DOMContentLoaded", function() {
-        const track = document.getElementById('carouselTrack');
-        const dotsContainer = document.getElementById('carouselDots');
-        if (track && dotsContainer) {
-          const total = track.children.length;
-          for (let i = 0; i < total; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-            dot.onclick = () => {
-              currentSlide = i;
-              track.style.transform = `translateX(-${currentSlide * 100}%)`;
-              document.querySelectorAll('.carousel-dot').forEach((d, idx) => d.classList.toggle('active', idx === currentSlide));
-            };
-            dotsContainer.appendChild(dot);
-          }
-        }
-      });
-    </script>
+      <div class="bank-card">
+        <div class="bank-name">BCA</div>
+        <div class="bank-number">1234 5678 9012</div>
+        <div class="bank-holder">a.n. {{ bride_name }}</div>
+      </div>
+      <div class="bank-card">
+        <div class="bank-name">Mandiri</div>
+        <div class="bank-number">9876 5432 1098</div>
+        <div class="bank-holder">a.n. {{ groom_name }}</div>
+      </div>
+    </section>
 
-    <!-- ================= HALAMAN 7: RSVP ================= -->
-    <section class="section-page" id="page-rsvp">
-      <div class="section-label">Konfirmasi Kehadiran</div>
-      <div class="section-title">RSVP &amp; Doa Restu</div>
-      <div class="section-desc">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir memberikan doa restu.</div>
+    <!-- ==================== CLOSING ==================== -->
+    <section class="closing">
+      <p class="section-label" style="color: rgba(255,255,255,0.6);">Sampai Jumpa</p>
+      <h2 class="section-title">Sampai bertemu<br>di hari bahagia</h2>
+      <div class="thankyou">Terima Kasih</div>
+      <div class="divider" style="background: rgba(255,255,255,0.3);"></div>
+      <p class="closing-names">{{ bride_name }} & {{ groom_name }}</p>
+      <p style="font-size: 13px; opacity: 0.75; margin-top: 12px;">
+        Kami yang berbahagia<br>Keluarga Besar Kedua Mempelai
+      </p>
+    </section>
 
-      <div class="form-card" id="rsvp-card">
-        <div class="form-group">
-          <label>Nama Lengkap</label>
-          <input type="text" id="rsvp-nama" name="nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required />
-        </div>
-        <div class="form-group">
-          <label>Konfirmasi Kehadiran</label>
-          <select id="rsvp-status" name="status" required>
-            <option value="Hadir">Hadir (InsyaAllah)</option>
-            <option value="Ragu">Masih Ragu-ragu</option>
-            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Jumlah Tamu</label>
-          <input type="number" id="rsvp-jumlah" name="jumlah" min="1" max="5" value="1" />
-        </div>
-        <div class="form-group">
-          <label>Ucapan &amp; Doa Restu</label>
-          <textarea id="rsvp-ucapan" name="ucapan" rows="4" placeholder="Tuliskan ucapan atau doa untuk kedua mempelai..."></textarea>
-        </div>
-        <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
-      </div>
-    </section>
+  </div>
 
-    <!-- SCRIPT RSVP (tetap sama) -->
-    <script>
-      function submitRSVP() {
-          var nama = document.getElementById('rsvp-nama').value;
-          var status = document.getElementById('rsvp-status').value;
-          var ucapan = document.getElementById('rsvp-ucapan').value;
-          var jumlah = document.getElementById('rsvp-jumlah') ? document.getElementById('rsvp-jumlah').value : 1;
-      
-          if (!nama || nama.trim() === "") {
-              alert("Mohon isi nama Anda terlebih dahulu.");
-              return;
-          }
-      
-          var card = document.getElementById('rsvp-card');
-          card.innerHTML = `
-              <div style="text-align: center; padding: 30px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                  <p style="font-size: 32px; margin-bottom: 4px;">✅</p>
-                  <p style="font-size: 15px; font-weight: bold; color: #EC407A;">Terima Kasih, ${nama}!</p>
-                  <p style="font-size: 12px; color: #8D6E7A; line-height: 150%;">Konfirmasi kehadiran dan doa restu Anda berhasil dikirim.</p>
-              </div>
-          `;
-      
-          var scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-          const urlParams = new URLSearchParams(window.location.search);
-          const currentUserId = urlParams.get('user_id') || "{{ current_user_id if current_user_id else 'default_user' }}";
-          
-          var payload = {
-              user_id: currentUserId,
-              nama: nama,
-              status: status,
-              jumlah: jumlah,
-              ucapan: ucapan
-          };
-      
-          fetch(scriptUrl, {
-              method: "POST",
-              mode: "no-cors",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-          }).catch(error => {
-              console.error("Gagal mengirim RSVP:", error);
-          });
-      }
-    </script>
-    
-    <!-- ================= HALAMAN 8: PENUTUP ================= -->
-    <section class="section-page" id="page-closing" style="justify-content: flex-end; padding-bottom: 60px;">
-      <div class="romantic-bg" style="background-image: url('{{ closing_photo }}');"></div>
-      <div class="photographic-scrim"></div>
-      <div class="portrait-frame"></div>
-    
-      <div class="closing-content" style="width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; z-index: 3;">
-        
-        <p class="fade-up" style="color: #FFF0F5; font-size: 13px; line-height: 170%; max-width: 340px; font-family: 'Inter', sans-serif;">
-            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
-        </p>
+  <script>
+    // Countdown
+    const weddingDate = new Date('{{ raw_event_date | default: "2027-12-12" }}T08:00:00').getTime();
 
-        <div class="fade-up" style="font-family: 'Italianno', cursive; font-size: 52px; line-height: 100%; color: #F8BBD0; margin: 10px 0;">
-          Terima Kasih
-        </div>
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
 
-        <div class="fine-ornament" style="margin: 4px 0; width: 80px;">
-          <div class="fine-rule" style="background: #F8BBD0;"></div><div class="diamond" style="background: #F8BBD0;"></div><div class="fine-rule" style="background: #F8BBD0;"></div>
-        </div>
+      if (distance < 0) {
+        clearInterval(timer);
+        document.getElementById('countdown').innerHTML = '<p style="font-size:18px;">Hari Bahagia Telah Tiba!</p>';
+        return;
+      }
 
-        <div class="closing-names" style="font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: #FFF5F7;">
-          {{ bride_name|default('Aruna') }} &amp; {{ groom_name|default('Aditya') }}
-        </div>
-        
-        <div style="font-size: 9px; color: #F8BBD0; margin-top: 10px; letter-spacing: 1.5px; text-transform: uppercase;">Digital Wedding Invitation</div>
-      </div>
-    </section>
+      document.getElementById('days').textContent   = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+      document.getElementById('hours').textContent  = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+      document.getElementById('minutes').textContent= String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      document.getElementById('seconds').textContent= String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+    }, 1000);
 
-</div>
+    // RSVP
+    function submitRSVP() {
+      const nama   = document.getElementById('rsvp-nama').value.trim();
+      const status = document.getElementById('rsvp-status').value;
+      const jumlah = document.getElementById('rsvp-jumlah').value || 1;
+      const ucapan = document.getElementById('rsvp-ucapan').value;
 
+      if (!nama) {
+        alert('Mohon isi nama Anda terlebih dahulu.');
+        return;
+      }
+
+      // Tampilkan pesan sukses
+      document.getElementById('rsvp-card').innerHTML = `
+        <div style="text-align:center; padding: 30px 10px;">
+          <div style="font-size:36px; margin-bottom:12px;">✅</div>
+          <p style="font-size:16px; font-weight:500; margin-bottom:8px;">Terima kasih, ${nama}!</p>
+          <p style="font-size:13px; color:#666; line-height:1.5;">
+            Konfirmasi kehadiran dan doa restu Anda telah berhasil dikirim.
+          </p>
+        </div>
+      `;
+
+      // Kirim ke Google Sheets (ganti URL jika perlu)
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentUserId = urlParams.get('user_id') || "{{ current_user_id | default: 'default_user' }}";
+
+      fetch(scriptUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: currentUserId,
+          nama: nama,
+          status: status,
+          jumlah: jumlah,
+          ucapan: ucapan
+        })
+      }).catch(err => console.error("Gagal mengirim RSVP:", err));
+    }
+
+    // Simpan tanggal ke kalender (opsional)
+    function saveDate() {
+      alert('Fitur simpan ke kalender dapat ditambahkan sesuai kebutuhan.');
+    }
+  </script>
 </body>
 </html>
