@@ -719,8 +719,8 @@
   </div>
 
   <script>
-    // Countdown
-    const weddingDate = new Date('{{ raw_event_date | default: "2027-12-12" }}T08:00:00').getTime();
+    // Countdown - sudah diperbaiki sintaks Jinja2
+    const weddingDate = new Date('{{ raw_event_date|default("2027-12-12") }}T08:00:00').getTime();
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -732,13 +732,13 @@
         return;
       }
 
-      document.getElementById('days').textContent   = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
-      document.getElementById('hours').textContent  = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-      document.getElementById('minutes').textContent= String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-      document.getElementById('seconds').textContent= String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+      document.getElementById('days').textContent    = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+      document.getElementById('hours').textContent   = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
     }, 1000);
 
-    // RSVP
+    // Fungsi RSVP
     function submitRSVP() {
       const nama   = document.getElementById('rsvp-nama').value.trim();
       const status = document.getElementById('rsvp-status').value;
@@ -761,10 +761,10 @@
         </div>
       `;
 
-      // Kirim ke Google Sheets (ganti URL jika perlu)
+      // Kirim ke Google Sheets
       const scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
       const urlParams = new URLSearchParams(window.location.search);
-      const currentUserId = urlParams.get('user_id') || "{{ current_user_id | default: 'default_user' }}";
+      const currentUserId = urlParams.get('user_id') || "{{ current_user_id|default('default_user') }}";
 
       fetch(scriptUrl, {
         method: "POST",
@@ -780,7 +780,7 @@
       }).catch(err => console.error("Gagal mengirim RSVP:", err));
     }
 
-    // Simpan tanggal ke kalender (opsional)
+    // Simpan tanggal (opsional)
     function saveDate() {
       alert('Fitur simpan ke kalender dapat ditambahkan sesuai kebutuhan.');
     }
