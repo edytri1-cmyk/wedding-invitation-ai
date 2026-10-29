@@ -597,12 +597,20 @@
         <div class="event-type">Akad Nikah</div>
         <div class="event-date">{{ akad_date }}</div>
         <div class="event-time">Pukul {{ akad_time }} WIB</div>
+        <p style="margin-top: 12px; font-size: 0.95rem;">
+                            <strong>{{ akad_venue }}</strong><br>
+                            {{ akad_address }}</p>
+        <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
       </div>
 
       <div class="event-card">
         <div class="event-type">Resepsi</div>
         <div class="event-date">{{ resep_date }}</div>
         <div class="event-time">Pukul {{ resep_time }} WIB</div>
+        <p style="margin-top: 12px; font-size: 0.95rem;">
+                            <strong>{{ resep_venue }}</strong><br>
+                            {{ resep_address }}</p>
+        <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi</a>
       </div>
 
       <button class="btn-save" onclick="saveDate()">Simpan Tanggal</button>
