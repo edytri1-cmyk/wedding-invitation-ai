@@ -565,11 +565,16 @@
       </div>
     </section>
 
-    <!-- ==================== DATE & COUNTDOWN ==================== -->
+<!-- ==================== DATE & COUNTDOWN ==================== -->
     <section class="date-section">
       <p class="section-label">Hari bahagia kami</p>
-      <h2 class="big-date">{{ akad_date }}</h2>
-      <p style="font-size: 14px; opacity: 0.85;">{{ resep_date }}</p>
+      
+      <!-- Bagian Tanggal Utama dengan Huruf Besar & Nama Hari -->
+      <h2 class="big-date" id="main-wedding-date" data-date="{{ raw_event_date if raw_event_date else '2026-10-31' }}">
+          {{ akad_date }}
+      </h2>
+      
+      <p style="font-size: 14px; opacity: 0.85;" id="sub-wedding-date">{{ akad_date }}</p>
 
       <div class="countdown" id="countdown">
         <div class="countdown-item">
@@ -604,6 +609,30 @@
 
       <button class="btn-save" onclick="saveDate()">Simpan Tanggal</button>
     </section>
+
+    <!-- Script untuk memformat tanggal otomatis menampilkan Nama Hari -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateElement = document.getElementById("main-wedding-date");
+        const subDateElement = document.getElementById("sub-wedding-date");
+        
+        if (dateElement) {
+          // Mengambil string tanggal (misal dari data-date atau teks bawaan)
+          let rawDate = dateElement.getAttribute("data-date") || dateElement.textContent.trim();
+          let targetDate = new Date(rawDate);
+          
+          if (!isNaN(targetDate.getTime())) {
+            // Format menggunakan bahasa Indonesia untuk memunculkan nama hari (Sabtu, Minggu, dll)
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = targetDate.toLocaleDateString('id-ID', options);
+            
+            // Terapkan ke elemen utama & sub elemen
+            dateElement.textContent = formattedDate;
+            if (subDateElement) subDateElement.textContent = formattedDate;
+          }
+        }
+      });
+    </script>
 
     <!-- ==================== STORY ==================== -->
     <section class="story-section">
