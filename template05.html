@@ -509,6 +509,33 @@
       font-size: 28px;
       margin: 16px 0;
     }
+
+    /* MUSIC BUTTON */
+    .music-player-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      background: #EC407A;
+      color: #FFF5F7;
+      border: 1px solid #F8BBD0;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+    .music-player-float:hover { transform: scale(1.1); }
+    .music-player-float.playing svg { animation: spin 3s linear infinite; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
   </style>
 </head>
 <body>
