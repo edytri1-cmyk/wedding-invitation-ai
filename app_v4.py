@@ -797,9 +797,9 @@ else:
                     
                     couple_initials = st.text_input("Singkatan Nama Kedua Mempelai", "A & A", disabled=is_session_active, help="Contoh: A & A atau A & H")
                     groom_name = st.text_input("Nama Lengkap Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
-                    groom_name_short = st.text_input("Nama Pendek Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
+                    groom_name_short = st.text_input("Nama Pendek Mempelai Pria", "Aditya", disabled=is_session_active)
                     bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
-                    bride_name_short = st.text_input("Nama Pendek Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
+                    bride_name_short = st.text_input("Nama Pendek Mempelai Wanita", "Aruna", disabled=is_session_active)
 
                 # HALAMAN 2: DETAIL FOTO, ORANG TUA & NARASI PENGANTAR
                 with st.expander("📌 Halaman 2: Foto Personal, Orang Tua & Narasi", expanded=False):
