@@ -971,15 +971,18 @@ else:
                         st.session_state["groom_name"] = groom_name
                         st.session_state["bride_name"] = bride_name
 
+                        # PENYESUAIAN STRUKTUR PENYIMPANAN MULTI-TEMPLATE & USER_ID
                         invitation_payload = {
+                            "user_id": current_user,  # Menyertakan ID Pengguna agar sinkron saat link tamu dibuka
                             "rendered_templates": rendered_templates,
                             "groom_name": groom_name,
                             "bride_name": bride_name,
                             "templates_used": selected_templates_list,
                             "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
+                        
                         save_json(INVITATION_DATA_FILE, invitation_payload)
-                        st.success(f"✅ Berhasil merender {len(selected_templates_list)} template undangan!")
+                        st.success(f"✅ Berhasil merender dan menyimpan {len(selected_templates_list)} template undangan!")
 
             # KOLOM KANAN: PREVIEW SWITCHER
             with col_preview:
