@@ -1029,7 +1029,7 @@ else:
 
 
 
-elif "Buat Link Undangan" in active_step:
+    elif "Buat Link Undangan" in active_step:
         base_app_url = "https://wedding-invitation-ai.streamlit.app"
 
         # KUNCI PERBAIKAN: Selalu ambil user_id yang konsisten dari session_state
