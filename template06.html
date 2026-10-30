@@ -14,6 +14,7 @@
       --text: #3F2E1F;
       --text-muted: #7A6A58;
       --accent: #C4A484;
+      --accent-dark: #4A3B2A;
       --dark: #4A3B2A;
       --border: #E8DFD2;
     }
@@ -197,15 +198,20 @@
     .countdown {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-top: 28px;
+      gap: 8px;
+      margin: 28px auto 0;
+      width: 100%;
+      max-width: 340px;
+      flex-wrap: wrap;
     }
 
     .countdown-item {
       background: #fff;
       border-radius: 12px;
       padding: 12px 10px;
-      min-width: 64px;
+      flex: 1 1 58px;
+      min-width: 0;
+      max-width: 78px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
@@ -213,6 +219,13 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 24px;
       display: block;
+    }
+
+    .countdown-finished {
+      flex: 1 1 100%;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--dark);
     }
 
     .countdown-label {
@@ -339,6 +352,8 @@
     }
     .carousel-dot {
       width: 8px; height: 8px;
+      padding: 0;
+      border: 0;
       border-radius: 50%;
       background: #F8BBD0;
       cursor: pointer;
@@ -520,6 +535,26 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    img { max-width: 100%; }
+
+    @media (max-width: 360px) {
+      section { padding: 40px 18px; }
+      .opening { padding: 32px 16px 40px; }
+      .opening-card { padding: 32px 18px; }
+      .couple-names-large { font-size: 36px; }
+      .hero-photo { width: min(250px, 85vw); height: min(250px, 85vw); }
+      .hero-names { font-size: 30px; }
+      .countdown { gap: 6px; }
+      .countdown-item { padding: 10px 6px; }
+      .countdown-number { font-size: 21px; }
+      .couple-grid { gap: 12px; }
+      .couple-photo { width: 100%; height: 145px; }
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
   </style>
 </head>
 <body>
@@ -577,74 +612,9 @@
 		    <span class="countdown-number" id="seconds">00</span>
 		    <span class="countdown-label">Detik</span>
 		  </div>
-		</div>>
-      </div>
+		</div>
     </section>
-	<!-- Script untuk memformat tanggal otomatis menampilkan Nama Hari -->
-	// ========== COUNTDOWN PERNIKAHAN ==========
-	document.addEventListener("DOMContentLoaded", function () {
-	  const countdown = document.getElementById("countdown");
-	  const dateElement = document.getElementById("main-wedding-date");
-	
-	  if (!countdown || !dateElement) {
-	    console.error("Elemen countdown atau tanggal pernikahan tidak ditemukan.");
-	    return;
-	  }
-	
-	  // Gunakan tanggal yang sama dengan bagian hero.
-	  // Format tanggal wajib YYYY-MM-DD.
-	  const rawDate = dateElement.getAttribute("data-date");
-	
-	  if (!rawDate || !/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
-	    console.error("Tanggal pernikahan tidak valid:", rawDate);
-	    countdown.textContent = "Tanggal pernikahan belum diatur.";
-	    return;
-	  }
-	
-	  // Waktu acara pukul 08.00 WIB.
-	  const weddingDate = new Date(rawDate + "T08:00:00+07:00").getTime();
-	
-	  if (Number.isNaN(weddingDate)) {
-	    console.error("Gagal membaca tanggal pernikahan.");
-	    return;
-	  }
-	
-	  const daysEl = document.getElementById("days");
-	  const hoursEl = document.getElementById("hours");
-	  const minutesEl = document.getElementById("minutes");
-	  const secondsEl = document.getElementById("seconds");
-	
-	  function updateCountdown() {
-	    const now = Date.now();
-	    const distance = weddingDate - now;
-	
-	    if (distance <= 0) {
-	      clearInterval(timer);
-	      countdown.innerHTML =
-	        '<p style="font-size:18px;">Hari Bahagia Telah Tiba!</p>';
-	      return;
-	    }
-	
-	    daysEl.textContent = String(
-	      Math.floor(distance / (1000 * 60 * 60 * 24))
-	    ).padStart(2, "0");
-	
-	    hoursEl.textContent = String(
-	      Math.floor((distance / (1000 * 60 * 60)) % 24)
-	    ).padStart(2, "0");
-	
-	    minutesEl.textContent = String(
-	      Math.floor((distance / (1000 * 60)) % 60)
-	    ).padStart(2, "0");
-	
-	    secondsEl.textContent = String(
-	      Math.floor((distance / 1000) % 60)
-	    ).padStart(2, "0");
-	  }
-	
-	  updateCountdown();
-	  const timer = setInterval(updateCountdown, 1000);
-	});
+    <!-- Countdown dan pemformatan tanggal dijalankan melalui script di bagian akhir dokumen. -->
 
     <!-- SALAM & COUPLE -->
     <section class="salam">
@@ -747,39 +717,8 @@
       <div class="section-label" style="margin-top: 10px;">Galeri Prewedding</div>
     </section>
 
-    <script>
-      let currentSlide = 0;
-      function moveCarousel(direction) {
-        const track = document.getElementById('carouselTrack');
-        if (!track) return;
-        const slides = track.children;
-        const total = slides.length;
-        currentSlide = (currentSlide + direction + total) % total;
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        
-        // Update dots
-        const dots = document.querySelectorAll('.carousel-dot');
-        dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
-      }
+    <!-- Fungsi carousel dijalankan oleh script utama di bagian bawah dokumen. -->
 
-      document.addEventListener("DOMContentLoaded", function() {
-        const track = document.getElementById('carouselTrack');
-        const dotsContainer = document.getElementById('carouselDots');
-        if (track && dotsContainer) {
-          const total = track.children.length;
-          for (let i = 0; i < total; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-            dot.onclick = () => {
-              currentSlide = i;
-              track.style.transform = `translateX(-${currentSlide * 100}%)`;
-              document.querySelectorAll('.carousel-dot').forEach((d, idx) => d.classList.toggle('active', idx === currentSlide));
-            };
-            dotsContainer.appendChild(dot);
-          }
-        }
-      });
-    </script>
 
     <!-- ==================== RSVP ==================== -->
     <section class="rsvp-section">
@@ -827,71 +766,169 @@
     </section>
 	
 	<script>
-    // Countdown - sudah diperbaiki sintaks Jinja2
-    const weddingDate = new Date('{{ raw_event_date|default("2027-12-12") }}T08:00:00').getTime();
+    (() => {
+      "use strict";
 
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = weddingDate - now;
+      // COUNTDOWN: gunakan tanggal dari elemen hero agar sumber tanggal konsisten.
+      const initCountdown = () => {
+        const countdown = document.getElementById("countdown");
+        const dateElement = document.getElementById("main-wedding-date");
+        if (!countdown || !dateElement) return;
 
-      if (distance < 0) {
-        clearInterval(timer);
-        document.getElementById('countdown').innerHTML = '<p style="font-size:18px;">Hari Bahagia Telah Tiba!</p>';
-        return;
+        const rawDate = (dateElement.getAttribute("data-date") || "").trim();
+        const dateMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!dateMatch) {
+          console.error("Tanggal pernikahan tidak valid:", rawDate);
+          return;
+        }
+
+        const year = Number(dateMatch[1]);
+        const month = Number(dateMatch[2]);
+        const day = Number(dateMatch[3]);
+        const checkDate = new Date(Date.UTC(year, month - 1, day));
+        if (checkDate.getUTCFullYear() !== year || checkDate.getUTCMonth() !== month - 1 || checkDate.getUTCDate() !== day) {
+          console.error("Tanggal pernikahan tidak valid:", rawDate);
+          return;
+        }
+
+        // Jam acara default 08.00 WIB (UTC+7). Ubah bila waktu akad berbeda.
+        const target = new Date(`${rawDate}T08:00:00+07:00`).getTime();
+        const daysEl = document.getElementById("days");
+        const hoursEl = document.getElementById("hours");
+        const minutesEl = document.getElementById("minutes");
+        const secondsEl = document.getElementById("seconds");
+        if (![daysEl, hoursEl, minutesEl, secondsEl].every(Boolean)) {
+          console.error("Elemen angka countdown belum lengkap.");
+          return;
+        }
+
+        let timerId;
+        const update = () => {
+          const distance = target - Date.now();
+          if (distance <= 0) {
+            if (timerId) window.clearInterval(timerId);
+            countdown.innerHTML = '<p class="countdown-finished">Hari Bahagia Telah Tiba!</p>';
+            return;
+          }
+          daysEl.textContent = String(Math.floor(distance / 86400000)).padStart(2, "0");
+          hoursEl.textContent = String(Math.floor((distance % 86400000) / 3600000)).padStart(2, "0");
+          minutesEl.textContent = String(Math.floor((distance % 3600000) / 60000)).padStart(2, "0");
+          secondsEl.textContent = String(Math.floor((distance % 60000) / 1000)).padStart(2, "0");
+        };
+        update();
+        timerId = window.setInterval(update, 1000);
+      };
+
+      // Format tanggal utama menjadi tanggal Indonesia tanpa mengubah data-date.
+      const formatWeddingDate = () => {
+        const dateElement = document.getElementById("main-wedding-date");
+        if (!dateElement) return;
+        const rawDate = (dateElement.getAttribute("data-date") || "").trim();
+        const match = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return;
+        const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12);
+        if (Number.isNaN(date.getTime())) return;
+        dateElement.textContent = date.toLocaleDateString("id-ID", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+        const subDate = document.getElementById("sub-wedding-date");
+        if (subDate) subDate.textContent = dateElement.textContent;
+      };
+
+      // CAROUSEL: aman jika galeri kosong atau tidak dirender oleh template.
+      let currentSlide = 0;
+      window.moveCarousel = (direction) => {
+        const track = document.getElementById("carouselTrack");
+        if (!track) return;
+        const total = track.children.length;
+        if (total === 0) return;
+        currentSlide = (currentSlide + direction + total) % total;
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll(".carousel-dot").forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentSlide);
+        });
+      };
+
+      const initCarousel = () => {
+        const track = document.getElementById("carouselTrack");
+        const dotsContainer = document.getElementById("carouselDots");
+        if (!track || !dotsContainer) return;
+        const total = track.children.length;
+        if (!total) return;
+        dotsContainer.replaceChildren();
+        for (let i = 0; i < total; i++) {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+          dot.setAttribute("aria-label", `Tampilkan foto ${i + 1}`);
+          dot.addEventListener("click", () => {
+            currentSlide = i;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dotsContainer.querySelectorAll(".carousel-dot").forEach((item, index) => {
+              item.classList.toggle("active", index === currentSlide);
+            });
+          });
+          dotsContainer.appendChild(dot);
+        }
+      };
+
+      // RSVP. Status berhasil dikirim hanya ditampilkan setelah permintaan dicoba;
+      // mode no-cors tidak memungkinkan browser membaca respons server.
+      window.submitRSVP = () => {
+        const namaEl = document.getElementById("rsvp-nama");
+        const statusEl = document.getElementById("rsvp-status");
+        const jumlahEl = document.getElementById("rsvp-jumlah");
+        const ucapanEl = document.getElementById("rsvp-ucapan");
+        const card = document.getElementById("rsvp-card");
+        if (!namaEl || !statusEl || !jumlahEl || !ucapanEl || !card) return;
+
+        const nama = namaEl.value.trim();
+        if (!nama) { alert("Mohon isi nama Anda terlebih dahulu."); namaEl.focus(); return; }
+
+        const status = statusEl.value;
+        const jumlah = Math.min(5, Math.max(1, Number(jumlahEl.value) || 1));
+        const ucapan = ucapanEl.value.trim();
+        const params = new URLSearchParams(window.location.search);
+        const currentUserId = params.get("user_id") || "{{ current_user_id|default('default_user') }}";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
+
+        // Hindari menyisipkan input pengguna langsung sebagai HTML.
+        card.replaceChildren();
+        const message = document.createElement("div");
+        message.style.cssText = "text-align:center;padding:30px 10px";
+        const icon = document.createElement("div");
+        icon.style.cssText = "font-size:36px;margin-bottom:12px";
+        icon.textContent = "💌";
+        const title = document.createElement("p");
+        title.style.cssText = "font-size:16px;font-weight:500;margin-bottom:8px";
+        title.textContent = `Terima kasih, ${nama}!`;
+        const detail = document.createElement("p");
+        detail.style.cssText = "font-size:13px;color:#666;line-height:1.5";
+        detail.textContent = "Konfirmasi Anda sedang diproses. Jika data belum masuk, silakan hubungi penyelenggara.";
+        message.append(icon, title, detail);
+        card.appendChild(message);
+
+        fetch(scriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ user_id: currentUserId, nama, status, jumlah, ucapan })
+        }).catch(error => console.error("Gagal mengirim RSVP:", error));
+      };
+
+      window.saveDate = () => alert("Fitur simpan ke kalender dapat ditambahkan sesuai kebutuhan.");
+
+      const init = () => {
+        formatWeddingDate();
+        initCountdown();
+        initCarousel();
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
       }
-
-      document.getElementById('days').textContent    = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
-      document.getElementById('hours').textContent   = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-      document.getElementById('minutes').textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-      document.getElementById('seconds').textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
-    }, 1000);
-
-    // Fungsi RSVP
-    function submitRSVP() {
-      const nama   = document.getElementById('rsvp-nama').value.trim();
-      const status = document.getElementById('rsvp-status').value;
-      const jumlah = document.getElementById('rsvp-jumlah').value || 1;
-      const ucapan = document.getElementById('rsvp-ucapan').value;
-
-      if (!nama) {
-        alert('Mohon isi nama Anda terlebih dahulu.');
-        return;
-      }
-
-      // Tampilkan pesan sukses
-      document.getElementById('rsvp-card').innerHTML = `
-        <div style="text-align:center; padding: 30px 10px;">
-          <div style="font-size:36px; margin-bottom:12px;">✅</div>
-          <p style="font-size:16px; font-weight:500; margin-bottom:8px;">Terima kasih, ${nama}!</p>
-          <p style="font-size:13px; color:#666; line-height:1.5;">
-            Konfirmasi kehadiran dan doa restu Anda telah berhasil dikirim.
-          </p>
-        </div>
-      `;
-
-      // Kirim ke Google Sheets
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
-      const urlParams = new URLSearchParams(window.location.search);
-      const currentUserId = urlParams.get('user_id') || "{{ current_user_id|default('default_user') }}";
-
-      fetch(scriptUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: currentUserId,
-          nama: nama,
-          status: status,
-          jumlah: jumlah,
-          ucapan: ucapan
-        })
-      }).catch(err => console.error("Gagal mengirim RSVP:", err));
-    }
-
-    // Simpan tanggal (opsional)
-    function saveDate() {
-      alert('Fitur simpan ke kalender dapat ditambahkan sesuai kebutuhan.');
-    }
+    })();
 	</script>
 
   </div>
