@@ -47,6 +47,41 @@ def log_visitor():
 # Catat kunjungan saat app dimuat
 log_visitor()
 
+# =========================================================
+# 0. ROUTER TAMU UNDANGAN (DIBUKA DARI LINK TAMU)
+# =========================================================
+query_params = st.query_params
+target_guest = query_params.get("to") or query_params.get("guest")
+target_user_id = query_params.get("user_id")
+target_tpl = query_params.get("tpl", "template01")  # Menangkap parameter tpl (default: template01)
+
+# Jika parameter 'to' atau 'guest' ditemukan, jalankan mode tampilan Tamu Undangan
+if target_guest:
+    st.set_page_config(page_title=f"Undangan Pernikahan — {target_guest}", layout="centered")
+    
+    # Memuat data undangan tersimpan dari file JSON
+    invitation_db = load_json(INVITATION_DATA_FILE, {})
+    
+    # Ambil kamus rendered_templates dari file JSON
+    rendered_templates = invitation_db.get("rendered_templates", {})
+    
+    # Cek apakah template yang diminta tersedia
+    if target_tpl in rendered_templates:
+        html_content = rendered_templates[target_tpl]
+        
+        # Ganti placeholder nama tamu di HTML dengan nama tamu asli dari URL
+        # Lakukan penggantian untuk beberapa kemungkinan penulisan placeholder
+        html_content = html_content.replace("Nadia & Keluarga", target_guest)
+        html_content = html_content.replace("Budi Sudarsono", target_guest)
+        
+        # Render tampilan undangan digital untuk tamu
+        st.components.v1.html(html_content, height=900, scrolling=True)
+    else:
+        st.warning(f"⚠️ Undangan dengan template `{target_tpl}` belum di-generate oleh pemilik acara.")
+    
+    # Hentikan eksekusi agar dashboard admin/klien di bawah tidak dirender untuk tamu
+    st.stop()
+
 def file_to_base64(uploaded_file):
     if uploaded_file is not None:
         bytes_data = uploaded_file.getvalue()
@@ -176,7 +211,6 @@ def save_order_to_gsheets(order_id, token, status, user_id):
 # ==========================================
 # 1. PENANGKAP TOKEN URL VIA GOOGLE SHEETS
 # ==========================================
-query_params = st.query_params
 url_token = query_params.get("token", None)
 
 if url_token and st.session_state.get("user_token") != url_token:
