@@ -746,52 +746,201 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5)
+        # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5) - CARD THUMBNAIL VERSION
         st.markdown("---")
         st.markdown("<h3 style='color: #B8860B;'>🎨 Pilih Multi Template Undangan (Minimal 1, Maksimal 5)</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#6B4E31;font-size:13px;margin-top:-8px;'>Klik card untuk pilih/hapus. Klik gambar untuk preview besar.</p>", unsafe_allow_html=True)
         
         template_options = [f"template{i:02d}" for i in range(1, 21)]
-        
+
+        # Mapping thumbnail - ganti URL ini dengan URL thumbnail asli lo
+        # Gue pakai unsplash + placeholder biar beda-beda
+        def get_thumb_url(tpl_name):
+            num = int(tpl_name.replace("template",""))
+            # Lo bisa ganti jadi: f"https://yourdomain.com/thumbs/{tpl_name}.jpg"
+            thumbs = [
+                "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=600&fit=crop",
+            ]
+            return thumbs[num % len(thumbs)] + f"&tpl={tpl_name}"
+
         # Penanganan nilai default yang aman untuk multiselect
         default_selected = [t for t in st.session_state.get("selected_templates", ["template01"]) if t in template_options]
         if not default_selected:
             default_selected = ["template01"]
+        
+        # Sinkronisasi awal jika belum ada selected_templates
+        if "selected_templates" not in st.session_state or not st.session_state["selected_templates"]:
+            st.session_state["selected_templates"] = default_selected
 
-        selected_tpls = st.multiselect(
-            "Pilih Template Undangan yang Ingin Digunakan:",
-            options=template_options,
-            default=default_selected,
-            max_selections=5,
-            help="Anda bisa memilih minimal 1 dan maksimal 5 template."
-        )
+        # --- STATE UNTUK PREVIEW MODAL ---
+        if "preview_template" not in st.session_state:
+            st.session_state["preview_template"] = None
 
-        # Validasi jika user tidak memilih template apapun
+        # --- CUSTOM CSS CARD ---
+        st.markdown("""
+            <style>
+            .tpl-card {
+                background: #ffffff;
+                border: 2px solid #E8D5B5;
+                border-radius: 14px;
+                overflow: hidden;
+                transition: all 0.2s ease;
+                cursor: pointer;
+                position: relative;
+                height: 100%;
+            }
+            .tpl-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 20px rgba(184,134,11,0.18);
+                border-color: #B8860B;
+            }
+            .tpl-card.selected {
+                border-color: #B8860B !important;
+                border-width: 3px !important;
+                box-shadow: 0 6px 0 #B8860B;
+                background: #FFFBF0;
+            }
+            .tpl-card-img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+                display: block;
+            }
+            .tpl-card-footer {
+                padding: 10px 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .tpl-card-name {
+                font-weight: 800;
+                font-size: 13px;
+                color: #5C4033;
+            }
+            .tpl-check {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                border: 2px solid #D4AF37;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 900;
+                background: white;
+            }
+            .tpl-check.checked {
+                background: #B8860B;
+                color: white;
+                border-color: #B8860B;
+            }
+            .tpl-badge {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                background: rgba(0,0,0,0.65);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 99px;
+                font-size: 10px;
+                font-weight: 800;
+                backdrop-filter: blur(4px);
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        # --- RENDER GRID CARD 4 KOLOM ---
+        cols_per_row = 4
+        for i in range(0, len(template_options), cols_per_row):
+            row_templates = template_options[i:i+cols_per_row]
+            cols = st.columns(cols_per_row)
+            for col_idx, tpl in enumerate(row_templates):
+                with cols[col_idx]:
+                    is_selected = tpl in st.session_state["selected_templates"]
+                    thumb_url = get_thumb_url(tpl)
+                    
+                    # Card HTML + 2 tombol: Pilih & Preview
+                    st.markdown(f"""
+                        <div class="tpl-card {'selected' if is_selected else ''}">
+                            <div class="tpl-badge">{'✓ DIPILIH' if is_selected else 'TAP UNTUK PREVIEW'}</div>
+                            <img src="{thumb_url}" class="tpl-card-img">
+                            <div class="tpl-card-footer">
+                                <div class="tpl-card-name">{tpl.upper()}</div>
+                                <div class="tpl-check {'checked' if is_selected else ''}">{'✓' if is_selected else '+'}</div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    # 2 tombol di bawah card (tetap fungsional)
+                    btn_col1, btn_col2 = st.columns([1.3, 1])
+                    with btn_col1:
+                        label = "✓ Hapus" if is_selected else "+ Pilih"
+                        btn_type = "primary" if is_selected else "secondary"
+                        if st.button(label, key=f"select_{tpl}", type=btn_type, use_container_width=True):
+                            current = st.session_state["selected_templates"]
+                            if is_selected:
+                                # Jangan biarkan 0, minimal 1
+                                if len(current) > 1:
+                                    current.remove(tpl)
+                                else:
+                                    st.toast("Minimal 1 template harus dipilih!", icon="⚠️")
+                            else:
+                                if len(current) < 5:
+                                    current.append(tpl)
+                                else:
+                                    st.toast("Maksimal 5 template!", icon="🚫")
+                            st.session_state["selected_templates"] = current
+                            st.rerun()
+                    with btn_col2:
+                        if st.button("👁️ Preview", key=f"preview_{tpl}", use_container_width=True):
+                            st.session_state["preview_template"] = tpl
+                            st.rerun()
+
+        # --- PREVIEW MODAL (pakai expander besar) ---
+        if st.session_state["preview_template"]:
+            tpl_prev = st.session_state["preview_template"]
+            with st.container():
+                st.markdown(f"### 👁️ Preview: {tpl_prev.upper()}")
+                c1, c2 = st.columns([2, 1])
+                with c1:
+                    st.image(get_thumb_url(tpl_prev), caption=f"Thumbnail {tpl_prev}", use_container_width=True)
+                with c2:
+                    st.markdown(f"""
+                        <div style="background:white;border:2px solid #B8860B;border-radius:12px;padding:14px;">
+                        <b style="color:#B8860B;">{tpl_prev.upper()}</b><br>
+                        <span style="font-size:12px;color:#6B4E31;">Template wedding Gen Z. Support foto, musik, RSVP.<br><br>
+                        Klik <b>Pilih</b> untuk masukkan ke daftar pilihan multi-template.</span>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    if st.button("❌ Tutup Preview", key="close_preview", use_container_width=True):
+                        st.session_state["preview_template"] = None
+                        st.rerun()
+                    is_sel_prev = tpl_prev in st.session_state["selected_templates"]
+                    if not is_sel_prev:
+                        if st.button(f"➕ Pilih {tpl_prev.upper()}", key="pick_from_preview", type="primary", use_container_width=True):
+                            if len(st.session_state["selected_templates"]) < 5:
+                                st.session_state["selected_templates"].append(tpl_prev)
+                                st.session_state["preview_template"] = None
+                                st.rerun()
+                            else:
+                                st.toast("Maksimal 5 template!", icon="🚫")
+                    else:
+                        st.success(f"{tpl_prev} sudah dipilih ✓")
+
+        # --- LOGIC LAMA TETAP DIPERTAHANKAN (jangan diubah) ---
+        # selected_tpls tetap diambil dari session_state agar variable & fungsi tidak berubah
+        selected_tpls = st.session_state["selected_templates"]
+
+        # Validasi jika user tidak memilih template apapun (logic asli)
         if len(selected_tpls) == 0:
             st.warning("⚠️ Silakan pilih minimal 1 template.")
             selected_tpls = ["template01"]
 
         st.session_state["selected_templates"] = selected_tpls
         st.info(f"✨ Template Terpilih ({len(selected_tpls)}): **{', '.join(selected_tpls)}**")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-        st.markdown("---")
-        
-        # Checkbox Persetujuan Syarat & Ketentuan
-        agreement = st.checkbox(
-            "Saya telah membaca informasi, memilih koleksi template, dan menyetujui syarat serta kebijakan keamanan data platform.", 
-            value=st.session_state.get("agreed_terms", False)
-        )
-          
-        if agreement:
-            st.session_state["agreed_terms"] = True
-            st.success(f"✅ Syarat disetujui & {len(selected_tpls)} template terpilih!")
-            
-            if st.button("🚀 Lanjutkan ke Tahap 2 (Isi Formulir & Preview Switcher)", type="primary", use_container_width=True):
-                st.session_state["active_step_idx"] = 1
-                st.rerun()
-        else:
-            st.session_state["agreed_terms"] = False
-            st.warning("⚠️ Harap pilih minimal 1 template dan centang kotak persetujuan di atas untuk membuka akses ke Tahap 2.")
 
     # =========================================================
     # TAHAP 2: DESAIN & PREVIEW SWITCHER UNDANGAN MULTI-TEMPLATE
