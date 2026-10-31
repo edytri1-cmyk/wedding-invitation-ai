@@ -631,7 +631,7 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: LANDING WOW - FIX PILIH 5 MULUS TANPA KETIMPA
+    # TAHAP 1: LANDING WOW - FIX ANTI KEDIP + 5 PILIH MULUS
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
         import os
@@ -648,11 +648,10 @@ else:
             base = thumbs[num % len(thumbs)]
             return base.replace("w=400&h=600", f"w={w}&h={h}") + f"&tpl={tpl_name}"
 
-        # INIT WAJIB DI ATAS SEMUA
         if "selected_templates" not in st.session_state:
             st.session_state["selected_templates"] = ["template01"]
-        if len(st.session_state["selected_templates"]) == 0:
-            st.session_state["selected_templates"] = ["template01"]
+        if "preview_tpl" not in st.session_state:
+            st.session_state["preview_tpl"] = None
 
         @st.dialog("👁 Preview Template", width="large")
         def preview_dialog(tpl_name):
@@ -660,65 +659,28 @@ else:
             static_path = f"static/{tpl_name}.html"
             st.markdown(f"<div style='text-align:center'><h3 style='margin:0'>{tpl_name.upper()}.HTML</h3></div>", unsafe_allow_html=True)
             found_path = None
-            if os.path.exists(file_path):
-                found_path = file_path
-            elif os.path.exists(static_path):
-                found_path = static_path
+            if os.path.exists(file_path): found_path = file_path
+            elif os.path.exists(static_path): found_path = static_path
             if found_path:
-                st.success(f"✅ File asli ditemukan: {found_path}")
+                st.success(f"✅ File asli: {found_path}")
                 with open(found_path, 'r', encoding='utf-8', errors='ignore') as f:
                     html_content = f.read()
                 components.html(html_content, height=700, scrolling=True)
-                st.markdown(f'<a href="{found_path}" target="_blank" style="display:block;text-align:center;background:#FFE45E;color:#111;padding:10px;border-radius:99px;font-weight:900;text-decoration:none;border:2px solid #111;margin-top:12px;">🔗 Buka {found_path} di Tab Baru</a>', unsafe_allow_html=True)
             else:
-                st.warning(f"⚠️ File {file_path} belum ada — tampilkan preview dummy dulu.")
+                st.warning(f"⚠️ {file_path} belum ada — fallback dummy")
                 st.image(get_thumb_url(tpl_name, w=800, h=1200), use_container_width=True)
-                st.markdown(f"<div style='background:#FFFBF2;border:1px dashed #E8D5B5;border-radius:12px;padding:14px;margin-top:12px;text-align:center'><b>🚧 {tpl_name}.html belum dibuat</b><br><span style='font-size:12px;color:#8B7355'>Ini preview dummy. Begitu file ada, otomatis ganti asli.</span></div>", unsafe_allow_html=True)
-            c1, c2 = st.columns(2)
-            with c1:
-                if st.button("❌ Tutup", use_container_width=True, key=f"close_prev_{tpl_name}"):
-                    st.query_params.clear()
-                    st.rerun()
-            with c2:
-                if st.button("✅ Pilih Template Ini", type="primary", use_container_width=True, key=f"pick_prev_{tpl_name}"):
-                    if tpl_name not in st.session_state["selected_templates"] and len(st.session_state["selected_templates"]) < 5:
-                        st.session_state["selected_templates"].append(tpl_name)
-                    st.query_params.clear()
-                    st.rerun()
+            if st.button("❌ Tutup", use_container_width=True):
+                st.session_state["preview_tpl"] = None
+                st.rerun()
+            if st.button("✅ Pilih Template Ini", type="primary", use_container_width=True):
+                if tpl_name not in st.session_state["selected_templates"] and len(st.session_state["selected_templates"]) < 5:
+                    st.session_state["selected_templates"].append(tpl_name)
+                st.session_state["preview_tpl"] = None
+                st.rerun()
 
-        # === HANDLER ANTI KETIMPA - PAKAI keep= ===
-        qp = st.query_params
-        if "preview" in qp:
-            preview_dialog(qp["preview"])
-        elif "pick" in qp:
-            tpl = qp["pick"]
-            keep_raw = qp.get("keep", "")
-            if keep_raw:
-                keep_list = [k for k in keep_raw.split(",") if k.startswith("template")]
-                if keep_list:
-                    st.session_state["selected_templates"] = keep_list
-            if tpl not in st.session_state["selected_templates"]:
-                if len(st.session_state["selected_templates"]) < 5:
-                    st.session_state["selected_templates"].append(tpl)
-                else:
-                    st.toast("Maksimal 5 template bro!", icon="🚫")
-            st.session_state["selected_templates"] = list(dict.fromkeys(st.session_state["selected_templates"]))
-            st.query_params.clear()
-            st.rerun()
-        elif "del" in qp:
-            tpl = qp["del"]
-            keep_raw = qp.get("keep", "")
-            if keep_raw:
-                keep_list = [k for k in keep_raw.split(",") if k.startswith("template")]
-                if keep_list:
-                    st.session_state["selected_templates"] = keep_list
-            if tpl in st.session_state["selected_templates"]:
-                if len(st.session_state["selected_templates"]) > 1:
-                    st.session_state["selected_templates"].remove(tpl)
-                else:
-                    st.toast("Minimal 1 template harus dipilih!", icon="⚠️")
-            st.query_params.clear()
-            st.rerun()
+        # kalau ada preview yang dipencet dari fragment
+        if st.session_state["preview_tpl"]:
+            preview_dialog(st.session_state["preview_tpl"])
 
         st.markdown("""
         <style>
@@ -730,26 +692,21 @@ else:
         .wow-title span{background:#FFE45E;padding:0 10px;transform:rotate(-1.5deg);display:inline-block}
         .wow-sub{font-size:13px;color:#6B4E31;max-width:520px;margin:12px auto 0 auto}
         .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 0 10px 18px}
-        .cat-desc{font-size:11px;color:#8B7355;font-weight:600;margin-left:8px}
-        .scroll-row{display:flex;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:14px;padding:0 18px 16px 18px;scroll-snap-type:x mandatory}
-        .scroll-row::-webkit-scrollbar{height:6px}
-        .scroll-row::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
-        .h-card{flex:0 0 19%;min-width:185px;max-width:185px;scroll-snap-align:start;background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
+        /* BIKIN COLUMNS JADI SCROLL, BUKAN WRAP */
+        div[data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;overflow-x:auto!important;gap:14px!important;padding:0 18px 16px 18px!important}
+        div[data-testid="stHorizontalBlock"]::-webkit-scrollbar{height:6px}
+        div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
+        div[data-testid="column"]{min-width:185px!important;max-width:185px!important;flex:0 0 185px!important}
+        .h-card{background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
         .h-card.selected{border-color:#111!important;border-width:2.5px;box-shadow:4px 4px 0 #FFE45E}
         .h-card img{width:100%;height:185px;object-fit:cover;display:block}
-        .h-footer{padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
-        .h-name{font-weight:800;font-size:11px;color:#111}
-        .h-check{width:22px;height:22px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
-        .h-check.checked{background:#111;color:#FFE45E}
-        .h-btn{display:block;text-align:center;margin:6px 10px 0 10px;padding:7px 0;border-radius:99px;font-size:12px;font-weight:800;text-decoration:none;border:1.5px solid #111}
-        .h-btn.pick{background:#fff;color:#111}
-        .h-btn.del{background:#111;color:#FFE45E}
-        .h-btn.prev{background:#FFE45E;color:#111;border-color:#111;margin-top:6px}
-        @media(max-width:768px){.h-card{flex:0 0 46%;min-width:46%;max-width:46%}.h-card img{height:150px}}
+        @media(max-width:768px){div[data-testid="column"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
+        /* HILANGKAN POPUP RUNNING YANG GANGGU */
+        div[data-testid="stStatusWidget"]{display:none!important}
         </style>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 FIX 5 PILIH MULUS • ANTI KETIMPA</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Sekarang bisa pilih 5 tanpa kehapus. Hapus cuma kalau klik Hapus.</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="wow-hero"><div class="wow-badge">✨ ANTI KEDIP • NO RELOAD POPUP</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Klik +Pilih sekarang mulus, tanpa window kedip. Geser ke kanan →</div></div>', unsafe_allow_html=True)
 
         categories = {
             "💼 Temen Kantor - Formal & Elegan": ["template01","template02","template03","template04","template05","template06","template07","template08"],
@@ -759,29 +716,39 @@ else:
             "🕌 Temen Alim - Religius & Berkah": ["template09","template10","template11","template19","template20","template12","template13","template14"],
         }
 
-        # BIKIN KEEP STRING UNTUK DIBAWA DI URL
-        keep_str = ",".join(st.session_state["selected_templates"])
+        @st.fragment
+        def render_categories():
+            for cat_name, tpl_list in categories.items():
+                st.markdown(f"<div class='cat-title'>{cat_name} <span style='font-size:11px;color:#8B7355;font-weight:600'>— geser →</span></div>", unsafe_allow_html=True)
+                cols = st.columns(len(tpl_list))
+                for idx, tpl in enumerate(tpl_list):
+                    is_sel = tpl in st.session_state["selected_templates"]
+                    badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
+                    with cols[idx]:
+                        border = "2.5px solid #111;box-shadow:4px 4px 0 #FFE45E" if is_sel else "2px solid #F3E9D9"
+                        st.markdown(f"<div class='h-card' style='border:{border}'><img src='{get_thumb_url(tpl)}'><div style='padding:8px 10px;display:flex;justify-content:space-between'><b style='font-size:11px'>{badge} {tpl.upper()}</b><span>{'✓' if is_sel else '+'}</span></div></div>", unsafe_allow_html=True)
+                        if st.button("👁 Preview", key=f"prev_{cat_name}_{tpl}_{idx}", use_container_width=True):
+                            st.session_state["preview_tpl"] = tpl
+                            st.rerun()
+                        if is_sel:
+                            if st.button("✓ Hapus", key=f"del_{cat_name}_{tpl}_{idx}", use_container_width=True):
+                                if len(st.session_state["selected_templates"]) > 1:
+                                    st.session_state["selected_templates"].remove(tpl)
+                                st.rerun()
+                        else:
+                            if st.button("+ Pilih", key=f"pick_{cat_name}_{tpl}_{idx}", use_container_width=True):
+                                if len(st.session_state["selected_templates"]) < 5:
+                                    st.session_state["selected_templates"].append(tpl)
+                                    st.session_state["selected_templates"] = list(dict.fromkeys(st.session_state["selected_templates"]))
+                                else:
+                                    st.toast("Maksimal 5 bro!", icon="🚫")
+                                st.rerun()
 
-        for cat_name, tpl_list in categories.items():
-            st.markdown(f"<div class='cat-title'>{cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
-            row_html = '<div class="scroll-row">'
-            for tpl in tpl_list:
-                is_sel = tpl in st.session_state["selected_templates"]
-                if is_sel:
-                    btn_action = f'<a class="h-btn del" href="?del={tpl}&keep={keep_str}" target="_self">✓ Hapus</a>'
-                else:
-                    btn_action = f'<a class="h-btn pick" href="?pick={tpl}&keep={keep_str}" target="_self">+ Pilih</a>'
-                sel_class = 'selected' if is_sel else ''
-                check_class = 'checked' if is_sel else ''
-                check_icon = '✓' if is_sel else '+'
-                badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
-                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{badge} {tpl.upper()}.HTML</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}&keep={keep_str}" target="_self">👁 Preview</a>{btn_action}</div>'
-            row_html += '</div>'
-            st.markdown(row_html, unsafe_allow_html=True)
+        render_categories()
 
         selected_tpls = st.session_state["selected_templates"]
         st.markdown(f'<div style="position:sticky;bottom:0;background:#111;color:white;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-radius:18px 18px 0 0;z-index:20;"><div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{", ".join(selected_tpls)}</span></div><div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div></div>', unsafe_allow_html=True)
-        st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}** | 📄 = asli ada, 🖼️ = dummy")
+        st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
         agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
         st.session_state["agreed_terms"] = agreement
         if agreement:
