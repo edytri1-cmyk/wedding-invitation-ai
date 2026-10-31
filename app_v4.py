@@ -770,7 +770,7 @@ else:
             </style>
         """, unsafe_allow_html=True)
 
-                cols_per_row = 5
+        cols_per_row = 5
         for i in range(0, len(template_options), cols_per_row):
             row_templates = template_options[i:i+cols_per_row]
             cols = st.columns(cols_per_row, gap="small")
