@@ -685,7 +685,14 @@ else:
         st.markdown("""
         <style>
         .stApp{background:#FFFBF2!important}
-        div.block-container{background:#fff!important;padding:0!important;max-width:1150px!important;margin:auto!important}
+        div.block-container{
+            background:#fff!important;
+            padding:24px 0 32px 0!important;
+            max-width:1150px!important;
+            margin:24px auto 32px auto!important;
+            border-radius:16px!important;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08)!important;
+        }
         .wow-hero{text-align:center;padding:28px 20px 14px 20px;border-bottom:1px solid #F3E9D9}
         .wow-badge{background:#111;color:#FFE45E;padding:6px 14px;border-radius:99px;font-size:11px;font-weight:800}
         .wow-title{font-size:clamp(32px,8vw,52px);font-weight:900;line-height:.9;letter-spacing:-2px;color:#111;margin-top:16px}
