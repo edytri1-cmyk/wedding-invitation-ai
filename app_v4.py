@@ -631,27 +631,61 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: LANDING WOW - 5 BARIS SCROLL + PREVIEW POP-UP
+    # TAHAP 1: LANDING WOW - 5 BARIS SCROLL + PREVIEW STATIK + FALLBACK DUMMY
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
+        import os
+        import streamlit.components.v1 as components
+
+        def get_thumb_url(tpl_name, w=400, h=600):
+            num = int(tpl_name.replace("template",""))
+            thumbs = [
+                "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=600&fit=crop",
+            ]
+            base = thumbs[num % len(thumbs)]
+            # ganti size kalau diminta HD
+            return base.replace("w=400&h=600", f"w={w}&h={h}") + f"&tpl={tpl_name}"
 
         @st.dialog("👁 Preview Template", width="large")
         def preview_dialog(tpl_name):
-            st.markdown(f"<div style='text-align:center'><h2 style='margin:0'>{tpl_name.upper()}</h2><p style='color:#6B4E31;font-size:13px'>Ini contoh tampilan asli kalau tamu buka link undangan</p></div>", unsafe_allow_html=True)
-            st.image(get_thumb_url(tpl_name).replace("w=400&h=600","w=800&h=1200"), use_container_width=True)
-            st.markdown(f"""
-                <div style='background:#FFFBF2;border:1px solid #F3E9D9;border-radius:12px;padding:12px;margin-top:12px;'>
-                <b>✨ Cocok untuk:</b> {tpl_name}<br>
-                <span style='font-size:12px;color:#8B7355'>Preview ini cuma contoh visual. Data mempelai asli akan otomatis masuk saat kamu lanjut isi data.</span>
-                </div>
-            """, unsafe_allow_html=True)
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("❌ Tutup", use_container_width=True):
+            file_path = f"{tpl_name}.html"
+            static_path = f"static/{tpl_name}.html" # untuk Streamlit Cloud
+            
+            st.markdown(f"<div style='text-align:center'><h3 style='margin:0'>{tpl_name.upper()}.HTML</h3></div>", unsafe_allow_html=True)
+
+            found_path = None
+            if os.path.exists(file_path):
+                found_path = file_path
+            elif os.path.exists(static_path):
+                found_path = static_path
+
+            if found_path:
+                st.success(f"✅ File asli ditemukan: {found_path}")
+                with open(found_path, 'r', encoding='utf-8', errors='ignore') as f:
+                    html_content = f.read()
+                components.html(html_content, height=700, scrolling=True)
+                st.markdown(f'<a href="{found_path}" target="_blank" style="display:block;text-align:center;background:#FFE45E;color:#111;padding:10px;border-radius:99px;font-weight:900;text-decoration:none;border:2px solid #111;margin-top:12px;">🔗 Buka {found_path} di Tab Baru</a>', unsafe_allow_html=True)
+            else:
+                # FALLBACK DUMMY
+                st.warning(f"⚠️ File {file_path} belum ada — tampilkan preview dummy dulu.")
+                st.image(get_thumb_url(tpl_name, w=800, h=1200), use_container_width=True)
+                st.markdown(f"""
+                    <div style='background:#FFFBF2;border:1px dashed #E8D5B5;border-radius:12px;padding:14px;margin-top:12px;text-align:center'>
+                        <b>🚧 {tpl_name}.html belum dibuat</b><br>
+                        <span style='font-size:12px;color:#8B7355'>Ini preview dummy. Begitu lo taro file {tpl_name}.html di folder yang sama dengan app_v4.py, preview akan otomatis ganti ke file asli tanpa ubah kode.</span>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            c1, c2 = st.columns(2)
+            with c1:
+                if st.button("❌ Tutup", use_container_width=True, key=f"close_prev_{tpl_name}"):
                     st.query_params.clear()
                     st.rerun()
-            with col2:
-                if st.button("✅ Pilih Template Ini", type="primary", use_container_width=True):
+            with c2:
+                if st.button("✅ Pilih Template Ini", type="primary", use_container_width=True, key=f"pick_prev_{tpl_name}"):
                     cur = st.session_state.get("selected_templates", ["template01"])
                     if tpl_name not in cur and len(cur) < 5:
                         cur.append(tpl_name)
@@ -709,18 +743,7 @@ else:
         </style>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN →</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Geser tiap baris ke kiri. Klik 👁 untuk preview. Pilih max 5.</div></div>', unsafe_allow_html=True)
-
-        template_options = [f"template{i:02d}" for i in range(1, 21)]
-        def get_thumb_url(tpl_name):
-            num = int(tpl_name.replace("template",""))
-            thumbs = [
-                "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=600&fit=crop",
-            ]
-            return thumbs[num % len(thumbs)] + f"&tpl={tpl_name}"
+        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 SMART PREVIEW • AUTO FALLBACK</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Kalau file templateXX.html ada → tampil asli. Kalau belum → tampil dummy.</div></div>', unsafe_allow_html=True)
 
         categories = {
             "💼 Temen Kantor - Formal & Elegan": ["template01","template02","template03","template04","template05","template06","template07","template08"],
@@ -742,7 +765,9 @@ else:
                 sel_class = 'selected' if is_sel else ''
                 check_class = 'checked' if is_sel else ''
                 check_icon = '✓' if is_sel else '+'
-                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{tpl.upper()}</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}">👁 Preview</a>{btn_action}</div>'
+                # Tandai kalau file ada
+                badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
+                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{badge} {tpl.upper()}.HTML</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}">👁 Preview</a>{btn_action}</div>'
             row_html += '</div>'
             st.markdown(row_html, unsafe_allow_html=True)
 
@@ -753,7 +778,7 @@ else:
 
         st.markdown(f'<div style="position:sticky;bottom:0;background:#111;color:white;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-radius:18px 18px 0 0;z-index:20;"><div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{", ".join(selected_tpls)}</span></div><div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div></div>', unsafe_allow_html=True)
 
-        st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
+        st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}** | 📄 = file html asli sudah ada, 🖼️ = masih dummy")
         agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
         st.session_state["agreed_terms"] = agreement
         if agreement:
