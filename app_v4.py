@@ -761,13 +761,12 @@ else:
             row_html = '<div class="scroll-row">'
             for tpl in tpl_list:
                 is_sel = tpl in st.session_state["selected_templates"]
-                btn_action = f'<a class="h-btn del" href="?del={tpl}">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}">+ Pilih</a>'
+                btn_action = f'<a class="h-btn del" href="?del={tpl}" target="_self">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}" target="_self">+ Pilih</a>'
                 sel_class = 'selected' if is_sel else ''
                 check_class = 'checked' if is_sel else ''
                 check_icon = '✓' if is_sel else '+'
-                # Tandai kalau file ada
                 badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
-                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{badge} {tpl.upper()}.HTML</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}">👁 Preview</a>{btn_action}</div>'
+                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{badge} {tpl.upper()}.HTML</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}" target="_self">👁 Preview</a>{btn_action}</div>'
             row_html += '</div>'
             st.markdown(row_html, unsafe_allow_html=True)
 
