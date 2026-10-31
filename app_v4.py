@@ -695,57 +695,78 @@ else:
         if "selected_templates" not in st.session_state: st.session_state["selected_templates"] = ["template01"]
         if "preview_template" not in st.session_state: st.session_state["preview_template"] = None
 
-        # --- RENDER 5 BARIS SCROLL ---
-        for cat_idx, (cat_name, tpl_list) in enumerate(categories.items()):
-            st.markdown(f"<div class='cat-title'>{cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
-            
-            # Buat container scroll pake columns
-            cols = st.columns(len(tpl_list), gap="small")
-            for c_idx, tpl in enumerate(tpl_list):
-                with cols[c_idx]:
-                    is_sel = tpl in st.session_state["selected_templates"]
-                    # Card HTML
-                    st.markdown(f"""
-                        <div class="h-card {'selected' if is_sel else ''}" style="margin-bottom:6px;">
-                            <img src="{get_thumb_url(tpl)}">
-                            <div class="h-footer">
-                                <div class="h-name">{tpl.upper()}</div>
-                                <div class="h-check {'checked' if is_sel else ''}">{'✓' if is_sel else '+'}</div>
-                            </div>
-                        </div>
-                    """, unsafe_allow_html=True)
-                    # Button unik per kategori biar gak duplicate
-                    if st.button(
-                        "✓ Hapus" if is_sel else "+ Pilih",
-                        key=f"cat{cat_idx}_sel_{tpl}_{c_idx}",
-                        type="primary" if is_sel else "secondary",
-                        use_container_width=True
-                    ):
-                        cur = st.session_state["selected_templates"]
-                        if is_sel:
-                            if len(cur) > 1: cur.remove(tpl)
-                            else: st.toast("Minimal 1 template!", icon="⚠️")
-                        else:
-                            if len(cur) < 5: cur.append(tpl)
-                            else: st.toast("Maksimal 5!", icon="🚫")
-                            # Hilangkan duplikat biar gak double karena template ada di 2 kategori
-                            cur = list(dict.fromkeys(cur))
-                        st.session_state["selected_templates"] = cur
-                        st.rerun()
+        # --- RENDER 5 BARIS SCROLL - FIX NUMPUK ---
+        st.markdown("""
+            <style>
+            /* WRAPPER SCROLL PER KATEGORI */
+            .cat-wrapper { margin-bottom: 8px; }
+            .cat-wrapper [data-testid="stHorizontalBlock"] {
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                gap: 12px !important;
+                padding: 0 18px 14px 18px !important;
+                scrollbar-width: thin;
+                scroll-snap-type: x mandatory;
+            }
+            .cat-wrapper [data-testid="stHorizontalBlock"]::-webkit-scrollbar { height: 6px; }
+            .cat-wrapper [data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb { background:#E8D5B5; border-radius:99px; }
+            .cat-wrapper [data-testid="column"] {
+                flex: 0 0 19% !important;
+                min-width: 185px !important;
+                max-width: 185px !important;
+                scroll-snap-align: start !important;
+            }
+            .h-card { background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; width:100%; }
+            .h-card.selected { border-color:#111 !important; border-width:2.5px; box-shadow:4px 4px 0 #FFE45E; }
+            .h-card img { width:100%; height:185px; object-fit:cover; display:block; }
+            .h-footer { padding:8px 10px; display:flex; justify-content:space-between; align-items:center; }
+            .h-name { font-weight:800; font-size:11px; color:#111; }
+            .h-check { width:22px; height:22px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; }
+            .h-check.checked { background:#111; color:#FFE45E; }
+            @media (max-width:768px){
+                .cat-wrapper [data-testid="column"] { flex: 0 0 46% !important; min-width: 46% !important; max-width: 46% !important; }
+                .h-card img { height:150px; }
+            }
+            </style>
+        """, unsafe_allow_html=True)
 
-            # Inject CSS scroll ke row ini
-            st.markdown("""
-                <script>
-                // hack: bikin horizontal block jadi scrollable
-                </script>
-                <style>
-                div[data-testid="stHorizontalBlock"]:has(> div > div > .h-card) {
-                    flex-wrap: nowrap !important;
-                    overflow-x: auto !important;
-                    padding-bottom: 10px !important;
-                }
-                </style>
-            """, unsafe_allow_html=True)
+        for cat_idx, (cat_name, tpl_list) in enumerate(categories.items()):
+            st.markdown(f"<div class='cat-title'>💼 {cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
+            
+            # WRAPPER PENTING BIAR GAK NUMPUK
+            with st.container():
+                st.markdown('<div class="cat-wrapper">', unsafe_allow_html=True)
+                cols = st.columns(len(tpl_list), gap="small")
+                for c_idx, tpl in enumerate(tpl_list):
+                    with cols[c_idx]:
+                        is_sel = tpl in st.session_state["selected_templates"]
+                        st.markdown(f"""
+                            <div class="h-card {'selected' if is_sel else ''}">
+                                <img src="{get_thumb_url(tpl)}">
+                                <div class="h-footer">
+                                    <div class="h-name">{tpl.upper()}</div>
+                                    <div class="h-check {'checked' if is_sel else ''}">{'✓' if is_sel else '+'}</div>
+                                </div>
+                            </div>
+                        """, unsafe_allow_html=True)
+                        if st.button(
+                            "✓ Hapus" if is_sel else "+ Pilih",
+                            key=f"cat{cat_idx}_sel_{tpl}_{c_idx}",
+                            type="primary" if is_sel else "secondary",
+                            use_container_width=True
+                        ):
+                            cur = st.session_state["selected_templates"]
+                            if is_sel:
+                                if len(cur) > 1: cur.remove(tpl)
+                                else: st.toast("Minimal 1!", icon="⚠️")
+                            else:
+                                if len(cur) < 5: cur.append(tpl)
+                                else: st.toast("Max 5!", icon="🚫")
+                                cur = list(dict.fromkeys(cur))
+                            st.session_state["selected_templates"] = cur
+                            st.rerun()
+                st.markdown('</div>', unsafe_allow_html=True)
 
         # --- LOGIC & CTA TETAP ---
         selected_tpls = st.session_state["selected_templates"]
