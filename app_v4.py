@@ -770,7 +770,7 @@ else:
             </style>
         """, unsafe_allow_html=True)
 
-        cols_per_row = 5
+                cols_per_row = 5
         for i in range(0, len(template_options), cols_per_row):
             row_templates = template_options[i:i+cols_per_row]
             cols = st.columns(cols_per_row, gap="small")
@@ -786,14 +786,24 @@ else:
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
-                    if st.button("✓ Hapus" if is_selected else "+ Pilih", key=f"select_{tpl}", type="primary" if is_selected else "secondary", use_container_width=True):
+                    # KEY UNIK ANTI DUPLIKAT
+                    if st.button(
+                        "✓ Hapus" if is_selected else "+ Pilih", 
+                        key=f"wow_select_{tpl}_{i}_{col_idx}",  # <-- GANTI INI
+                        type="primary" if is_selected else "secondary", 
+                        use_container_width=True
+                    ):
                         cur = st.session_state["selected_templates"]
                         if is_selected:
-                            if len(cur) > 1: cur.remove(tpl)
-                            else: st.toast("Minimal 1!", icon="⚠️")
+                            if len(cur) > 1: 
+                                cur.remove(tpl)
+                            else: 
+                                st.toast("Minimal 1!", icon="⚠️")
                         else:
-                            if len(cur) < 5: cur.append(tpl)
-                            else: st.toast("Max 5!", icon="🚫")
+                            if len(cur) < 5: 
+                                cur.append(tpl)
+                            else: 
+                                st.toast("Max 5!", icon="🚫")
                         st.session_state["selected_templates"] = cur
                         st.rerun()
 
