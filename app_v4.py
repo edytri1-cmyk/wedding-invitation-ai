@@ -692,17 +692,10 @@ else:
         .wow-title span{background:#FFE45E;padding:0 10px;transform:rotate(-1.5deg);display:inline-block}
         .wow-sub{font-size:13px;color:#6B4E31;max-width:520px;margin:12px auto 0 auto}
         .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 18px 10px 18px}
-        /* ATAS biar sinkron kiri kanan */
         div[data-testid="stHorizontalBlock"]{padding-left:18px!important;padding-right:18px!important;gap:14px!important}
-        /* BAWAH DOANG: yang habis cat-title baru dipaksa scroll 200px = 5 keliatan 3 ngumpet */
-        .cat-title + div[data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;padding:0 18px 16px 18px!important;scroll-snap-type:x mandatory!important}
-        .cat-title + div[data-testid="stHorizontalBlock"]::-webkit-scrollbar{height:6px}
-        .cat-title + div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
-        .cat-title + div[data-testid="stHorizontalBlock"] div[data-testid="column"], .cat-title + div[data-testid="stHorizontalBlock"] div[data-testid="stColumn"]{min-width:200px!important;max-width:200px!important;flex:0 0 200px!important;scroll-snap-align:start!important}
         .h-card{background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
         .h-card.selected{border-color:#111!important;border-width:2.5px;box-shadow:4px 4px 0 #FFE45E}
         .h-card img{width:100%;height:185px;object-fit:cover;display:block}
-        @media(max-width:768px){.cat-title + div[data-testid="stHorizontalBlock"] div[data-testid="column"], .cat-title + div[data-testid="stHorizontalBlock"] div[data-testid="stColumn"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
         div[data-testid="stStatusWidget"]{display:none!important}
         </style>
         """, unsafe_allow_html=True)
@@ -720,30 +713,33 @@ else:
         @st.fragment
         def render_categories():
             for cat_name, tpl_list in categories.items():
-                st.markdown(f"<div class='cat-title'>{cat_name} <span style='font-size:11px;color:#8B7355;font-weight:600'>— geser →</span></div>", unsafe_allow_html=True)
-                cols = st.columns(len(tpl_list))
-                for idx, tpl in enumerate(tpl_list):
-                    is_sel = tpl in st.session_state["selected_templates"]
-                    badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
-                    with cols[idx]:
-                        border = "2.5px solid #111;box-shadow:4px 4px 0 #FFE45E" if is_sel else "2px solid #F3E9D9"
-                        st.markdown(f"<div class='h-card' style='border:{border}'><img src='{get_thumb_url(tpl)}'><div style='padding:8px 10px;display:flex;justify-content:space-between'><b style='font-size:11px'>{badge} {tpl.upper()}</b><span>{'✓' if is_sel else '+'}</span></div></div>", unsafe_allow_html=True)
-                        if st.button("👁 Preview", key=f"prev_{cat_name}_{tpl}_{idx}", use_container_width=True):
-                            st.session_state["preview_tpl"] = tpl
-                            st.rerun()
-                        if is_sel:
-                            if st.button("✓ Hapus", key=f"del_{cat_name}_{tpl}_{idx}", use_container_width=True):
-                                if len(st.session_state["selected_templates"]) > 1:
-                                    st.session_state["selected_templates"].remove(tpl)
+                st.markdown(f"<div class='cat-title'>{cat_name} <span style='font-size:11px;color:#8B7355;font-weight:600'>— max 5 per baris</span></div>", unsafe_allow_html=True)
+                # POTONG JADI CHUNK 5-5
+                for row_start in range(0, len(tpl_list), 5):
+                    chunk = tpl_list[row_start:row_start+5]
+                    cols = st.columns(5)  # selalu 5 kolom biar rata kiri-kanan
+                    for idx, tpl in enumerate(chunk):
+                        is_sel = tpl in st.session_state["selected_templates"]
+                        badge = "📄" if os.path.exists(f"{tpl}.html") or os.path.exists(f"static/{tpl}.html") else "🖼️"
+                        with cols[idx]:
+                            border = "2.5px solid #111;box-shadow:4px 4px 0 #FFE45E" if is_sel else "2px solid #F3E9D9"
+                            st.markdown(f"<div class='h-card' style='border:{border}'><img src='{get_thumb_url(tpl)}'><div style='padding:8px 10px;display:flex;justify-content:space-between'><b style='font-size:11px'>{badge} {tpl.upper()}</b><span>{'✓' if is_sel else '+'}</span></div></div>", unsafe_allow_html=True)
+                            if st.button("👁 Preview", key=f"prev_{cat_name}_{tpl}_{row_start}_{idx}", use_container_width=True):
+                                st.session_state["preview_tpl"] = tpl
                                 st.rerun()
-                        else:
-                            if st.button("+ Pilih", key=f"pick_{cat_name}_{tpl}_{idx}", use_container_width=True):
-                                if len(st.session_state["selected_templates"]) < 5:
-                                    st.session_state["selected_templates"].append(tpl)
-                                    st.session_state["selected_templates"] = list(dict.fromkeys(st.session_state["selected_templates"]))
-                                else:
-                                    st.toast("Maksimal 5 bro!", icon="🚫")
-                                st.rerun()
+                            if is_sel:
+                                if st.button("✓ Hapus", key=f"del_{cat_name}_{tpl}_{row_start}_{idx}", use_container_width=True):
+                                    if len(st.session_state["selected_templates"]) > 1:
+                                        st.session_state["selected_templates"].remove(tpl)
+                                    st.rerun()
+                            else:
+                                if st.button("+ Pilih", key=f"pick_{cat_name}_{tpl}_{row_start}_{idx}", use_container_width=True):
+                                    if len(st.session_state["selected_templates"]) < 5:
+                                        st.session_state["selected_templates"].append(tpl)
+                                        st.session_state["selected_templates"] = list(dict.fromkeys(st.session_state["selected_templates"]))
+                                    else:
+                                        st.toast("Maksimal 5 bro!", icon="🚫")
+                                    st.rerun()
 
         render_categories()
 
