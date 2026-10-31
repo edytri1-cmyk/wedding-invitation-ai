@@ -746,7 +746,7 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5) - CARD THUMBNAIL VERSION
+        # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5) - CARD THUMBNAIL RESPONSIVE 2 HP / 5 DESKTOP
         st.markdown("---")
         st.markdown("<h3 style='color: #B8860B;'>🎨 Pilih Multi Template Undangan (Minimal 1, Maksimal 5)</h3>", unsafe_allow_html=True)
         st.markdown("<p style='color:#6B4E31;font-size:13px;margin-top:-8px;'>Klik card untuk pilih/hapus. Klik gambar untuk preview besar.</p>", unsafe_allow_html=True)
@@ -754,10 +754,8 @@ else:
         template_options = [f"template{i:02d}" for i in range(1, 21)]
 
         # Mapping thumbnail - ganti URL ini dengan URL thumbnail asli lo
-        # Gue pakai unsplash + placeholder biar beda-beda
         def get_thumb_url(tpl_name):
             num = int(tpl_name.replace("template",""))
-            # Lo bisa ganti jadi: f"https://yourdomain.com/thumbs/{tpl_name}.jpg"
             thumbs = [
                 "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
                 "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
@@ -771,15 +769,13 @@ else:
         if not default_selected:
             default_selected = ["template01"]
         
-        # Sinkronisasi awal jika belum ada selected_templates
         if "selected_templates" not in st.session_state or not st.session_state["selected_templates"]:
             st.session_state["selected_templates"] = default_selected
 
-        # --- STATE UNTUK PREVIEW MODAL ---
         if "preview_template" not in st.session_state:
             st.session_state["preview_template"] = None
 
-        # --- CUSTOM CSS CARD ---
+        # --- CUSTOM CSS CARD + RESPONSIVE LOGIC ---
         st.markdown("""
             <style>
             .tpl-card {
@@ -849,23 +845,41 @@ else:
                 font-weight: 800;
                 backdrop-filter: blur(4px);
             }
+            /* RESPONSIVE GRID: 5 kolom desktop, 2 kolom HP */
+            @media (max-width: 768px) {
+                .tpl-card-img { height: 150px !important; }
+                .tpl-card-name { font-size: 11px !important; }
+                div[data-testid="stHorizontalBlock"] {
+                    flex-wrap: wrap !important;
+                    gap: 0.5rem !important;
+                }
+                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+                    flex: 0 0 calc(50% - 0.5rem) !important;
+                    width: calc(50% - 0.5rem) !important;
+                    min-width: calc(50% - 0.5rem) !important;
+                }
+            }
+            @media (min-width: 769px) {
+                div[data-testid="stHorizontalBlock"] {
+                    flex-wrap: nowrap !important;
+                }
+            }
             </style>
         """, unsafe_allow_html=True)
 
-        # --- RENDER GRID CARD 4 KOLOM ---
-        cols_per_row = 4
+        # --- RENDER GRID CARD 5 KOLOM (auto jadi 2 di HP via CSS) ---
+        cols_per_row = 5
         for i in range(0, len(template_options), cols_per_row):
             row_templates = template_options[i:i+cols_per_row]
-            cols = st.columns(cols_per_row)
+            cols = st.columns(cols_per_row, gap="small")
             for col_idx, tpl in enumerate(row_templates):
                 with cols[col_idx]:
                     is_selected = tpl in st.session_state["selected_templates"]
                     thumb_url = get_thumb_url(tpl)
                     
-                    # Card HTML + 2 tombol: Pilih & Preview
                     st.markdown(f"""
                         <div class="tpl-card {'selected' if is_selected else ''}">
-                            <div class="tpl-badge">{'✓ DIPILIH' if is_selected else 'TAP UNTUK PREVIEW'}</div>
+                            <div class="tpl-badge">{'✓ DIPILIH' if is_selected else 'PREVIEW'}</div>
                             <img src="{thumb_url}" class="tpl-card-img">
                             <div class="tpl-card-footer">
                                 <div class="tpl-card-name">{tpl.upper()}</div>
@@ -874,7 +888,6 @@ else:
                         </div>
                     """, unsafe_allow_html=True)
 
-                    # 2 tombol di bawah card (tetap fungsional)
                     btn_col1, btn_col2 = st.columns([1.3, 1])
                     with btn_col1:
                         label = "✓ Hapus" if is_selected else "+ Pilih"
@@ -882,7 +895,6 @@ else:
                         if st.button(label, key=f"select_{tpl}", type=btn_type, use_container_width=True):
                             current = st.session_state["selected_templates"]
                             if is_selected:
-                                # Jangan biarkan 0, minimal 1
                                 if len(current) > 1:
                                     current.remove(tpl)
                                 else:
@@ -895,11 +907,11 @@ else:
                             st.session_state["selected_templates"] = current
                             st.rerun()
                     with btn_col2:
-                        if st.button("👁️ Preview", key=f"preview_{tpl}", use_container_width=True):
+                        if st.button("👁️", key=f"preview_{tpl}", use_container_width=True):
                             st.session_state["preview_template"] = tpl
                             st.rerun()
 
-        # --- PREVIEW MODAL (pakai expander besar) ---
+        # --- PREVIEW MODAL ---
         if st.session_state["preview_template"]:
             tpl_prev = st.session_state["preview_template"]
             with st.container():
@@ -930,15 +942,11 @@ else:
                     else:
                         st.success(f"{tpl_prev} sudah dipilih ✓")
 
-        # --- LOGIC LAMA TETAP DIPERTAHANKAN (jangan diubah) ---
-        # selected_tpls tetap diambil dari session_state agar variable & fungsi tidak berubah
+        # --- LOGIC LAMA TETAP ---
         selected_tpls = st.session_state["selected_templates"]
-
-        # Validasi jika user tidak memilih template apapun (logic asli)
         if len(selected_tpls) == 0:
             st.warning("⚠️ Silakan pilih minimal 1 template.")
             selected_tpls = ["template01"]
-
         st.session_state["selected_templates"] = selected_tpls
         st.info(f"✨ Template Terpilih ({len(selected_tpls)}): **{', '.join(selected_tpls)}**")
 
