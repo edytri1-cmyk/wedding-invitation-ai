@@ -631,19 +631,16 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: LANDING WOW - 5 BARIS HORIZONTAL SCROLL PER SEGMEN (FIX ANTI NUMPUK)
+    # TAHAP 1: LANDING WOW - 5 BARIS SCROLL (FIX KODE MENTAH & NUMPUK)
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
 
-        # --- HANDLE KLIK PILIH / HAPUS DARI URL (biar bisa pake HTML murni) ---
         qp = st.query_params
         if "pick" in qp:
             tpl = qp["pick"]
             cur = st.session_state.get("selected_templates", ["template01"])
-            if tpl in cur:
-                if len(cur) > 1: cur.remove(tpl)
-            else:
-                if len(cur) < 5: cur.append(tpl)
+            if tpl not in cur and len(cur) < 5:
+                cur.append(tpl)
                 cur = list(dict.fromkeys(cur))
             st.session_state["selected_templates"] = cur
             st.query_params.clear()
@@ -651,47 +648,41 @@ else:
         if "del" in qp:
             tpl = qp["del"]
             cur = st.session_state.get("selected_templates", ["template01"])
-            if tpl in cur and len(cur) > 1: cur.remove(tpl)
+            if tpl in cur and len(cur) > 1:
+                cur.remove(tpl)
             st.session_state["selected_templates"] = cur
             st.query_params.clear()
             st.rerun()
 
         st.markdown("""
-            <style>
-            .stApp { background: #FFFBF2 !important; }
-            div.block-container { background:#fff !important; padding:0 !important; max-width:1150px !important; }
-            .wow-hero { text-align:center; padding:28px 20px 14px 20px; border-bottom:1px solid #F3E9D9; }
-            .wow-badge { background:#111; color:#FFE45E; padding:6px 14px; border-radius:99px; font-size:11px; font-weight:800; }
-            .wow-title { font-size: clamp(32px, 8vw, 52px); font-weight:900; line-height:.9; letter-spacing:-2px; color:#111; margin-top:16px; }
-            .wow-title span { background:#FFE45E; padding:0 10px; transform:rotate(-1.5deg); display:inline-block; }
-            .wow-sub { font-size:13px; color:#6B4E31; max-width:520px; margin:12px auto 0 auto; }
-            .cat-title { font-weight:900; font-size:14px; color:#111; margin:26px 0 10px 18px; }
-            .cat-desc { font-size:11px; color:#8B7355; font-weight:600; margin-left:8px; }
-            /* INI KUNCI ANTI NUMPUK - PURE FLEX SCROLL */
-            .scroll-row { display:flex; flex-direction:row; overflow-x:auto; overflow-y:hidden; gap:14px; padding:0 18px 16px 18px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
-            .scroll-row::-webkit-scrollbar { height:6px; }
-            .scroll-row::-webkit-scrollbar-thumb { background:#E8D5B5; border-radius:99px; }
-            .h-card { flex:0 0 19%; min-width:185px; max-width:185px; scroll-snap-align:start; background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; }
-            .h-card.selected { border-color:#111 !important; border-width:2.5px; box-shadow:4px 4px 0 #FFE45E; }
-            .h-card img { width:100%; height:190px; object-fit:cover; display:block; }
-            .h-footer { padding:8px 10px; display:flex; justify-content:space-between; align-items:center; }
-            .h-name { font-weight:800; font-size:11px; color:#111; }
-            .h-check { width:22px; height:22px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; }
-            .h-check.checked { background:#111; color:#FFE45E; }
-            .h-btn { display:block; text-align:center; margin:6px 10px 0 10px; padding:7px 0; border-radius:99px; font-size:12px; font-weight:800; text-decoration:none; border:1.5px solid #111; }
-            .h-btn.pick { background:#fff; color:#111; }
-            .h-btn.del { background:#111; color:#FFE45E; }
-            @media (max-width:768px){ .h-card { flex:0 0 46%; min-width:46%; max-width:46%; } .h-card img{height:150px;} }
-            </style>
+        <style>
+        .stApp{background:#FFFBF2!important}
+        div.block-container{background:#fff!important;padding:0!important;max-width:1150px!important}
+        .wow-hero{text-align:center;padding:28px 20px 14px 20px;border-bottom:1px solid #F3E9D9}
+        .wow-badge{background:#111;color:#FFE45E;padding:6px 14px;border-radius:99px;font-size:11px;font-weight:800}
+        .wow-title{font-size:clamp(32px,8vw,52px);font-weight:900;line-height:.9;letter-spacing:-2px;color:#111;margin-top:16px}
+        .wow-title span{background:#FFE45E;padding:0 10px;transform:rotate(-1.5deg);display:inline-block}
+        .wow-sub{font-size:13px;color:#6B4E31;max-width:520px;margin:12px auto 0 auto}
+        .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 0 10px 18px}
+        .cat-desc{font-size:11px;color:#8B7355;font-weight:600;margin-left:8px}
+        .scroll-row{display:flex;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:14px;padding:0 18px 16px 18px;scroll-snap-type:x mandatory}
+        .scroll-row::-webkit-scrollbar{height:6px}
+        .scroll-row::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
+        .h-card{flex:0 0 19%;min-width:185px;max-width:185px;scroll-snap-align:start;background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
+        .h-card.selected{border-color:#111!important;border-width:2.5px;box-shadow:4px 4px 0 #FFE45E}
+        .h-card img{width:100%;height:185px;object-fit:cover;display:block}
+        .h-footer{padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
+        .h-name{font-weight:800;font-size:11px;color:#111}
+        .h-check{width:22px;height:22px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+        .h-check.checked{background:#111;color:#FFE45E}
+        .h-btn{display:block;text-align:center;margin:8px 10px 10px 10px;padding:7px 0;border-radius:99px;font-size:12px;font-weight:800;text-decoration:none;border:1.5px solid #111}
+        .h-btn.pick{background:#fff;color:#111}
+        .h-btn.del{background:#111;color:#FFE45E}
+        @media(max-width:768px){.h-card{flex:0 0 46%;min-width:46%;max-width:46%}.h-card img{height:150px}}
+        </style>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
-            <div class="wow-hero">
-                <div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN UNTUK LIHAT LEBIH BANYAK →</div>
-                <div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div>
-                <div class="wow-sub">Geser tiap baris ke kiri. Tiap segmen punya style beda. Pilih max 5.</div>
-            </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN →</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Geser tiap baris ke kiri. Tiap segmen punya style beda. Pilih max 5.</div></div>', unsafe_allow_html=True)
 
         template_options = [f"template{i:02d}" for i in range(1, 21)]
         def get_thumb_url(tpl_name):
@@ -712,39 +703,29 @@ else:
             "🕌 Temen Alim - Religius & Berkah": ["template09","template10","template11","template19","template20","template12","template13","template14"],
         }
 
-        if "selected_templates" not in st.session_state: st.session_state["selected_templates"] = ["template01"]
+        if "selected_templates" not in st.session_state:
+            st.session_state["selected_templates"] = ["template01"]
 
-        # --- RENDER 5 BARIS TANPA st.columns ---
         for cat_name, tpl_list in categories.items():
             st.markdown(f"<div class='cat-title'>{cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
-            
-            cards_html = '<div class="scroll-row">'
+            # BUILD TANPA SPASI DEPAN (PENTING!)
+            row_html = '<div class="scroll-row">'
             for tpl in tpl_list:
                 is_sel = tpl in st.session_state["selected_templates"]
-                btn = f'<a class="h-btn del" href="?del={tpl}">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}">+ Pilih</a>'
-                cards_html += f"""
-                    <div class="h-card {'selected' if is_sel else ''}">
-                        <img src="{get_thumb_url(tpl)}">
-                        <div class="h-footer">
-                            <div class="h-name">{tpl.upper()}</div>
-                            <div class="h-check {'checked' if is_sel else ''}">{'✓' if is_sel else '+'}</div>
-                        </div>
-                        {btn}
-                    </div>
-                """
-            cards_html += '</div>'
-            st.markdown(cards_html, unsafe_allow_html=True)
+                btn_html = f'<a class="h-btn del" href="?del={tpl}">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}">+ Pilih</a>'
+                sel_class = 'selected' if is_sel else ''
+                check_class = 'checked' if is_sel else ''
+                check_icon = '✓' if is_sel else '+'
+                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{tpl.upper()}</div><div class="h-check {check_class}">{check_icon}</div></div>{btn_html}</div>'
+            row_html += '</div>'
+            st.markdown(row_html, unsafe_allow_html=True)
 
         selected_tpls = st.session_state["selected_templates"]
-        if len(selected_tpls) == 0: selected_tpls = ["template01"]
+        if len(selected_tpls) == 0:
+            selected_tpls = ["template01"]
         st.session_state["selected_templates"] = selected_tpls
 
-        st.markdown(f"""
-            <div style="position:sticky; bottom:0; background:#111; color:white; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; margin-top:18px; border-radius:18px 18px 0 0; z-index:20;">
-                <div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{', '.join(selected_tpls)}</span></div>
-                <div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div>
-            </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f'<div style="position:sticky;bottom:0;background:#111;color:white;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-radius:18px 18px 0 0;z-index:20;"><div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{", ".join(selected_tpls)}</span></div><div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div></div>', unsafe_allow_html=True)
 
         st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
         agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
