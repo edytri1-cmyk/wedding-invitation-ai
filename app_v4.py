@@ -631,15 +631,11 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: PANDUAN APLIKASI & PEMILIHAN MULTI TEMPLATE (1-5)
-    # =========================================================
-        # =========================================================
     # TAHAP 1: LANDING WOW - RINGAN, SIMPLE, LANGSUNG NGENA
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
         st.markdown("""
             <style>
-            /* HAPUS BACKGROUND BERAT, GANTI CLEAN */
             .stApp { background: #FFFBF2 !important; }
             div.block-container {
                 background: #ffffff !important;
@@ -649,7 +645,6 @@ else:
                 margin-top: 0 !important;
                 max-width: 1100px !important;
             }
-            /* HERO WOW */
             .wow-hero {
                 background: #ffffff;
                 padding: 32px 24px 18px 24px;
@@ -695,16 +690,26 @@ else:
                 color: #111;
             }
             .wow-proof div { display:flex; align-items:center; gap:6px; background:#FFFBF2; border:1.5px solid #E8D5B5; padding:6px 12px; border-radius:99px; }
-            /* STEP DOTS SIMPLE */
             .step-dots { display:flex; justify-content:center; gap:8px; margin:18px 0 0 0; }
             .dot { width:32px; height:6px; border-radius:99px; background:#E8D5B5; }
             .dot.active { background:#B8860B; width:42px; }
-            /* TEMPLATE HEADER STICKY */
             .tpl-header { position:sticky; top:0; z-index:10; background:rgba(255,251,242,0.9); backdrop-filter:blur(12px); padding:14px 20px; border-bottom:1px solid #F3E9D9; display:flex; justify-content:space-between; align-items:center; }
+            .tpl-card { background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; transition:.2s; }
+            .tpl-card:hover { transform:translateY(-3px); border-color:#B8860B; box-shadow:0 10px 20px rgba(184,134,11,.12); }
+            .tpl-card.selected { border-color:#111 !important; border-width:2.5px !important; box-shadow:4px 4px 0 #FFE45E; }
+            .tpl-card-img { width:100%; height:160px; object-fit:cover; }
+            .tpl-card-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; }
+            .tpl-card-name { font-weight:800; font-size:12px; color:#111; }
+            .tpl-check { width:24px; height:24px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+            .tpl-check.checked { background:#111; color:#FFE45E; }
+            @media (max-width: 768px) {
+                .tpl-card-img { height:140px !important; }
+                div[data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 0.5rem !important; }
+                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { flex: 0 0 calc(50% - 0.5rem) !important; width: calc(50% - 0.5rem) !important; min-width: calc(50% - 0.5rem) !important; }
+            }
             </style>
         """, unsafe_allow_html=True)
 
-        # --- HERO SUPER RINGAN ---
         st.markdown("""
             <div class="wow-hero">
                 <div class="wow-badge">🔥 12.400+ UNDANGAN TERKIRIM • RATING 4.9/5</div>
@@ -719,7 +724,6 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # --- MOCKUP PREVIEW (EFEK WOW VISUAL) ---
         c_left, c_mid, c_right = st.columns([1, 1.2, 1])
         with c_mid:
             st.markdown("""
@@ -731,7 +735,6 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-        # --- TEMPLATE PICKER (TETAP RESPONSIVE 2 HP / 5 DESKTOP) ---
         st.markdown("<div class='tpl-header'><b style='color:#111;'>🎨 Pilih Template (max 5)</b><span style='font-size:11px;background:#111;color:white;padding:5px 10px;border-radius:99px;'>20 TEMPLATE GEN Z</span></div>", unsafe_allow_html=True)
         
         template_options = [f"template{i:02d}" for i in range(1, 21)]
@@ -752,24 +755,7 @@ else:
         if "preview_template" not in st.session_state:
             st.session_state["preview_template"] = None
 
-        st.markdown("""
-            <style>
-            .tpl-card { background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; transition:.2s; }
-            .tpl-card:hover { transform:translateY(-3px); border-color:#B8860B; box-shadow:0 10px 20px rgba(184,134,11,.12); }
-            .tpl-card.selected { border-color:#111 !important; border-width:2.5px !important; box-shadow:4px 4px 0 #FFE45E; }
-            .tpl-card-img { width:100%; height:160px; object-fit:cover; }
-            .tpl-card-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; }
-            .tpl-card-name { font-weight:800; font-size:12px; color:#111; }
-            .tpl-check { width:24px; height:24px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
-            .tpl-check.checked { background:#111; color:#FFE45E; }
-            @media (max-width: 768px) {
-                .tpl-card-img { height:140px !important; }
-                div[data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 0.5rem !important; }
-                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { flex: 0 0 calc(50% - 0.5rem) !important; width: calc(50% - 0.5rem) !important; min-width: calc(50% - 0.5rem) !important; }
-            }
-            </style>
-        """, unsafe_allow_html=True)
-
+        # --- SATU-SATUNYA GRID CARD (5 DESKTOP / 2 HP) ---
         cols_per_row = 5
         for i in range(0, len(template_options), cols_per_row):
             row_templates = template_options[i:i+cols_per_row]
@@ -786,35 +772,28 @@ else:
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
-                    # KEY UNIK ANTI DUPLIKAT
                     if st.button(
                         "✓ Hapus" if is_selected else "+ Pilih", 
-                        key=f"wow_select_{tpl}_{i}_{col_idx}",  # <-- GANTI INI
+                        key=f"wow_select_{tpl}_{i}_{col_idx}",
                         type="primary" if is_selected else "secondary", 
                         use_container_width=True
                     ):
                         cur = st.session_state["selected_templates"]
                         if is_selected:
-                            if len(cur) > 1: 
-                                cur.remove(tpl)
-                            else: 
-                                st.toast("Minimal 1!", icon="⚠️")
+                            if len(cur) > 1: cur.remove(tpl)
+                            else: st.toast("Minimal 1!", icon="⚠️")
                         else:
-                            if len(cur) < 5: 
-                                cur.append(tpl)
-                            else: 
-                                st.toast("Max 5!", icon="🚫")
+                            if len(cur) < 5: cur.append(tpl)
+                            else: st.toast("Max 5!", icon="🚫")
                         st.session_state["selected_templates"] = cur
                         st.rerun()
 
-        # --- LOGIC TETAP ---
         selected_tpls = st.session_state["selected_templates"]
         if len(selected_tpls) == 0:
             st.warning("⚠️ Pilih minimal 1 template.")
             selected_tpls = ["template01"]
         st.session_state["selected_templates"] = selected_tpls
 
-        # --- CTA STICKY SIMPLE ---
         st.markdown(f"""
             <div style="position:sticky; bottom:0; background:#111; color:white; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-radius:18px 18px 0 0;">
                 <div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{', '.join(selected_tpls[:3])}{' +'+str(len(selected_tpls)-3) if len(selected_tpls)>3 else ''}</span></div>
@@ -823,7 +802,6 @@ else:
         """, unsafe_allow_html=True)
         
         st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
-        # Checkbox persetujuan dipindah ke bawah CTA biar ringan
         agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
         st.session_state["agreed_terms"] = agreement
         if agreement:
@@ -832,210 +810,6 @@ else:
                 st.rerun()
         else:
             st.caption("Centang untuk lanjut ke pengisian data")
-
-        # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5) - CARD THUMBNAIL RESPONSIVE 2 HP / 5 DESKTOP
-        st.markdown("---")
-        st.markdown("<h3 style='color: #B8860B;'>🎨 Pilih Multi Template Undangan (Minimal 1, Maksimal 5)</h3>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#6B4E31;font-size:13px;margin-top:-8px;'>Klik card untuk pilih/hapus. Klik gambar untuk preview besar.</p>", unsafe_allow_html=True)
-        
-        template_options = [f"template{i:02d}" for i in range(1, 21)]
-
-        # Mapping thumbnail - ganti URL ini dengan URL thumbnail asli lo
-        def get_thumb_url(tpl_name):
-            num = int(tpl_name.replace("template",""))
-            thumbs = [
-                "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=600&fit=crop",
-            ]
-            return thumbs[num % len(thumbs)] + f"&tpl={tpl_name}"
-
-        # Penanganan nilai default yang aman untuk multiselect
-        default_selected = [t for t in st.session_state.get("selected_templates", ["template01"]) if t in template_options]
-        if not default_selected:
-            default_selected = ["template01"]
-        
-        if "selected_templates" not in st.session_state or not st.session_state["selected_templates"]:
-            st.session_state["selected_templates"] = default_selected
-
-        if "preview_template" not in st.session_state:
-            st.session_state["preview_template"] = None
-
-        # --- CUSTOM CSS CARD + RESPONSIVE LOGIC ---
-        st.markdown("""
-            <style>
-            .tpl-card {
-                background: #ffffff;
-                border: 2px solid #E8D5B5;
-                border-radius: 14px;
-                overflow: hidden;
-                transition: all 0.2s ease;
-                cursor: pointer;
-                position: relative;
-                height: 100%;
-            }
-            .tpl-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 8px 20px rgba(184,134,11,0.18);
-                border-color: #B8860B;
-            }
-            .tpl-card.selected {
-                border-color: #B8860B !important;
-                border-width: 3px !important;
-                box-shadow: 0 6px 0 #B8860B;
-                background: #FFFBF0;
-            }
-            .tpl-card-img {
-                width: 100%;
-                height: 180px;
-                object-fit: cover;
-                display: block;
-            }
-            .tpl-card-footer {
-                padding: 10px 12px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .tpl-card-name {
-                font-weight: 800;
-                font-size: 13px;
-                color: #5C4033;
-            }
-            .tpl-check {
-                width: 26px;
-                height: 26px;
-                border-radius: 50%;
-                border: 2px solid #D4AF37;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                font-weight: 900;
-                background: white;
-            }
-            .tpl-check.checked {
-                background: #B8860B;
-                color: white;
-                border-color: #B8860B;
-            }
-            .tpl-badge {
-                position: absolute;
-                top: 8px;
-                left: 8px;
-                background: rgba(0,0,0,0.65);
-                color: white;
-                padding: 4px 8px;
-                border-radius: 99px;
-                font-size: 10px;
-                font-weight: 800;
-                backdrop-filter: blur(4px);
-            }
-            /* RESPONSIVE GRID: 5 kolom desktop, 2 kolom HP */
-            @media (max-width: 768px) {
-                .tpl-card-img { height: 150px !important; }
-                .tpl-card-name { font-size: 11px !important; }
-                div[data-testid="stHorizontalBlock"] {
-                    flex-wrap: wrap !important;
-                    gap: 0.5rem !important;
-                }
-                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-                    flex: 0 0 calc(50% - 0.5rem) !important;
-                    width: calc(50% - 0.5rem) !important;
-                    min-width: calc(50% - 0.5rem) !important;
-                }
-            }
-            @media (min-width: 769px) {
-                div[data-testid="stHorizontalBlock"] {
-                    flex-wrap: nowrap !important;
-                }
-            }
-            </style>
-        """, unsafe_allow_html=True)
-
-        # --- RENDER GRID CARD 5 KOLOM (auto jadi 2 di HP via CSS) ---
-        cols_per_row = 5
-        for i in range(0, len(template_options), cols_per_row):
-            row_templates = template_options[i:i+cols_per_row]
-            cols = st.columns(cols_per_row, gap="small")
-            for col_idx, tpl in enumerate(row_templates):
-                with cols[col_idx]:
-                    is_selected = tpl in st.session_state["selected_templates"]
-                    thumb_url = get_thumb_url(tpl)
-                    
-                    st.markdown(f"""
-                        <div class="tpl-card {'selected' if is_selected else ''}">
-                            <div class="tpl-badge">{'✓ DIPILIH' if is_selected else 'PREVIEW'}</div>
-                            <img src="{thumb_url}" class="tpl-card-img">
-                            <div class="tpl-card-footer">
-                                <div class="tpl-card-name">{tpl.upper()}</div>
-                                <div class="tpl-check {'checked' if is_selected else ''}">{'✓' if is_selected else '+'}</div>
-                            </div>
-                        </div>
-                    """, unsafe_allow_html=True)
-
-                    btn_col1, btn_col2 = st.columns([1.3, 1])
-                    with btn_col1:
-                        label = "✓ Hapus" if is_selected else "+ Pilih"
-                        btn_type = "primary" if is_selected else "secondary"
-                        if st.button(label, key=f"select_{tpl}", type=btn_type, use_container_width=True):
-                            current = st.session_state["selected_templates"]
-                            if is_selected:
-                                if len(current) > 1:
-                                    current.remove(tpl)
-                                else:
-                                    st.toast("Minimal 1 template harus dipilih!", icon="⚠️")
-                            else:
-                                if len(current) < 5:
-                                    current.append(tpl)
-                                else:
-                                    st.toast("Maksimal 5 template!", icon="🚫")
-                            st.session_state["selected_templates"] = current
-                            st.rerun()
-                    with btn_col2:
-                        if st.button("👁️", key=f"preview_{tpl}", use_container_width=True):
-                            st.session_state["preview_template"] = tpl
-                            st.rerun()
-
-        # --- PREVIEW MODAL ---
-        if st.session_state["preview_template"]:
-            tpl_prev = st.session_state["preview_template"]
-            with st.container():
-                st.markdown(f"### 👁️ Preview: {tpl_prev.upper()}")
-                c1, c2 = st.columns([2, 1])
-                with c1:
-                    st.image(get_thumb_url(tpl_prev), caption=f"Thumbnail {tpl_prev}", use_container_width=True)
-                with c2:
-                    st.markdown(f"""
-                        <div style="background:white;border:2px solid #B8860B;border-radius:12px;padding:14px;">
-                        <b style="color:#B8860B;">{tpl_prev.upper()}</b><br>
-                        <span style="font-size:12px;color:#6B4E31;">Template wedding Gen Z. Support foto, musik, RSVP.<br><br>
-                        Klik <b>Pilih</b> untuk masukkan ke daftar pilihan multi-template.</span>
-                        </div>
-                    """, unsafe_allow_html=True)
-                    if st.button("❌ Tutup Preview", key="close_preview", use_container_width=True):
-                        st.session_state["preview_template"] = None
-                        st.rerun()
-                    is_sel_prev = tpl_prev in st.session_state["selected_templates"]
-                    if not is_sel_prev:
-                        if st.button(f"➕ Pilih {tpl_prev.upper()}", key="pick_from_preview", type="primary", use_container_width=True):
-                            if len(st.session_state["selected_templates"]) < 5:
-                                st.session_state["selected_templates"].append(tpl_prev)
-                                st.session_state["preview_template"] = None
-                                st.rerun()
-                            else:
-                                st.toast("Maksimal 5 template!", icon="🚫")
-                    else:
-                        st.success(f"{tpl_prev} sudah dipilih ✓")
-
-        # --- LOGIC LAMA TETAP ---
-        selected_tpls = st.session_state["selected_templates"]
-        if len(selected_tpls) == 0:
-            st.warning("⚠️ Silakan pilih minimal 1 template.")
-            selected_tpls = ["template01"]
-        st.session_state["selected_templates"] = selected_tpls
-        st.info(f"✨ Template Terpilih ({len(selected_tpls)}): **{', '.join(selected_tpls)}**")
 
     # =========================================================
     # TAHAP 2: DESAIN & PREVIEW SWITCHER UNDANGAN MULTI-TEMPLATE
