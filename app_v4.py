@@ -631,11 +631,37 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: LANDING WOW - 5 BARIS SCROLL (FIX KODE MENTAH & NUMPUK)
+    # TAHAP 1: LANDING WOW - 5 BARIS SCROLL + PREVIEW POP-UP
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
 
+        @st.dialog("👁 Preview Template", width="large")
+        def preview_dialog(tpl_name):
+            st.markdown(f"<div style='text-align:center'><h2 style='margin:0'>{tpl_name.upper()}</h2><p style='color:#6B4E31;font-size:13px'>Ini contoh tampilan asli kalau tamu buka link undangan</p></div>", unsafe_allow_html=True)
+            st.image(get_thumb_url(tpl_name).replace("w=400&h=600","w=800&h=1200"), use_container_width=True)
+            st.markdown(f"""
+                <div style='background:#FFFBF2;border:1px solid #F3E9D9;border-radius:12px;padding:12px;margin-top:12px;'>
+                <b>✨ Cocok untuk:</b> {tpl_name}<br>
+                <span style='font-size:12px;color:#8B7355'>Preview ini cuma contoh visual. Data mempelai asli akan otomatis masuk saat kamu lanjut isi data.</span>
+                </div>
+            """, unsafe_allow_html=True)
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("❌ Tutup", use_container_width=True):
+                    st.query_params.clear()
+                    st.rerun()
+            with col2:
+                if st.button("✅ Pilih Template Ini", type="primary", use_container_width=True):
+                    cur = st.session_state.get("selected_templates", ["template01"])
+                    if tpl_name not in cur and len(cur) < 5:
+                        cur.append(tpl_name)
+                        st.session_state["selected_templates"] = list(dict.fromkeys(cur))
+                    st.query_params.clear()
+                    st.rerun()
+
         qp = st.query_params
+        if "preview" in qp:
+            preview_dialog(qp["preview"])
         if "pick" in qp:
             tpl = qp["pick"]
             cur = st.session_state.get("selected_templates", ["template01"])
@@ -675,14 +701,15 @@ else:
         .h-name{font-weight:800;font-size:11px;color:#111}
         .h-check{width:22px;height:22px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
         .h-check.checked{background:#111;color:#FFE45E}
-        .h-btn{display:block;text-align:center;margin:8px 10px 10px 10px;padding:7px 0;border-radius:99px;font-size:12px;font-weight:800;text-decoration:none;border:1.5px solid #111}
+        .h-btn{display:block;text-align:center;margin:6px 10px 0 10px;padding:7px 0;border-radius:99px;font-size:12px;font-weight:800;text-decoration:none;border:1.5px solid #111}
         .h-btn.pick{background:#fff;color:#111}
         .h-btn.del{background:#111;color:#FFE45E}
+        .h-btn.prev{background:#FFE45E;color:#111;border-color:#111;margin-top:6px}
         @media(max-width:768px){.h-card{flex:0 0 46%;min-width:46%;max-width:46%}.h-card img{height:150px}}
         </style>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN →</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Geser tiap baris ke kiri. Tiap segmen punya style beda. Pilih max 5.</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="wow-hero"><div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN →</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Geser tiap baris ke kiri. Klik 👁 untuk preview. Pilih max 5.</div></div>', unsafe_allow_html=True)
 
         template_options = [f"template{i:02d}" for i in range(1, 21)]
         def get_thumb_url(tpl_name):
@@ -708,15 +735,14 @@ else:
 
         for cat_name, tpl_list in categories.items():
             st.markdown(f"<div class='cat-title'>{cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
-            # BUILD TANPA SPASI DEPAN (PENTING!)
             row_html = '<div class="scroll-row">'
             for tpl in tpl_list:
                 is_sel = tpl in st.session_state["selected_templates"]
-                btn_html = f'<a class="h-btn del" href="?del={tpl}">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}">+ Pilih</a>'
+                btn_action = f'<a class="h-btn del" href="?del={tpl}">✓ Hapus</a>' if is_sel else f'<a class="h-btn pick" href="?pick={tpl}">+ Pilih</a>'
                 sel_class = 'selected' if is_sel else ''
                 check_class = 'checked' if is_sel else ''
                 check_icon = '✓' if is_sel else '+'
-                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{tpl.upper()}</div><div class="h-check {check_class}">{check_icon}</div></div>{btn_html}</div>'
+                row_html += f'<div class="h-card {sel_class}"><img src="{get_thumb_url(tpl)}"><div class="h-footer"><div class="h-name">{tpl.upper()}</div><div class="h-check {check_class}">{check_icon}</div></div><a class="h-btn prev" href="?preview={tpl}">👁 Preview</a>{btn_action}</div>'
             row_html += '</div>'
             st.markdown(row_html, unsafe_allow_html=True)
 
