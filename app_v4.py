@@ -685,22 +685,22 @@ else:
         st.markdown("""
         <style>
         .stApp{background:#FFFBF2!important}
-        div.block-container{background:#fff!important;padding:0!important;max-width:1150px!important}
+        div.block-container{background:#fff!important;padding:0!important;max-width:1150px!important;margin:auto!important}
         .wow-hero{text-align:center;padding:28px 20px 14px 20px;border-bottom:1px solid #F3E9D9}
         .wow-badge{background:#111;color:#FFE45E;padding:6px 14px;border-radius:99px;font-size:11px;font-weight:800}
         .wow-title{font-size:clamp(32px,8vw,52px);font-weight:900;line-height:.9;letter-spacing:-2px;color:#111;margin-top:16px}
         .wow-title span{background:#FFE45E;padding:0 10px;transform:rotate(-1.5deg);display:inline-block}
         .wow-sub{font-size:13px;color:#6B4E31;max-width:520px;margin:12px auto 0 auto}
-        .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 0 10px 18px}
-        /* SCROLL PAKSA 5 CARD */
-        div[data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;gap:14px!important;padding:0 18px 16px 18px!important;scroll-snap-type:x mandatory!important}
-        div[data-testid="stHorizontalBlock"]::-webkit-scrollbar{height:6px}
-        div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
-        div[data-testid="column"], div[data-testid="stColumn"]{min-width:200px!important;max-width:200px!important;flex:0 0 200px!important;scroll-snap-align:start!important}
+        .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 18px 10px 18px}
+        div[data-testid="stHorizontalBlock"]{padding-left:18px!important;padding-right:18px!important;gap:14px!important}
+        .template-scroll div[data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;padding:0 18px 16px 18px!important;scroll-snap-type:x mandatory!important}
+        .template-scroll div[data-testid="stHorizontalBlock"]::-webkit-scrollbar{height:6px}
+        .template-scroll div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
+        .template-scroll div[data-testid="column"], .template-scroll div[data-testid="stColumn"]{min-width:200px!important;max-width:200px!important;flex:0 0 200px!important;scroll-snap-align:start!important}
         .h-card{background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
         .h-card.selected{border-color:#111!important;border-width:2.5px;box-shadow:4px 4px 0 #FFE45E}
         .h-card img{width:100%;height:185px;object-fit:cover;display:block}
-        @media(max-width:768px){div[data-testid="column"], div[data-testid="stColumn"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
+        @media(max-width:768px){.template-scroll div[data-testid="column"], .template-scroll div[data-testid="stColumn"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
         div[data-testid="stStatusWidget"]{display:none!important}
         </style>
         """, unsafe_allow_html=True)
@@ -717,6 +717,8 @@ else:
 
         @st.fragment
         def render_categories():
+            # WRAPPER BIAR CSS SCROLL CUMA KENA BAGIAN INI, ATAS GAK KEGESER
+            st.markdown('<div class="template-scroll">', unsafe_allow_html=True)
             for cat_name, tpl_list in categories.items():
                 st.markdown(f"<div class='cat-title'>{cat_name} <span style='font-size:11px;color:#8B7355;font-weight:600'>— geser →</span></div>", unsafe_allow_html=True)
                 cols = st.columns(len(tpl_list))
@@ -742,6 +744,7 @@ else:
                                 else:
                                     st.toast("Maksimal 5 bro!", icon="🚫")
                                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
         render_categories()
 
