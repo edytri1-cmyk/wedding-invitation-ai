@@ -631,112 +631,48 @@ else:
     active_step = menu_steps_mapping[current_idx]
 
     # =========================================================
-    # TAHAP 1: LANDING WOW - RINGAN, SIMPLE, LANGSUNG NGENA
+    # TAHAP 1: LANDING WOW - 5 BARIS HORIZONTAL SCROLL PER SEGMEN
     # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
         st.markdown("""
             <style>
             .stApp { background: #FFFBF2 !important; }
-            div.block-container {
-                background: #ffffff !important;
-                padding: 0 !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                margin-top: 0 !important;
-                max-width: 1100px !important;
-            }
-            .wow-hero {
-                background: #ffffff;
-                padding: 32px 24px 18px 24px;
-                text-align: center;
-                border-bottom: 1px solid #F3E9D9;
-            }
-            .wow-badge {
-                display: inline-flex;
-                gap: 6px;
-                background: #111;
-                color: #FFE45E;
-                padding: 6px 14px;
-                border-radius: 99px;
-                font-size: 11px;
-                font-weight: 800;
-                letter-spacing: .5px;
-            }
-            .wow-title {
-                font-family: 'Syne', sans-serif;
-                font-size: clamp(32px, 8vw, 54px);
-                font-weight: 800;
-                line-height: 0.9;
-                letter-spacing: -2px;
-                color: #111;
-                margin-top: 18px;
-            }
-            .wow-title span { background: #FFE45E; padding: 0 10px; transform: rotate(-1.5deg); display: inline-block; }
-            .wow-sub {
-                font-size: 14px;
-                color: #6B4E31;
-                max-width: 520px;
-                margin: 14px auto 0 auto;
-                line-height: 1.5;
-                font-weight: 500;
-            }
-            .wow-proof {
-                display: flex;
-                justify-content: center;
-                gap: 18px;
-                margin-top: 18px;
-                font-size: 12px;
-                font-weight: 800;
-                color: #111;
-            }
-            .wow-proof div { display:flex; align-items:center; gap:6px; background:#FFFBF2; border:1.5px solid #E8D5B5; padding:6px 12px; border-radius:99px; }
-            .step-dots { display:flex; justify-content:center; gap:8px; margin:18px 0 0 0; }
-            .dot { width:32px; height:6px; border-radius:99px; background:#E8D5B5; }
-            .dot.active { background:#B8860B; width:42px; }
-            .tpl-header { position:sticky; top:0; z-index:10; background:rgba(255,251,242,0.9); backdrop-filter:blur(12px); padding:14px 20px; border-bottom:1px solid #F3E9D9; display:flex; justify-content:space-between; align-items:center; }
-            .tpl-card { background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; transition:.2s; }
-            .tpl-card:hover { transform:translateY(-3px); border-color:#B8860B; box-shadow:0 10px 20px rgba(184,134,11,.12); }
-            .tpl-card.selected { border-color:#111 !important; border-width:2.5px !important; box-shadow:4px 4px 0 #FFE45E; }
-            .tpl-card-img { width:100%; height:160px; object-fit:cover; }
-            .tpl-card-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; }
-            .tpl-card-name { font-weight:800; font-size:12px; color:#111; }
-            .tpl-check { width:24px; height:24px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
-            .tpl-check.checked { background:#111; color:#FFE45E; }
-            @media (max-width: 768px) {
-                .tpl-card-img { height:140px !important; }
-                div[data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 0.5rem !important; }
-                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { flex: 0 0 calc(50% - 0.5rem) !important; width: calc(50% - 0.5rem) !important; min-width: calc(50% - 0.5rem) !important; }
+            div.block-container { background:#fff !important; padding:0 !important; border-radius:0 !important; box-shadow:none !important; max-width:1150px !important; }
+            .wow-hero { text-align:center; padding:28px 20px 14px 20px; border-bottom:1px solid #F3E9D9; }
+            .wow-badge { background:#111; color:#FFE45E; padding:6px 14px; border-radius:99px; font-size:11px; font-weight:800; }
+            .wow-title { font-size: clamp(32px, 8vw, 52px); font-weight:900; line-height:.9; letter-spacing:-2px; color:#111; margin-top:16px; }
+            .wow-title span { background:#FFE45E; padding:0 10px; transform:rotate(-1.5deg); display:inline-block; }
+            .wow-sub { font-size:13px; color:#6B4E31; max-width:520px; margin:12px auto 0 auto; }
+            /* KATEGORI ROW */
+            .cat-title { font-weight:900; font-size:14px; color:#111; margin:22px 0 10px 18px; display:flex; align-items:center; gap:8px; }
+            .cat-desc { font-size:11px; color:#8B7355; font-weight:500; margin-left:8px; }
+            .h-scroll { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:12px; padding:0 18px 14px 18px; scrollbar-width:thin; }
+            .h-scroll::-webkit-scrollbar { height:6px; } 
+            .h-scroll::-webkit-scrollbar-thumb { background:#E8D5B5; border-radius:99px; }
+            .h-card { flex:0 0 19%; min-width:170px; scroll-snap-align:start; background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; transition:.2s; }
+            .h-card:hover { border-color:#B8860B; transform:translateY(-3px); }
+            .h-card.selected { border-color:#111 !important; border-width:2.5px; box-shadow:4px 4px 0 #FFE45E; }
+            .h-card img { width:100%; height:190px; object-fit:cover; display:block; }
+            .h-footer { padding:8px 10px; display:flex; justify-content:space-between; align-items:center; }
+            .h-name { font-weight:800; font-size:11px; color:#111; }
+            .h-check { width:22px; height:22px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; }
+            .h-check.checked { background:#111; color:#FFE45E; }
+            @media (max-width:768px){
+                .h-card { flex:0 0 46%; min-width:46%; }
+                .h-card img { height:150px; }
             }
             </style>
         """, unsafe_allow_html=True)
 
         st.markdown("""
             <div class="wow-hero">
-                <div class="wow-badge">🔥 12.400+ UNDANGAN TERKIRIM • RATING 4.9/5</div>
-                <div class="wow-title">UNDANGAN<br>YANG BIKIN<br><span>TAMU BILANG WOW</span></div>
-                <div class="wow-sub">Pilih 1-5 template beda buat Keluarga, Kantor, & Sahabat. Isi data sekali, jadi semua. Gak perlu desain.</div>
-                <div class="wow-proof">
-                    <div>⚡ Jadi 3 menit</div>
-                    <div>💌 RSVP 1 Dashboard</div>
-                    <div>🎵 Musik bebas</div>
-                </div>
-                <div class="step-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                <div class="wow-badge">🔥 12.400+ UNDANGAN • SCROLL KE KANAN UNTUK LIHAT LEBIH BANYAK →</div>
+                <div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div>
+                <div class="wow-sub">Geser tiap baris ke kiri. Tiap segmen punya style beda. Pilih max 5.</div>
             </div>
         """, unsafe_allow_html=True)
 
-        c_left, c_mid, c_right = st.columns([1, 1.2, 1])
-        with c_mid:
-            st.markdown("""
-                <div style="margin: -10px 0 18px 0; background: #111; border-radius: 22px; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: rotate(-1deg);">
-                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop" style="width:100%; height:180px; object-fit:cover; border-radius:14px;">
-                    <div style="color:white; padding:10px 4px 4px 4px; display:flex; justify-content:space-between; align-items:center;">
-                        <b style="font-size:13px;">template07 • Raka & Luna</b><span style="background:#FFE45E;color:black;padding:4px 8px;border-radius:99px;font-size:10px;font-weight:900;">LIVE PREVIEW</span>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("<div class='tpl-header'><b style='color:#111;'>🎨 Pilih Template (max 5)</b><span style='font-size:11px;background:#111;color:white;padding:5px 10px;border-radius:99px;'>20 TEMPLATE GEN Z</span></div>", unsafe_allow_html=True)
-        
+        # --- DATA KATEGORI (lo bisa ubah mapping template nya) ---
         template_options = [f"template{i:02d}" for i in range(1, 21)]
         def get_thumb_url(tpl_name):
             num = int(tpl_name.replace("template",""))
@@ -748,59 +684,82 @@ else:
             ]
             return thumbs[num % len(thumbs)] + f"&tpl={tpl_name}"
 
-        default_selected = [t for t in st.session_state.get("selected_templates", ["template01"]) if t in template_options]
-        if not default_selected: default_selected = ["template01"]
-        if "selected_templates" not in st.session_state or not st.session_state["selected_templates"]:
-            st.session_state["selected_templates"] = default_selected
-        if "preview_template" not in st.session_state:
-            st.session_state["preview_template"] = None
+        categories = {
+            "💼 Temen Kantor - Formal & Elegan": ["template01","template02","template03","template04","template05","template06","template07","template08"],
+            "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template09","template10","template11","template12","template13","template14","template05","template06"],
+            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template15","template16","template17","template18","template19","template20","template02","template07"],
+            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template01","template08","template15","template16","template03","template04","template17","template18"],
+            "🕌 Temen Alim - Religius & Berkah": ["template09","template10","template11","template19","template20","template12","template13","template14"],
+        }
 
-        # --- SATU-SATUNYA GRID CARD (5 DESKTOP / 2 HP) ---
-        cols_per_row = 5
-        for i in range(0, len(template_options), cols_per_row):
-            row_templates = template_options[i:i+cols_per_row]
-            cols = st.columns(cols_per_row, gap="small")
-            for col_idx, tpl in enumerate(row_templates):
-                with cols[col_idx]:
-                    is_selected = tpl in st.session_state["selected_templates"]
+        if "selected_templates" not in st.session_state: st.session_state["selected_templates"] = ["template01"]
+        if "preview_template" not in st.session_state: st.session_state["preview_template"] = None
+
+        # --- RENDER 5 BARIS SCROLL ---
+        for cat_idx, (cat_name, tpl_list) in enumerate(categories.items()):
+            st.markdown(f"<div class='cat-title'>{cat_name} <span class='cat-desc'>— geser → {len(tpl_list)} template</span></div>", unsafe_allow_html=True)
+            
+            # Buat container scroll pake columns
+            cols = st.columns(len(tpl_list), gap="small")
+            for c_idx, tpl in enumerate(tpl_list):
+                with cols[c_idx]:
+                    is_sel = tpl in st.session_state["selected_templates"]
+                    # Card HTML
                     st.markdown(f"""
-                        <div class="tpl-card {'selected' if is_selected else ''}">
-                            <img src="{get_thumb_url(tpl)}" class="tpl-card-img">
-                            <div class="tpl-card-footer">
-                                <div class="tpl-card-name">{tpl.upper()}</div>
-                                <div class="tpl-check {'checked' if is_selected else ''}">{'✓' if is_selected else '+'}</div>
+                        <div class="h-card {'selected' if is_sel else ''}" style="margin-bottom:6px;">
+                            <img src="{get_thumb_url(tpl)}">
+                            <div class="h-footer">
+                                <div class="h-name">{tpl.upper()}</div>
+                                <div class="h-check {'checked' if is_sel else ''}">{'✓' if is_sel else '+'}</div>
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
+                    # Button unik per kategori biar gak duplicate
                     if st.button(
-                        "✓ Hapus" if is_selected else "+ Pilih", 
-                        key=f"wow_select_{tpl}_{i}_{col_idx}",
-                        type="primary" if is_selected else "secondary", 
+                        "✓ Hapus" if is_sel else "+ Pilih",
+                        key=f"cat{cat_idx}_sel_{tpl}_{c_idx}",
+                        type="primary" if is_sel else "secondary",
                         use_container_width=True
                     ):
                         cur = st.session_state["selected_templates"]
-                        if is_selected:
+                        if is_sel:
                             if len(cur) > 1: cur.remove(tpl)
-                            else: st.toast("Minimal 1!", icon="⚠️")
+                            else: st.toast("Minimal 1 template!", icon="⚠️")
                         else:
                             if len(cur) < 5: cur.append(tpl)
-                            else: st.toast("Max 5!", icon="🚫")
+                            else: st.toast("Maksimal 5!", icon="🚫")
+                            # Hilangkan duplikat biar gak double karena template ada di 2 kategori
+                            cur = list(dict.fromkeys(cur))
                         st.session_state["selected_templates"] = cur
                         st.rerun()
 
+            # Inject CSS scroll ke row ini
+            st.markdown("""
+                <script>
+                // hack: bikin horizontal block jadi scrollable
+                </script>
+                <style>
+                div[data-testid="stHorizontalBlock"]:has(> div > div > .h-card) {
+                    flex-wrap: nowrap !important;
+                    overflow-x: auto !important;
+                    padding-bottom: 10px !important;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+
+        # --- LOGIC & CTA TETAP ---
         selected_tpls = st.session_state["selected_templates"]
         if len(selected_tpls) == 0:
-            st.warning("⚠️ Pilih minimal 1 template.")
             selected_tpls = ["template01"]
         st.session_state["selected_templates"] = selected_tpls
 
         st.markdown(f"""
-            <div style="position:sticky; bottom:0; background:#111; color:white; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-radius:18px 18px 0 0;">
-                <div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{', '.join(selected_tpls[:3])}{' +'+str(len(selected_tpls)-3) if len(selected_tpls)>3 else ''}</span></div>
+            <div style="position:sticky; bottom:0; background:#111; color:white; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; margin-top:18px; border-radius:18px 18px 0 0; z-index:20;">
+                <div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{', '.join(selected_tpls)}</span></div>
                 <div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div>
             </div>
         """, unsafe_allow_html=True)
-        
+
         st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
         agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
         st.session_state["agreed_terms"] = agreement
@@ -808,8 +767,6 @@ else:
             if st.button("🚀 Lanjutkan Isi Data →", type="primary", use_container_width=True):
                 st.session_state["active_step_idx"] = 1
                 st.rerun()
-        else:
-            st.caption("Centang untuk lanjut ke pengisian data")
 
     # =========================================================
     # TAHAP 2: DESAIN & PREVIEW SWITCHER UNDANGAN MULTI-TEMPLATE
