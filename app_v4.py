@@ -692,14 +692,15 @@ else:
         .wow-title span{background:#FFE45E;padding:0 10px;transform:rotate(-1.5deg);display:inline-block}
         .wow-sub{font-size:13px;color:#6B4E31;max-width:520px;margin:12px auto 0 auto}
         .cat-title{font-weight:900;font-size:14px;color:#111;margin:26px 0 10px 18px}
+        /* SCROLL PAKSA 5 CARD */
         div[data-testid="stHorizontalBlock"]{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;gap:14px!important;padding:0 18px 16px 18px!important;scroll-snap-type:x mandatory!important}
         div[data-testid="stHorizontalBlock"]::-webkit-scrollbar{height:6px}
         div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb{background:#E8D5B5;border-radius:99px}
-        div[data-testid="column"]{min-width:19%!important;max-width:19%!important;flex:0 0 19%!important;scroll-snap-align:start!important}
+        div[data-testid="column"], div[data-testid="stColumn"]{min-width:200px!important;max-width:200px!important;flex:0 0 200px!important;scroll-snap-align:start!important}
         .h-card{background:#fff;border:2px solid #F3E9D9;border-radius:16px;overflow:hidden}
         .h-card.selected{border-color:#111!important;border-width:2.5px;box-shadow:4px 4px 0 #FFE45E}
         .h-card img{width:100%;height:185px;object-fit:cover;display:block}
-        @media(max-width:768px){div[data-testid="column"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
+        @media(max-width:768px){div[data-testid="column"], div[data-testid="stColumn"]{min-width:46%!important;max-width:46%!important;flex:0 0 46%!important}}
         div[data-testid="stStatusWidget"]{display:none!important}
         </style>
         """, unsafe_allow_html=True)
