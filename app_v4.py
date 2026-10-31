@@ -694,23 +694,33 @@ else:
                     st.rerun()
 
         qp = st.query_params
+        # --- INIT DULU BIAR GAK KE-RESET ---
+        if "selected_templates" not in st.session_state:
+            st.session_state["selected_templates"] = ["template01"]
+
         if "preview" in qp:
             preview_dialog(qp["preview"])
+        
         if "pick" in qp:
             tpl = qp["pick"]
-            cur = st.session_state.get("selected_templates", ["template01"])
-            if tpl not in cur and len(cur) < 5:
-                cur.append(tpl)
-                cur = list(dict.fromkeys(cur))
-            st.session_state["selected_templates"] = cur
+            # PASTIKAN AMBIL DARI SESSION YANG ASLI, BUKAN DEFAULT BARU
+            if tpl not in st.session_state["selected_templates"]:
+                if len(st.session_state["selected_templates"]) < 5:
+                    st.session_state["selected_templates"].append(tpl)
+                else:
+                    st.toast("Maksimal 5 template bro!", icon="🚫")
+            # hilangkan duplikat tapi jangan hapus yang lama
+            st.session_state["selected_templates"] = list(dict.fromkeys(st.session_state["selected_templates"]))
             st.query_params.clear()
             st.rerun()
+            
         if "del" in qp:
             tpl = qp["del"]
-            cur = st.session_state.get("selected_templates", ["template01"])
-            if tpl in cur and len(cur) > 1:
-                cur.remove(tpl)
-            st.session_state["selected_templates"] = cur
+            if tpl in st.session_state["selected_templates"]:
+                if len(st.session_state["selected_templates"]) > 1:
+                    st.session_state["selected_templates"].remove(tpl)
+                else:
+                    st.toast("Minimal 1 template harus dipilih!", icon="⚠️")
             st.query_params.clear()
             st.rerun()
 
