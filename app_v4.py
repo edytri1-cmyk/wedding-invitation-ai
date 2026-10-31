@@ -633,118 +633,195 @@ else:
     # =========================================================
     # TAHAP 1: PANDUAN APLIKASI & PEMILIHAN MULTI TEMPLATE (1-5)
     # =========================================================
+        # =========================================================
+    # TAHAP 1: LANDING WOW - RINGAN, SIMPLE, LANGSUNG NGENA
+    # =========================================================
     if "Panduan & Pilih Multi-Template" in active_step or "Panduan Aplikasi" in active_step:
         st.markdown("""
             <style>
-            .hero-title {
-                color: #B8860B;
-                font-family: 'Playfair Display', serif;
-                font-size: 36px;
-                font-weight: 700;
-                line-height: 1.25;
-                margin-bottom: 14px;
+            /* HAPUS BACKGROUND BERAT, GANTI CLEAN */
+            .stApp { background: #FFFBF2 !important; }
+            div.block-container {
+                background: #ffffff !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin-top: 0 !important;
+                max-width: 1100px !important;
             }
-            .hero-desc {
-                color: #6B4E31;
-                font-size: 15px;
-                line-height: 1.65;
-                margin-bottom: 22px;
-            }
-            .feature-box-pink {
-                background: rgba(255, 249, 240, 0.9);
-                color: #B8860B;
-                padding: 18px 16px;
-                border-radius: 16px;
-                border: 1px solid #B8860B;
-                box-shadow: 0 6px 18px rgba(139, 90, 43, 0.1);
-                height: 100%;
-            }
-            .section-heading {
+            /* HERO WOW */
+            .wow-hero {
+                background: #ffffff;
+                padding: 32px 24px 18px 24px;
                 text-align: center;
-                color: #B8860B;
-                font-family: 'Playfair Display', serif;
-                font-size: 24px;
-                font-weight: 600;
-                margin: 32px 0 18px 0;
+                border-bottom: 1px solid #F3E9D9;
             }
-            .security-box {
-                background: linear-gradient(135deg, #5C4033 0%, #8B6914 50%, #B8860B 100%);
-                color: #fff;
-                padding: 22px 24px;
-                border-radius: 16px;
-                border: 1px solid #B8860B;
-                margin-top: 24px;
-                margin-bottom: 24px;
+            .wow-badge {
+                display: inline-flex;
+                gap: 6px;
+                background: #111;
+                color: #FFE45E;
+                padding: 6px 14px;
+                border-radius: 99px;
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: .5px;
+            }
+            .wow-title {
+                font-family: 'Syne', sans-serif;
+                font-size: clamp(32px, 8vw, 54px);
+                font-weight: 800;
+                line-height: 0.9;
+                letter-spacing: -2px;
+                color: #111;
+                margin-top: 18px;
+            }
+            .wow-title span { background: #FFE45E; padding: 0 10px; transform: rotate(-1.5deg); display: inline-block; }
+            .wow-sub {
+                font-size: 14px;
+                color: #6B4E31;
+                max-width: 520px;
+                margin: 14px auto 0 auto;
+                line-height: 1.5;
+                font-weight: 500;
+            }
+            .wow-proof {
+                display: flex;
+                justify-content: center;
+                gap: 18px;
+                margin-top: 18px;
+                font-size: 12px;
+                font-weight: 800;
+                color: #111;
+            }
+            .wow-proof div { display:flex; align-items:center; gap:6px; background:#FFFBF2; border:1.5px solid #E8D5B5; padding:6px 12px; border-radius:99px; }
+            /* STEP DOTS SIMPLE */
+            .step-dots { display:flex; justify-content:center; gap:8px; margin:18px 0 0 0; }
+            .dot { width:32px; height:6px; border-radius:99px; background:#E8D5B5; }
+            .dot.active { background:#B8860B; width:42px; }
+            /* TEMPLATE HEADER STICKY */
+            .tpl-header { position:sticky; top:0; z-index:10; background:rgba(255,251,242,0.9); backdrop-filter:blur(12px); padding:14px 20px; border-bottom:1px solid #F3E9D9; display:flex; justify-content:space-between; align-items:center; }
+            </style>
+        """, unsafe_allow_html=True)
+
+        # --- HERO SUPER RINGAN ---
+        st.markdown("""
+            <div class="wow-hero">
+                <div class="wow-badge">🔥 12.400+ UNDANGAN TERKIRIM • RATING 4.9/5</div>
+                <div class="wow-title">UNDANGAN<br>YANG BIKIN<br><span>TAMU BILANG WOW</span></div>
+                <div class="wow-sub">Pilih 1-5 template beda buat Keluarga, Kantor, & Sahabat. Isi data sekali, jadi semua. Gak perlu desain.</div>
+                <div class="wow-proof">
+                    <div>⚡ Jadi 3 menit</div>
+                    <div>💌 RSVP 1 Dashboard</div>
+                    <div>🎵 Musik bebas</div>
+                </div>
+                <div class="step-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # --- MOCKUP PREVIEW (EFEK WOW VISUAL) ---
+        c_left, c_mid, c_right = st.columns([1, 1.2, 1])
+        with c_mid:
+            st.markdown("""
+                <div style="margin: -10px 0 18px 0; background: #111; border-radius: 22px; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: rotate(-1deg);">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop" style="width:100%; height:180px; object-fit:cover; border-radius:14px;">
+                    <div style="color:white; padding:10px 4px 4px 4px; display:flex; justify-content:space-between; align-items:center;">
+                        <b style="font-size:13px;">template07 • Raka & Luna</b><span style="background:#FFE45E;color:black;padding:4px 8px;border-radius:99px;font-size:10px;font-weight:900;">LIVE PREVIEW</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        # --- TEMPLATE PICKER (TETAP RESPONSIVE 2 HP / 5 DESKTOP) ---
+        st.markdown("<div class='tpl-header'><b style='color:#111;'>🎨 Pilih Template (max 5)</b><span style='font-size:11px;background:#111;color:white;padding:5px 10px;border-radius:99px;'>20 TEMPLATE GEN Z</span></div>", unsafe_allow_html=True)
+        
+        template_options = [f"template{i:02d}" for i in range(1, 21)]
+        def get_thumb_url(tpl_name):
+            num = int(tpl_name.replace("template",""))
+            thumbs = [
+                "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=600&fit=crop",
+            ]
+            return thumbs[num % len(thumbs)] + f"&tpl={tpl_name}"
+
+        default_selected = [t for t in st.session_state.get("selected_templates", ["template01"]) if t in template_options]
+        if not default_selected: default_selected = ["template01"]
+        if "selected_templates" not in st.session_state or not st.session_state["selected_templates"]:
+            st.session_state["selected_templates"] = default_selected
+        if "preview_template" not in st.session_state:
+            st.session_state["preview_template"] = None
+
+        st.markdown("""
+            <style>
+            .tpl-card { background:#fff; border:2px solid #F3E9D9; border-radius:16px; overflow:hidden; transition:.2s; }
+            .tpl-card:hover { transform:translateY(-3px); border-color:#B8860B; box-shadow:0 10px 20px rgba(184,134,11,.12); }
+            .tpl-card.selected { border-color:#111 !important; border-width:2.5px !important; box-shadow:4px 4px 0 #FFE45E; }
+            .tpl-card-img { width:100%; height:160px; object-fit:cover; }
+            .tpl-card-footer { padding:10px 12px; display:flex; justify-content:space-between; align-items:center; }
+            .tpl-card-name { font-weight:800; font-size:12px; color:#111; }
+            .tpl-check { width:24px; height:24px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+            .tpl-check.checked { background:#111; color:#FFE45E; }
+            @media (max-width: 768px) {
+                .tpl-card-img { height:140px !important; }
+                div[data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 0.5rem !important; }
+                div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { flex: 0 0 calc(50% - 0.5rem) !important; width: calc(50% - 0.5rem) !important; min-width: calc(50% - 0.5rem) !important; }
             }
             </style>
         """, unsafe_allow_html=True)
-        
-        st.markdown('<div class="landing-wrapper">', unsafe_allow_html=True)
-        
-        # HERO SECTION
-        hero_col1, hero_col2 = st.columns([1.35, 1])
-        with hero_col1:
-            st.markdown("""
-                <div style="padding-top: 10px;">
-                    <span style="background: #FFF0D6; color: #8B6914; padding: 6px 16px; border-radius: 30px; font-size: 12px; font-weight: 600; border: 1px solid #E8C39E;">
-                        🌸 Wedding Invitation AI Generator Multi-Template
-                    </span>
-                    <h1 class="hero-title" style="margin-top: 18px; color: #B8860B;">
-                        Undang Berbagai Segmen Tamu dengan Template Berbeda
-                    </h1>
-                    <p class="hero-desc">
-                        Buat undangan pernikahan digital yang fleksibel, elegan, dan mudah dibagikan. 
-                        Anda dapat memilih <b>minimal 1 hingga maksimal 5 template</b> sekaligus untuk mengelompokkan segmen tamu (Keluarga, Rekan Kerja, Sahabat, dll).
-                    </p>
-                </div>
-            """, unsafe_allow_html=True)
 
-        with hero_col2:
-            st.markdown("""
-                <div style="border-radius: 20px; overflow: hidden; border: 3px solid #D4AF37; box-shadow: 0 14px 32px rgba(184, 134, 11, 0.2);">
-                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" 
-                         style="width: 100%; height: 310px; object-fit: cover;">
-                </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        # FITUR UTAMA
-        st.markdown('<h2 class="section-heading">✨ Fitur Multi-Template</h2>', unsafe_allow_html=True)
-        
-        f_col1, f_col2, f_col3 = st.columns(3)
-        with f_col1:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #B8860B; font-size: 15px; margin-bottom: 6px;">🎨 Multi-Template Selection</h4>
-                    <p style="font-size: 12.5px; color: #6B4E31; margin: 0;">Pilih hingga 5 desain template sekaligus untuk segmen tamu yang berbeda.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with f_col2:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #B8860B; font-size: 15px; margin-bottom: 6px;">💌 RSVP Terpusat</h4>
-                    <p style="font-size: 12.5px; color: #6B4E31; margin: 0;">Respon RSVP dari seluruh template terpilih akan otomatis terkumpul dalam 1 dashboard.</p>
-                </div>
-            """, unsafe_allow_html=True)
-        with f_col3:
-            st.markdown("""
-                <div class="feature-box-pink">
-                    <h4 style="color: #B8860B; font-size: 15px; margin-bottom: 6px;">🎵 Custom Experience</h4>
-                    <p style="font-size: 12.5px; color: #6B4E31; margin: 0;">Atur musik latar dan isi formulir satu kali untuk diterapkan ke semua pilihan template.</p>
-                </div>
-            """, unsafe_allow_html=True)
+        cols_per_row = 5
+        for i in range(0, len(template_options), cols_per_row):
+            row_templates = template_options[i:i+cols_per_row]
+            cols = st.columns(cols_per_row, gap="small")
+            for col_idx, tpl in enumerate(row_templates):
+                with cols[col_idx]:
+                    is_selected = tpl in st.session_state["selected_templates"]
+                    st.markdown(f"""
+                        <div class="tpl-card {'selected' if is_selected else ''}">
+                            <img src="{get_thumb_url(tpl)}" class="tpl-card-img">
+                            <div class="tpl-card-footer">
+                                <div class="tpl-card-name">{tpl.upper()}</div>
+                                <div class="tpl-check {'checked' if is_selected else ''}">{'✓' if is_selected else '+'}</div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    if st.button("✓ Hapus" if is_selected else "+ Pilih", key=f"select_{tpl}", type="primary" if is_selected else "secondary", use_container_width=True):
+                        cur = st.session_state["selected_templates"]
+                        if is_selected:
+                            if len(cur) > 1: cur.remove(tpl)
+                            else: st.toast("Minimal 1!", icon="⚠️")
+                        else:
+                            if len(cur) < 5: cur.append(tpl)
+                            else: st.toast("Max 5!", icon="🚫")
+                        st.session_state["selected_templates"] = cur
+                        st.rerun()
 
-        # JAMINAN KEAMANAN
-        st.markdown("""
-            <div class="security-box">
-                <h4 style="color: #FFECB3; font-size: 16px; margin-bottom: 10px;">🔒 Jaminan Keamanan & Data Privacy</h4>
-                <p style="font-size: 13px; color: #FFF8E7; margin-bottom: 0; line-height: 1.6;">
-                    Seluruh data pribadi, informasi acara, dan daftar kontak tamu Anda dilindungi dengan enkripsi tingkat tinggi (SSL). 
-                    Kami menjamin kerahasiaan data sesuai standar internasional.
-                </p>
+        # --- LOGIC TETAP ---
+        selected_tpls = st.session_state["selected_templates"]
+        if len(selected_tpls) == 0:
+            st.warning("⚠️ Pilih minimal 1 template.")
+            selected_tpls = ["template01"]
+        st.session_state["selected_templates"] = selected_tpls
+
+        # --- CTA STICKY SIMPLE ---
+        st.markdown(f"""
+            <div style="position:sticky; bottom:0; background:#111; color:white; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-radius:18px 18px 0 0;">
+                <div><b style="font-size:13px;">{len(selected_tpls)} template dipilih</b><br><span style="font-size:11px;opacity:.6;">{', '.join(selected_tpls[:3])}{' +'+str(len(selected_tpls)-3) if len(selected_tpls)>3 else ''}</span></div>
+                <div style="background:#FFE45E;color:black;padding:6px 12px;border-radius:99px;font-size:12px;font-weight:900;">SIAP LANJUT →</div>
             </div>
         """, unsafe_allow_html=True)
+        
+        st.info(f"✨ Terpilih: **{', '.join(selected_tpls)}**")
+        # Checkbox persetujuan dipindah ke bawah CTA biar ringan
+        agreement = st.checkbox("Saya setuju syarat & privacy", value=st.session_state.get("agreed_terms", False))
+        st.session_state["agreed_terms"] = agreement
+        if agreement:
+            if st.button("🚀 Lanjutkan Isi Data →", type="primary", use_container_width=True):
+                st.session_state["active_step_idx"] = 1
+                st.rerun()
+        else:
+            st.caption("Centang untuk lanjut ke pengisian data")
 
         # PEMILIHAN MULTI TEMPLATE (Pilih 1 s.d. 5) - CARD THUMBNAIL RESPONSIVE 2 HP / 5 DESKTOP
         st.markdown("---")
