@@ -127,79 +127,24 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
         return f"<h1>Template {tpl_name} tidak ditemukan</h1>"
     
     html = tpl_path.read_text(encoding='utf-8', errors='ignore')
-    base_dir = tpl_path.parent
-    config = load_template_config(tpl_name)
+    
+    # Cuma mapping data, gak usah inline-inline lagi
+    akad_obj = ctx.get('akad_date_obj')
+    akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
+    
+    reps = {
+        "Wahyu &amp; Riski": f"{ctx.get('groom_name_short','Wahyu')} &amp; {ctx.get('bride_name_short','Riski')}",
+        "Nama Wahyu Siapa": ctx.get('groom_name','Nama Wahyu'),
+        "Nama Riski Siapa": ctx.get('bride_name','Nama Riski'),
+    }
+    for k,v in reps.items():
+        if v: html = html.replace(k, v)
 
-    # === ENGINE ULEM / REPLACE = AUTO BUNDLE JADI 1 FILE ===
-    if config.get("engine") == "ulem_replace":
-        # 1. AUTO INLINE SEMUA CSS
-        css_dir = base_dir / "css"
-        combined_css = ""
-        if css_dir.exists():
-            for css_file in sorted(css_dir.glob("*.css")):
-                try:
-                    combined_css += f"\n/* {css_file.name} */\n" + css_file.read_text(encoding='utf-8', errors='ignore')
-                except: pass
-        
-        if combined_css:
-            html = re.sub(r'<link[^>]*href="\./css/[^"]*\.css"[^>]*>', '', html)
-            html = re.sub(r'<link[^>]*href="\./assets/[^"]*\.css"[^>]*>', '', html)
-            if "</head>" in html:
-                html = html.replace("</head>", f"<style>{combined_css}</style></head>")
-            else:
-                html = f"<style>{combined_css}</style>" + html
+    if ctx.get('photo_url'):
+        # ganti semua placeholder dengan foto user
+        html = re.sub(r'data:image/[^;]+;base64,[^"]+', ctx.get('photo_url'), html, count=1)
 
-        # 2. AUTO INLINE SEMUA JS (support js/ , dist/ , assets/js/ )
-        combined_js = ""
-        for js_folder_name in ["js", "dist", "assets/js"]:
-            js_dir = base_dir / js_folder_name
-            if js_dir.exists():
-                for js_file in sorted(js_dir.rglob("*.js"), key=lambda x: x.stat().st_size):
-                    try:
-                        combined_js += f"\n// {js_file.name}\n" + js_file.read_text(encoding='utf-8', errors='ignore') + "\n"
-                    except: pass
-        
-        if combined_js:
-            html = re.sub(r'<script[^>]*src="\./(js|dist|assets/js)/[^"]*\.js"[^>]*></script>', '', html)
-            # inject sebelum </body>
-            if "</body>" in html:
-                html = html.replace("</body>", f"<script>{combined_js}</script></body>")
-            else:
-                html += f"<script>{combined_js}</script>"
-
-        # 3. FIX PUTIH: Hapus loading screen yang nutupin
-        html = html.replace('id="loading-screen"', 'id="loading-screen" style="display:none!important;"')
-        html = re.sub(r'<div[^>]*class="[^"]*loading[^"]*"[^>]*>', '<div style="display:none!important;">', html, count=1)
-
-        # 4. MAPPING DATA (Wahyu & Riski -> data form)
-        akad_obj = ctx.get('akad_date_obj')
-        akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
-        akad_time_raw = ctx.get('akad_time','09:30:00')
-        akad_time_clean = akad_time_raw.split(' ')[0]
-        if len(akad_time_clean.split(':')) == 1: akad_time_clean += ':00:00'
-        elif len(akad_time_clean.split(':')) == 2: akad_time_clean += ':00'
-
-        reps = {
-            "Wahyu &amp; Riski": f"{ctx.get('groom_name_short','Wahyu')} &amp; {ctx.get('bride_name_short','Riski')}",
-            "Wahyu & Riski": f"{ctx.get('groom_name_short','Wahyu')} & {ctx.get('bride_name_short','Riski')}",
-            "Nama Wahyu Siapa": ctx.get('groom_name','Nama Wahyu'),
-            "Nama Riski Siapa": ctx.get('bride_name','Nama Riski'),
-            'data-time="2024-01-01 09:30:00"': f'data-time="{akad_str} {akad_time_clean}"',
-        }
-        for k,v in reps.items():
-            if v: html = html.replace(k, v)
-
-        if ctx.get('photo_url'):
-            html = html.replace("./assets/images/bg.webp", ctx.get('photo_url'))
-            html = html.replace("./assets/images/placeholder.webp", ctx.get('photo_url'))
-            html = html.replace("https://ulems.my.id/assets/images/bg.webp", ctx.get('photo_url'))
-
-        return html
-
-    # === ENGINE JINJA LAMA (template01, template02) ===
-    else:
-        from jinja2 import Template as JinjaTemplate
-        return JinjaTemplate(html).render(**ctx)
+    return html
         
 # =========================================================
 # END UNIVERSAL ENGINE
