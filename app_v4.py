@@ -118,6 +118,9 @@ def load_template_config(tpl_name: str):
             return {}
     return {}
 
+import re
+from pathlib import Path
+
 def render_any_template(tpl_name: str, ctx: dict) -> str:
     tpl_path = resolve_template_path(tpl_name)
     if not tpl_path:
@@ -125,52 +128,56 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
     
     html = tpl_path.read_text(encoding='utf-8', errors='ignore')
     base_dir = tpl_path.parent
-
     config = load_template_config(tpl_name)
 
-    if tpl_name == "FORMAL_KANTOR_01" or config.get("engine") == "ulem_replace":
-        # 1. Inline SEMUA CSS
-        css_files = ["common.css", "animation.css", "guest.css", "admin.css"]
+    # === ENGINE ULEM / REPLACE = AUTO BUNDLE JADI 1 FILE ===
+    if config.get("engine") == "ulem_replace":
+        # 1. AUTO INLINE SEMUA CSS
+        css_dir = base_dir / "css"
         combined_css = ""
-        for css_name in css_files:
-            p = base_dir / "css" / css_name
-            if p.exists():
-                combined_css += "\n" + p.read_text(encoding='utf-8', errors='ignore')
-        if combined_css:
-            html = html.replace("</head>", f"<style>{combined_css}</style></head>")
-
-        # 2. FIX JS - AUTO DETECT FILE APAPUN DI FOLDER js/
-        js_dir = base_dir / "js"
-        js_content = ""
-        if js_dir.exists():
-            # Cari file js apapun
-            js_files = list(js_dir.rglob("*.js"))
-            if js_files:
-                # Ambil file terbesar (biasanya guest.js / app.js)
-                js_files_sorted = sorted(js_files, key=lambda x: x.stat().st_size, reverse=True)
-                js_path = js_files_sorted[0]
-                js_content = js_path.read_text(encoding='utf-8', errors='ignore')
+        if css_dir.exists():
+            for css_file in sorted(css_dir.glob("*.css")):
+                try:
+                    combined_css += f"\n/* {css_file.name} */\n" + css_file.read_text(encoding='utf-8', errors='ignore')
+                except: pass
         
-        if js_content:
-            # Hapus semua tag script lama, ganti dengan inline
-            import re
-            html = re.sub(r'<script src="\./(dist|js)/.*?\.js"></script>', f"<script>{js_content}</script>", html)
-            # Kalau gak ke-replace, inject sebelum </body>
-            if "<script>" not in html[-2000:] or js_content[:20] not in html:
-                html = html.replace("</body>", f"<script>{js_content}</script></body>")
+        if combined_css:
+            html = re.sub(r'<link[^>]*href="\./css/[^"]*\.css"[^>]*>', '', html)
+            html = re.sub(r'<link[^>]*href="\./assets/[^"]*\.css"[^>]*>', '', html)
+            if "</head>" in html:
+                html = html.replace("</head>", f"<style>{combined_css}</style></head>")
+            else:
+                html = f"<style>{combined_css}</style>" + html
 
-        # 3. Paksa hapus loading screen yang bikin putih
+        # 2. AUTO INLINE SEMUA JS (support js/ , dist/ , assets/js/ )
+        combined_js = ""
+        for js_folder_name in ["js", "dist", "assets/js"]:
+            js_dir = base_dir / js_folder_name
+            if js_dir.exists():
+                for js_file in sorted(js_dir.rglob("*.js"), key=lambda x: x.stat().st_size):
+                    try:
+                        combined_js += f"\n// {js_file.name}\n" + js_file.read_text(encoding='utf-8', errors='ignore') + "\n"
+                    except: pass
+        
+        if combined_js:
+            html = re.sub(r'<script[^>]*src="\./(js|dist|assets/js)/[^"]*\.js"[^>]*></script>', '', html)
+            # inject sebelum </body>
+            if "</body>" in html:
+                html = html.replace("</body>", f"<script>{combined_js}</script></body>")
+            else:
+                html += f"<script>{combined_js}</script>"
+
+        # 3. FIX PUTIH: Hapus loading screen yang nutupin
         html = html.replace('id="loading-screen"', 'id="loading-screen" style="display:none!important;"')
+        html = re.sub(r'<div[^>]*class="[^"]*loading[^"]*"[^>]*>', '<div style="display:none!important;">', html, count=1)
 
-        # 4. Mapping data
+        # 4. MAPPING DATA (Wahyu & Riski -> data form)
         akad_obj = ctx.get('akad_date_obj')
         akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
         akad_time_raw = ctx.get('akad_time','09:30:00')
         akad_time_clean = akad_time_raw.split(' ')[0]
-        if len(akad_time_clean.split(':')) == 1:
-            akad_time_clean += ':00:00'
-        elif len(akad_time_clean.split(':')) == 2:
-            akad_time_clean += ':00'
+        if len(akad_time_clean.split(':')) == 1: akad_time_clean += ':00:00'
+        elif len(akad_time_clean.split(':')) == 2: akad_time_clean += ':00'
 
         reps = {
             "Wahyu &amp; Riski": f"{ctx.get('groom_name_short','Wahyu')} &amp; {ctx.get('bride_name_short','Riski')}",
@@ -178,19 +185,18 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
             "Nama Wahyu Siapa": ctx.get('groom_name','Nama Wahyu'),
             "Nama Riski Siapa": ctx.get('bride_name','Nama Riski'),
             'data-time="2024-01-01 09:30:00"': f'data-time="{akad_str} {akad_time_clean}"',
-            "Rabu, 15 Maret 2023": ctx.get('akad_date_str','15 Maret 2024'),
-            "Pukul 10.00 WIB - Selesai": ctx.get('akad_time','Pukul 10.00 WIB'),
-            "Pukul 13.00 WIB - Selesai": ctx.get('resep_time','Pukul 13.00 WIB'),
         }
         for k,v in reps.items():
-            if v:
-                html = html.replace(k, v)
+            if v: html = html.replace(k, v)
 
         if ctx.get('photo_url'):
             html = html.replace("./assets/images/bg.webp", ctx.get('photo_url'))
             html = html.replace("./assets/images/placeholder.webp", ctx.get('photo_url'))
+            html = html.replace("https://ulems.my.id/assets/images/bg.webp", ctx.get('photo_url'))
 
         return html
+
+    # === ENGINE JINJA LAMA (template01, template02) ===
     else:
         from jinja2 import Template as JinjaTemplate
         return JinjaTemplate(html).render(**ctx)
