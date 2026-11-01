@@ -129,39 +129,40 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
     config = load_template_config(tpl_name)
 
     if tpl_name == "FORMAL_KANTOR_01" or config.get("engine") == "ulem_replace":
-        # --- FIX: Support js/ dan dist/ ---
-        # 1. Inline SEMUA CSS (common, animation, guest)
-        css_files = ["common.css", "animation.css", "guest.css"]
+        # 1. Inline SEMUA CSS
+        css_files = ["common.css", "animation.css", "guest.css", "admin.css"]
         combined_css = ""
         for css_name in css_files:
             p = base_dir / "css" / css_name
             if p.exists():
                 combined_css += "\n" + p.read_text(encoding='utf-8', errors='ignore')
-        
         if combined_css:
-            # Hapus semua link css lama, ganti 1 style gabungan
-            html = html.replace('<link rel="stylesheet" href="./css/guest.css">', '')
-            html = html.replace('<link rel="stylesheet" href="./css/common.css">', '')
-            html = html.replace('<link rel="stylesheet" href="./css/animation.css">', '')
-            html = html.replace('<link rel="stylesheet" href="./css/admin.css">', '')
-            # Inject sebelum </head>
             html = html.replace("</head>", f"<style>{combined_css}</style></head>")
 
-        # 2. Inline JS - cek js/ dulu baru dist/
-        js_candidates = [base_dir / "js" / "guest.js", base_dir / "dist" / "guest.js", base_dir / "js" / "common.js"]
-        for js_path in js_candidates:
-            if js_path.exists():
+        # 2. FIX JS - AUTO DETECT FILE APAPUN DI FOLDER js/
+        js_dir = base_dir / "js"
+        js_content = ""
+        if js_dir.exists():
+            # Cari file js apapun
+            js_files = list(js_dir.rglob("*.js"))
+            if js_files:
+                # Ambil file terbesar (biasanya guest.js / app.js)
+                js_files_sorted = sorted(js_files, key=lambda x: x.stat().st_size, reverse=True)
+                js_path = js_files_sorted[0]
                 js_content = js_path.read_text(encoding='utf-8', errors='ignore')
-                # Hapus tag script lama apapun path-nya
-                html = html.replace('<script src="./dist/guest.js"></script>', f"<script>{js_content}</script>", 1)
-                html = html.replace('<script src="./js/guest.js"></script>', f"<script>{js_content}</script>", 1)
-                break
+        
+        if js_content:
+            # Hapus semua tag script lama, ganti dengan inline
+            import re
+            html = re.sub(r'<script src="\./(dist|js)/.*?\.js"></script>', f"<script>{js_content}</script>", html)
+            # Kalau gak ke-replace, inject sebelum </body>
+            if "<script>" not in html[-2000:] or js_content[:20] not in html:
+                html = html.replace("</body>", f"<script>{js_content}</script></body>")
 
-        # 3. Paksa hapus loading screen biar gak nutupin putih
+        # 3. Paksa hapus loading screen yang bikin putih
         html = html.replace('id="loading-screen"', 'id="loading-screen" style="display:none!important;"')
-        html = html.replace('class="loading-screen"', 'class="loading-screen" style="display:none!important;"')
 
-        # 4. Mapping data (Wahyu & Riski -> data asli)
+        # 4. Mapping data
         akad_obj = ctx.get('akad_date_obj')
         akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
         akad_time_raw = ctx.get('akad_time','09:30:00')
@@ -180,7 +181,6 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
             "Rabu, 15 Maret 2023": ctx.get('akad_date_str','15 Maret 2024'),
             "Pukul 10.00 WIB - Selesai": ctx.get('akad_time','Pukul 10.00 WIB'),
             "Pukul 13.00 WIB - Selesai": ctx.get('resep_time','Pukul 13.00 WIB'),
-            "./assets/music/pure-love-304010.mp3": ctx.get('music_url','./assets/music/pure-love-304010.mp3'),
         }
         for k,v in reps.items():
             if v:
