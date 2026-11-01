@@ -90,6 +90,92 @@ def file_to_base64(uploaded_file):
         return f"data:{mime_type};base64,{base64_encoded}"
     return None
 
+# =========================================================
+# UNIVERSAL TEMPLATE ENGINE - ANTI PATCH SELAMANYA
+# =========================================================
+from pathlib import Path
+import json as _json_mod
+
+def resolve_template_path(tpl_name: str):
+    candidates = [
+        Path(f"templates/{tpl_name}/index.html"),
+        Path(f"templates/OLD_TEMPLATE/{tpl_name}.html"),
+        Path(f"templates/{tpl_name}.html"),
+        Path(f"{tpl_name}.html"),
+        Path("template.html"),
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    return None
+
+def load_template_config(tpl_name: str):
+    cfg_path = Path(f"templates/{tpl_name}/config.json")
+    if cfg_path.exists():
+        try:
+            return _json_mod.loads(cfg_path.read_text(encoding='utf-8'))
+        except Exception:
+            return {}
+    return {}
+
+def render_any_template(tpl_name: str, ctx: dict) -> str:
+    tpl_path = resolve_template_path(tpl_name)
+    if not tpl_path:
+        return f"<h1>Template {tpl_name} tidak ditemukan</h1>"
+    html = tpl_path.read_text(encoding='utf-8', errors='ignore')
+    config = load_template_config(tpl_name)
+    if config.get("colors"):
+        colors = config["colors"]
+        fonts = config.get("fonts", {})
+        inject = f"<style>:root{{--primary:{colors.get('primary','#0F172A')} !important; --secondary:{colors.get('secondary','#C9A86A')} !important;}} .font-esthetic{{font-family:'{fonts.get('heading','Playfair Display')}', serif !important;}}</style></head>"
+        if "</head>" in html:
+            html = html.replace("</head>", inject)
+    if tpl_name == "FORMAL_KANTOR_01" or config.get("engine") == "ulem_replace":
+        akad_obj = ctx.get('akad_date_obj')
+        akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
+        akad_time_raw = ctx.get('akad_time','09:30:00')
+        akad_time_clean = akad_time_raw.split(' ')[0]
+        if len(akad_time_clean.split(':')) == 1:
+            akad_time_clean = akad_time_clean + ':00:00'
+        elif len(akad_time_clean.split(':')) == 2:
+            akad_time_clean = akad_time_clean + ':00'
+        reps = {
+            "Wahyu &amp; Riski": f"{ctx.get('groom_name_short','Wahyu')} &amp; {ctx.get('bride_name_short','Riski')}",
+            "Wahyu & Riski": f"{ctx.get('groom_name_short','Wahyu')} & {ctx.get('bride_name_short','Riski')}",
+            "Nama Wahyu Siapa": ctx.get('groom_name','Nama Wahyu'),
+            "Nama Riski Siapa": ctx.get('bride_name','Nama Riski'),
+            'data-time="2024-01-01 09:30:00"': f'data-time="{akad_str} {akad_time_clean}"',
+            "Rabu, 15 Maret 2023": ctx.get('akad_date_str','15 Maret 2024'),
+            "Pukul 10.00 WIB - Selesai": ctx.get('akad_time','Pukul 10.00 WIB'),
+            "Pukul 13.00 WIB - Selesai": ctx.get('resep_time','Pukul 13.00 WIB'),
+            "./assets/music/pure-love-304010.mp3": ctx.get('music_url','./assets/music/pure-love-304010.mp3'),
+        }
+        for k,v in reps.items():
+            if v:
+                html = html.replace(k, v)
+        if ctx.get('groom_parents'):
+            html = html.replace("Bapak lorem ipsum", ctx.get('groom_parents'), 1)
+        if ctx.get('bride_parents'):
+            html = html.replace("Bapak lorem ipsum", ctx.get('bride_parents'), 1)
+        if ctx.get('photo_url'):
+            html = html.replace("./assets/images/bg.webp", ctx.get('photo_url'))
+            html = html.replace("https://ulems.my.id/assets/images/bg.webp", ctx.get('photo_url'))
+        glist = ctx.get('gallery_list',[])
+        if glist:
+            for i in range(1,7):
+                if i-1 < len(glist):
+                    html = html.replace(f"https://picsum.photos/1280/720?random={i}", glist[i-1])
+            for i in range(7,13):
+                if i-7 < len(glist):
+                    html = html.replace(f"https://picsum.photos/1000/1000?random={i}", glist[i-7])
+        return html
+    else:
+        from jinja2 import Template as JinjaTemplate
+        return JinjaTemplate(html).render(**ctx)
+# =========================================================
+# END UNIVERSAL ENGINE
+# =========================================================
+
 def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
     GROQ_KEY = os.environ.get("GROQ_API_KEY", "")
