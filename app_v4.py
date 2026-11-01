@@ -124,29 +124,44 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
         return f"<h1>Template {tpl_name} tidak ditemukan</h1>"
     
     html = tpl_path.read_text(encoding='utf-8', errors='ignore')
-    base_dir = tpl_path.parent  # templates/FORMAL_KANTOR_01/
+    base_dir = tpl_path.parent
 
-    # --- INLINING CSS & JS UNTUK PREVIEW STREAMLIT (KUNCI ANTI-PUTIH) ---
     config = load_template_config(tpl_name)
-    
+
     if tpl_name == "FORMAL_KANTOR_01" or config.get("engine") == "ulem_replace":
-        # 1. Inline guest.css biar gak 404
-        css_path = base_dir / "css" / "guest.css"
-        if css_path.exists():
-            css_content = css_path.read_text(encoding='utf-8', errors='ignore')
-            html = html.replace('<link rel="stylesheet" href="./css/guest.css">', f"<style>{css_content}</style>")
+        # --- FIX: Support js/ dan dist/ ---
+        # 1. Inline SEMUA CSS (common, animation, guest)
+        css_files = ["common.css", "animation.css", "guest.css"]
+        combined_css = ""
+        for css_name in css_files:
+            p = base_dir / "css" / css_name
+            if p.exists():
+                combined_css += "\n" + p.read_text(encoding='utf-8', errors='ignore')
+        
+        if combined_css:
+            # Hapus semua link css lama, ganti 1 style gabungan
+            html = html.replace('<link rel="stylesheet" href="./css/guest.css">', '')
+            html = html.replace('<link rel="stylesheet" href="./css/common.css">', '')
+            html = html.replace('<link rel="stylesheet" href="./css/animation.css">', '')
+            html = html.replace('<link rel="stylesheet" href="./css/admin.css">', '')
+            # Inject sebelum </head>
+            html = html.replace("</head>", f"<style>{combined_css}</style></head>")
 
-        # 2. Inline guest.js biar gak 404
-        js_path = base_dir / "dist" / "guest.js"
-        if js_path.exists():
-            js_content = js_path.read_text(encoding='utf-8', errors='ignore')
-            html = html.replace('<script src="./dist/guest.js"></script>', f"<script>{js_content}</script>")
+        # 2. Inline JS - cek js/ dulu baru dist/
+        js_candidates = [base_dir / "js" / "guest.js", base_dir / "dist" / "guest.js", base_dir / "js" / "common.js"]
+        for js_path in js_candidates:
+            if js_path.exists():
+                js_content = js_path.read_text(encoding='utf-8', errors='ignore')
+                # Hapus tag script lama apapun path-nya
+                html = html.replace('<script src="./dist/guest.js"></script>', f"<script>{js_content}</script>", 1)
+                html = html.replace('<script src="./js/guest.js"></script>', f"<script>{js_content}</script>", 1)
+                break
 
-        # 3. Fix placeholder biar gak putih
-        placeholder_fix = ctx.get('photo_url') or "https://via.placeholder.com/400"
-        html = html.replace("./assets/images/placeholder.webp", placeholder_fix)
+        # 3. Paksa hapus loading screen biar gak nutupin putih
+        html = html.replace('id="loading-screen"', 'id="loading-screen" style="display:none!important;"')
+        html = html.replace('class="loading-screen"', 'class="loading-screen" style="display:none!important;"')
 
-        # 4. MAPPING VARIABEL FORM -> ULEM
+        # 4. Mapping data (Wahyu & Riski -> data asli)
         akad_obj = ctx.get('akad_date_obj')
         akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
         akad_time_raw = ctx.get('akad_time','09:30:00')
@@ -167,29 +182,16 @@ def render_any_template(tpl_name: str, ctx: dict) -> str:
             "Pukul 13.00 WIB - Selesai": ctx.get('resep_time','Pukul 13.00 WIB'),
             "./assets/music/pure-love-304010.mp3": ctx.get('music_url','./assets/music/pure-love-304010.mp3'),
         }
-        for k, v in reps.items():
+        for k,v in reps.items():
             if v:
                 html = html.replace(k, v)
 
-        if ctx.get('groom_parents'):
-            html = html.replace("Bapak lorem ipsum", ctx.get('groom_parents'), 1)
-        if ctx.get('bride_parents'):
-            html = html.replace("Bapak lorem ipsum", ctx.get('bride_parents'), 1)
-        
         if ctx.get('photo_url'):
             html = html.replace("./assets/images/bg.webp", ctx.get('photo_url'))
-            html = html.replace("https://ulems.my.id/assets/images/bg.webp", ctx.get('photo_url'))
-
-        glist = ctx.get('gallery_list', [])
-        if glist:
-            for i in range(1,7):
-                if i-1 < len(glist):
-                    html = html.replace(f"https://picsum.photos/1280/720?random={i}", glist[i-1])
+            html = html.replace("./assets/images/placeholder.webp", ctx.get('photo_url'))
 
         return html
-
     else:
-        # ENGINE LAMA (JINJA) - template01, template02, dll
         from jinja2 import Template as JinjaTemplate
         return JinjaTemplate(html).render(**ctx)
         
