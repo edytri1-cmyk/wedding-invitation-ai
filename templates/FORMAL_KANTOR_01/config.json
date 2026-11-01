@@ -1,1 +1,32 @@
-
+{
+  "id": "FORMAL_KANTOR_01",
+  "name": "Formal Kantor - Bos Eksekutif",
+  "segment": "bos_kantor_pejabat",
+  "version": "1.0",
+  "colors": {
+    "primary": "#0F172A",
+    "secondary": "#C9A86A",
+    "accent": "#F8FAFC",
+    "text_dark": "#1E293B",
+    "text_light": "#FFFFFF"
+  },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Inter",
+    "accent": "Cormorant Garamond"
+  },
+  "style": {
+    "border_radius": "4px",
+    "button_style": "sharp_elegant",
+    "animation": "fade_up_soft",
+    "layout": "center_formal"
+  },
+  "fields_required": [
+    "nama_pria",
+    "nama_wanita",
+    "tanggal_akad",
+    "lokasi",
+    "nama_ortu"
+  ],
+  "price_tier": "premium"
+}
