@@ -1111,6 +1111,9 @@ else:
                     
                     st.info(f"📱 Menampilkan Pratinjau: **{preview_choice}**")
                     st.components.v1.html(rendered_templates[preview_choice], height=800, scrolling=True)
+                    st.write(f"DEBUG - CSS ada? {Path(f'templates/{preview_choice}/css/guest.css').exists()}")
+                    st.write(f"DEBUG - JS ada? {Path(f'templates/{preview_choice}/dist/guest.js').exists()}")
+                    st.write(f"DEBUG - Folder isi: {list(Path(f'templates/{preview_choice}').glob('*'))}")
                 else:
                     st.info("Silakan atur data di sebelah kiri lalu klik tombol **Generate & Render** untuk melihat pratinjau.")
 
