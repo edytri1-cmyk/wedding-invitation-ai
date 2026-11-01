@@ -997,63 +997,57 @@ else:
 
                 if btn_generate:
                     with st.spinner(f"Merangkai data untuk {len(selected_templates_list)} template terpilih..."):
-                        
+
                         rendered_templates = {}
                         for tpl_name in selected_templates_list:
-                            target_tpl_file = f"{tpl_name}.html"
-                            template_filename = target_tpl_file if os.path.exists(target_tpl_file) else "template.html"
-
-                            if os.path.exists(template_filename):
-                                with open(template_filename, "r", encoding="utf-8") as f:
-                                    template_content = f.read()
-                            else:
-                                template_content = f"<h1>Template {tpl_name} tidak ditemukan. Memakai fallback template.</h1>"
-
-                            jinja_template = Template(template_content)
-                            rendered_html = jinja_template.render(
-                                couple_initials=couple_initials,
-                                groom_name=groom_name,
-                                groom_name_short=groom_name_short,
-                                bride_name=bride_name,
-                                bride_name_short=bride_name_short,
-                                bride_photo=bride_photo,
-                                groom_photo=groom_photo,
-                                bride_parents=bride_parents,
-                                groom_parents=groom_parents,
-                                intro_greeting=intro_greeting,
-                                akad_date=akad_date.strftime("%d %B %Y"),
-                                raw_event_date=akad_date.strftime("%Y-%m-%d"),
-                                akad_time=akad_time,
-                                akad_venue=akad_venue,
-                                akad_address=akad_address,
-                                akad_maps_url=akad_maps_url,
-                                resep_date=resep_date.strftime("%d %B %Y"),
-                                resep_time=resep_time,
-                                resep_venue=resep_venue,
-                                resep_address=resep_address,
-                                resep_maps_url=resep_maps_url,
-                                event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
-                                story_photo=story_photo,
-                                story_date_1=story_date_1,
-                                story_title_1=story_title_1,
-                                story_desc_1=story_desc_1,
-                                story_date_2=story_date_2,
-                                story_title_2=story_title_2,
-                                story_desc_2=story_desc_2,
-                                story_date_3=story_date_3,
-                                story_title_3=story_title_3,
-                                story_desc_3=story_desc_3,
-                                gallery_list=gallery_list,
-                                quote_text=quote_text,
-                                closing_photo=closing_photo,
-                                photo_url=cover_photo_url,
-                                music_url=final_music_url,
-                                guest_name=test_guest_name,
-                                current_user_id=current_user
-                            )
+                            ctx = {
+                                "couple_initials": couple_initials,
+                                "groom_name": groom_name,
+                                "groom_name_short": groom_name_short,
+                                "bride_name": bride_name,
+                                "bride_name_short": bride_name_short,
+                                "bride_photo": bride_photo,
+                                "groom_photo": groom_photo,
+                                "bride_parents": bride_parents,
+                                "groom_parents": groom_parents,
+                                "intro_greeting": intro_greeting,
+                                "akad_date": akad_date.strftime("%d %B %Y"),
+                                "akad_date_str": akad_date.strftime("%d %B %Y"),
+                                "akad_date_obj": akad_date,
+                                "raw_event_date": akad_date.strftime("%Y-%m-%d"),
+                                "akad_time": akad_time,
+                                "akad_venue": akad_venue,
+                                "akad_address": akad_address,
+                                "akad_maps_url": akad_maps_url,
+                                "resep_date": resep_date.strftime("%d %B %Y"),
+                                "resep_time": resep_time,
+                                "resep_venue": resep_venue,
+                                "resep_address": resep_address,
+                                "resep_maps_url": resep_maps_url,
+                                "event_city": resep_address.split(",")[-1].strip() if resep_address else "Bandung",
+                                "story_photo": story_photo,
+                                "story_date_1": story_date_1,
+                                "story_title_1": story_title_1,
+                                "story_desc_1": story_desc_1,
+                                "story_date_2": story_date_2,
+                                "story_title_2": story_title_2,
+                                "story_desc_2": story_desc_2,
+                                "story_date_3": story_date_3,
+                                "story_title_3": story_title_3,
+                                "story_desc_3": story_desc_3,
+                                "gallery_list": gallery_list,
+                                "quote_text": quote_text,
+                                "closing_photo": closing_photo,
+                                "photo_url": cover_photo_url,
+                                "music_url": final_music_url,
+                                "guest_name": test_guest_name,
+                                "current_user_id": current_user
+                            }
+                            rendered_html = render_any_template(tpl_name, ctx)
                             rendered_templates[tpl_name] = rendered_html
 
                         st.session_state["rendered_templates"] = rendered_templates
+                        
                         st.session_state["design_ready"] = True
                         st.session_state["groom_name"] = groom_name
                         st.session_state["bride_name"] = bride_name
