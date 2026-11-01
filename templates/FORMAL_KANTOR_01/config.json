@@ -1,32 +1,14 @@
 {
   "id": "FORMAL_KANTOR_01",
   "name": "Formal Kantor - Bos Eksekutif",
-  "segment": "bos_kantor_pejabat",
-  "version": "1.0",
-  "colors": {
-    "primary": "#0F172A",
-    "secondary": "#C9A86A",
-    "accent": "#F8FAFC",
-    "text_dark": "#1E293B",
-    "text_light": "#FFFFFF"
-  },
-  "fonts": {
-    "heading": "Playfair Display",
-    "body": "Inter",
-    "accent": "Cormorant Garamond"
-  },
-  "style": {
-    "border_radius": "4px",
-    "button_style": "sharp_elegant",
-    "animation": "fade_up_soft",
-    "layout": "center_formal"
-  },
-  "fields_required": [
-    "nama_pria",
-    "nama_wanita",
-    "tanggal_akad",
-    "lokasi",
-    "nama_ortu"
-  ],
-  "price_tier": "premium"
+  "engine": "ulem_replace",
+  "colors": { "primary": "#0F172A", "secondary": "#C9A86A" },
+  "fonts": { "heading": "Playfair Display", "body": "Inter" },
+  "mapping": {
+    "Wahyu &amp; Riski": "{{groom_short}} &amp; {{bride_short}}",
+    "Nama Wahyu Siapa": "{{groom_name}}",
+    "Nama Riski Siapa": "{{bride_name}}",
+    "Bapak lorem ipsum": "{{groom_parents}}",
+    "data-time=\"2024-01-01 09:30:00\"": "data-time=\"{{akad_datetime}}\""
+  }
 }
