@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Pernikahan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #F8F1E9;
+      --bg-soft: #F3EBE0;
+      --card: #FFFdf9;
+      --text: #3F2E1F;
+      --text-muted: #7A6A58;
+      --accent: #C4A484;
+      --accent-dark: #4A3B2A;
+      --dark: #4A3B2A;
+      --border: #E8DFD2;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #2C241B;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .invitation {
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--bg);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    section {
+      padding: 50px 28px;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    /* ========== OPENING CARD ========== */
+    .opening {
+      background: var(--bg);
+      padding: 40px 24px 50px;
+      text-align: center;
+    }
+
+    .opening-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 40px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .opening-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 55%;
+      height: 100%;
+      background: linear-gradient(135deg, #EDE0D0, #E5D5C0);
+      clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .opening-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .couple-names-large {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.15;
+      margin: 12px 0;
+    }
+
+    .monogram {
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--text);
+      margin: 18px auto;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .guest-box {
+      margin: 28px 0 20px;
+    }
+
+    .guest-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .guest-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    .btn-open {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 32px;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-open:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .opening-footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      background: var(--bg-soft);
+      padding: 50px 28px;
+    }
+
+    .hero-photo {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 8px solid #fff;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+    }
+
+    .hero-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .hero-info {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+	
+	.date-small {
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: var(--accent-dark);
+      margin-bottom: 16px;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 28px auto 0;
+      width: 100%;
+      max-width: 340px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px 10px;
+      flex: 1 1 58px;
+      min-width: 0;
+      max-width: 78px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .countdown-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      display: block;
+    }
+
+    .countdown-finished {
+      flex: 1 1 100%;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--dark);
+    }
+
+    .countdown-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* ========== SALAM & COUPLE ========== */
+    .salam {
+      background: var(--bg);
+    }
+
+    .couple-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 36px;
+    }
+
+    .couple-card {
+      text-align: center;
+    }
+
+    .couple-photo {
+      width: 140px;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 80px 80px 12px 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .couple-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .couple-parents {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+/* ========== STORY ========== */
+    .story-section {
+      background: var(--bg);
+    }
+
+    .timeline {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .timeline-year {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-dark);
+      min-width: 42px;
+      padding-top: 3px;
+    }
+
+    .timeline-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .timeline-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ========== HALAMAN GALERI (CAROUSEL) ========== */
+    #page-gallery { background: #FFF0F5; }
+    .carousel-container {
+      width: 100%;
+      max-width: 382px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .carousel-slide {
+      min-width: 100%;
+      height: 320px;
+      background-size: cover;
+      background-position: center;
+      background-color: #FCE4EC;
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(236, 64, 122, 0.75);
+      color: white;
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .carousel-btn.prev { left: 10px; }
+    .carousel-btn.next { right: 10px; }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .carousel-dot {
+      width: 8px; height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #F8BBD0;
+      cursor: pointer;
+    }
+    .carousel-dot.active { background: #EC407A; }
+
+    /* ========== EVENTS ========== */
+    .events {
+      background: var(--bg);
+    }
+
+    .event-cards {
+      display: grid;
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .event-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+
+    .event-type {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .event-detail {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .btn-maps {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 8px 18px;
+      border: 1px solid var(--dark);
+      border-radius: 50px;
+      font-size: 11px;
+      color: var(--dark);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========== GALLERY ========== */
+    .gallery {
+      background: var(--bg-soft);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .gallery-item {
+      border-radius: 12px;
+      overflow: hidden;
+      height: 120px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ========== RSVP ========== */
+    .rsvp-section {
+      background: var(--bg);
+    }
+
+    .form-container {
+      max-width: 340px;
+      margin: 28px auto 0;
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent-dark);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #4A5A44;
+    }
+
+    /* ========== CLOSING ========== */
+    .closing {
+      background: var(--dark);
+      color: #F5F0E6;
+      padding: 60px 28px;
+    }
+
+    .closing .section-title {
+      color: #F5F0E6;
+    }
+
+    .closing-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      margin-top: 16px;
+    }
+
+    .thankyou {
+      font-family: 'Great Vibes', cursive;
+      font-size: 28px;
+      margin: 16px 0;
+    }
+
+    /* MUSIC BUTTON */
+    .music-player-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      background: #EC407A;
+      color: #FFF5F7;
+      border: 1px solid #F8BBD0;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+    .music-player-float:hover { transform: scale(1.1); }
+    .music-player-float.playing svg { animation: spin 3s linear infinite; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    img { max-width: 100%; }
+
+    @media (max-width: 360px) {
+      section { padding: 40px 18px; }
+      .opening { padding: 32px 16px 40px; }
+      .opening-card { padding: 32px 18px; }
+      .couple-names-large { font-size: 36px; }
+      .hero-photo { width: min(250px, 85vw); height: min(250px, 85vw); }
+      .hero-names { font-size: 30px; }
+      .countdown { gap: 6px; }
+      .countdown-item { padding: 10px 6px; }
+      .countdown-number { font-size: 21px; }
+      .couple-grid { gap: 12px; }
+      .couple-photo { width: 100%; height: 145px; }
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="invitation">
+
+    <!-- OPENING -->
+    <section class="opening">
+      <div class="opening-card">
+        <div class="opening-content">
+          <p class="section-label">Surat Undangan</p>
+          <h1 class="couple-names-large">{{ bride_name_short }}
+          <span class="and">&</span>{{ groom_name_short }}</h1>
+          <div class="monogram">{{ couple_initials }}</div>
+
+          <div class="guest-box">
+            <p class="guest-label">Kepada Bapak/Ibu/Saudara/i</p>
+            <p class="guest-name">{{ guest_name }}</p>
+          </div>
+
+          <button class="btn-open"> geser undangan ke bawah... </button>
+        </div>
+      </div>
+      <p class="opening-footer">{{ quote_text }}</p>
+    </section>
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="section-label">The Wedding Of</p>
+      <img src="{{ story_photo }}" alt="{{ couple_initials }}" class="hero-photo">
+      <h2 class="hero-names">{{ bride_name }}<span class="and">&</span>{{ groom_name }}</h2>
+      <h2 class="date-small" id="main-wedding-date" data-date="{{ raw_event_date if raw_event_date else '2026-10-31' }}">
+          {{ akad_date }}
+      </h2>
+      <p style="margin-top: 12px; font-size: 0.95rem;">
+                            <strong>{{ resep_venue }}</strong><br>
+                            {{ resep_address }}</p>
+
+		<div class="countdown" id="countdown">
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="days">00</span>
+		    <span class="countdown-label">Hari</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="hours">00</span>
+		    <span class="countdown-label">Jam</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="minutes">00</span>
+		    <span class="countdown-label">Menit</span>
+		  </div>
+		
+		  <div class="countdown-item">
+		    <span class="countdown-number" id="seconds">00</span>
+		    <span class="countdown-label">Detik</span>
+		  </div>
+		</div>
+    </section>
+    <!-- Countdown dan pemformatan tanggal dijalankan melalui script di bagian akhir dokumen. -->
+
+    <!-- SALAM & COUPLE -->
+    <section class="salam">
+      <h2 class="section-title">Assalamu’alaikum Wr. Wb.</h2>
+      <p style="font-size:14px; color:var(--text-muted); max-width:320px; margin:0 auto 10px;">
+        {{ intro_greeting }}
+      </p>
+
+      <div class="couple-grid">
+        <div class="couple-card">
+		  <img src="{{ bride_photo }}" alt="{{ bride_name }}" class="couple-photo">
+          <h3 class="couple-name">{{ bride_name }}</h3>
+          <p class="couple-parents">Putri dari<br>{{ bride_parents }}</p>
+        </div>
+        <div class="couple-card">
+		  <img src="{{ groom_photo }}" alt="{{ groom_name }}" class="couple-photo">
+          <h3 class="couple-name">{{ groom_name }}</h3>
+          <p class="couple-parents">Putra dari<br>{{ groom_parents }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== STORY ==================== -->
+    <section class="story-section">
+      <p class="section-label">Cerita tentang kita</p>
+      <h2 class="section-title">Dari pertemuan,<br>menjadi bersama</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_1 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_1 }}</h3>
+            <p>{{ story_desc_1 }}</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_2 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_2 }}</h3>
+            <p>{{ story_desc_2 }}</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-year">{{ story_date_3 }}</div>
+          <div class="timeline-content">
+            <h3>{{ story_title_3 }}</h3>
+            <p>{{ story_desc_3 }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVENTS -->
+    <section class="events">
+      <p class="section-label">Save The Date</p>
+      <h2 class="section-title">Janji suci & perayaan</h2>
+
+      <div class="event-cards">
+        <div class="event-card">
+          <div class="event-type">Akad Nikah</div>
+		  <p class="event-detail">{{ akad_date }}</p>
+		  <p class="event-detail">Pukul {{ akad_time }} WIB</p>
+          <p class="event-detail">{{ akad_venue }}</p>
+          <p class="event-detail">{{ akad_address }}</p>
+		  <a href="{{ akad_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi Google Maps</a>
+        </div>
+
+        <div class="event-card">
+          <div class="event-type">Resepsi</div>
+          <p class="event-detail">{{ resep_date }}</p>
+          <p class="event-detail">Pukul {{ resep_time }} WIB</p>
+          <p class="event-detail">{{ resep_venue }}</p>
+          <p class="event-detail">{{ resep_address }}</p>
+          <a href="{{ resep_maps_url }}" target="_blank" class="btn-maps">Lihat Lokasi Google Maps</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 6: GALERI (CAROUSEL) ================= -->
+    <section class="section-page" id="page-gallery">
+      <div class="section-label">Momen Indah</div>
+      <div class="section-title">Galeri Pre-Wedding</div>
+      <div class="section-desc" style="font-style: italic; font-family: 'Cormorant Garamond'; font-size: 18px; margin-top: -10px;">"A moment that lasts forever"</div>
+    
+      {% if gallery_list and gallery_list|length > 0 %}
+      <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+          {% for img_url in gallery_list %}
+            <div class="carousel-slide" style="background-image: url('{{ img_url }}');"></div>
+          {% endfor %}
+        </div>
+        <button class="carousel-btn prev" onclick="moveCarousel(-1)">‹</button>
+        <button class="carousel-btn next" onclick="moveCarousel(1)">›</button>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+      {% endif %}
+    
+      <div class="section-label" style="margin-top: 10px;">Galeri Prewedding</div>
+    </section>
+
+    <!-- Fungsi carousel dijalankan oleh script utama di bagian bawah dokumen. -->
+
+
+    <!-- ==================== RSVP ==================== -->
+    <section class="rsvp-section">
+      <p class="section-label">Konfirmasi Kehadiran</p>
+      <h2 class="section-title">Bersedia hadir?</h2>
+      <p style="font-size: 14px; color: var(--text-muted); max-width: 300px; margin: 0 auto 10px;">
+        Merupakan suatu kehormatan apabila Bapak/Ibu/Saudara/i berkenan hadir.
+      </p>
+
+      <div class="form-container" id="rsvp-card">
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <input type="text" id="rsvp-nama" value="{{ guest_name if guest_name else '' }}" placeholder="Masukkan nama Anda..." required>
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Kehadiran</label>
+          <select id="rsvp-status" required>
+            <option value="Hadir">Hadir</option>
+            <option value="Ragu">Masih Ragu-ragu</option>
+            <option value="Tidak Hadir">Mohon Maaf, Tidak Bisa Hadir</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah Tamu</label>
+          <input type="number" id="rsvp-jumlah" min="1" max="5" value="1">
+        </div>
+        <div class="form-group">
+          <label>Ucapan & Doa Restu</label>
+          <textarea id="rsvp-ucapan" rows="3" placeholder="Tuliskan ucapan atau doa..."></textarea>
+        </div>
+        <button type="button" class="btn-submit" onclick="submitRSVP()">Kirim Konfirmasi</button>
+      </div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="closing">
+      <div class="closing-bg"></div>
+      <div class="closing-content">
+        <h2 class="closing-title">Terima Kasih</h2>
+        <p style="font-size:14px; max-width:300px; margin:0 auto; opacity:0.9;">
+          Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
+        </p>
+        <p class="closing-names">{{ bride_name_short }} & {{ groom_name_short }}</p>
+      </div>
+    </section>
+	
+	<script>
+    (() => {
+      "use strict";
+
+      // COUNTDOWN: gunakan tanggal dari elemen hero agar sumber tanggal konsisten.
+      const initCountdown = () => {
+        const countdown = document.getElementById("countdown");
+        const dateElement = document.getElementById("main-wedding-date");
+        if (!countdown || !dateElement) return;
+
+        const rawDate = (dateElement.getAttribute("data-date") || "").trim();
+        const dateMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!dateMatch) {
+          console.error("Tanggal pernikahan tidak valid:", rawDate);
+          return;
+        }
+
+        const year = Number(dateMatch[1]);
+        const month = Number(dateMatch[2]);
+        const day = Number(dateMatch[3]);
+        const checkDate = new Date(Date.UTC(year, month - 1, day));
+        if (checkDate.getUTCFullYear() !== year || checkDate.getUTCMonth() !== month - 1 || checkDate.getUTCDate() !== day) {
+          console.error("Tanggal pernikahan tidak valid:", rawDate);
+          return;
+        }
+
+        // Jam acara default 08.00 WIB (UTC+7). Ubah bila waktu akad berbeda.
+        const target = new Date(`${rawDate}T08:00:00+07:00`).getTime();
+        const daysEl = document.getElementById("days");
+        const hoursEl = document.getElementById("hours");
+        const minutesEl = document.getElementById("minutes");
+        const secondsEl = document.getElementById("seconds");
+        if (![daysEl, hoursEl, minutesEl, secondsEl].every(Boolean)) {
+          console.error("Elemen angka countdown belum lengkap.");
+          return;
+        }
+
+        let timerId;
+        const update = () => {
+          const distance = target - Date.now();
+          if (distance <= 0) {
+            if (timerId) window.clearInterval(timerId);
+            countdown.innerHTML = '<p class="countdown-finished">Hari Bahagia Telah Tiba!</p>';
+            return;
+          }
+          daysEl.textContent = String(Math.floor(distance / 86400000)).padStart(2, "0");
+          hoursEl.textContent = String(Math.floor((distance % 86400000) / 3600000)).padStart(2, "0");
+          minutesEl.textContent = String(Math.floor((distance % 3600000) / 60000)).padStart(2, "0");
+          secondsEl.textContent = String(Math.floor((distance % 60000) / 1000)).padStart(2, "0");
+        };
+        update();
+        timerId = window.setInterval(update, 1000);
+      };
+
+      // Format tanggal utama menjadi tanggal Indonesia tanpa mengubah data-date.
+      const formatWeddingDate = () => {
+        const dateElement = document.getElementById("main-wedding-date");
+        if (!dateElement) return;
+        const rawDate = (dateElement.getAttribute("data-date") || "").trim();
+        const match = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return;
+        const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12);
+        if (Number.isNaN(date.getTime())) return;
+        dateElement.textContent = date.toLocaleDateString("id-ID", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+        const subDate = document.getElementById("sub-wedding-date");
+        if (subDate) subDate.textContent = dateElement.textContent;
+      };
+
+      // CAROUSEL: aman jika galeri kosong atau tidak dirender oleh template.
+      let currentSlide = 0;
+      window.moveCarousel = (direction) => {
+        const track = document.getElementById("carouselTrack");
+        if (!track) return;
+        const total = track.children.length;
+        if (total === 0) return;
+        currentSlide = (currentSlide + direction + total) % total;
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll(".carousel-dot").forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentSlide);
+        });
+      };
+
+      const initCarousel = () => {
+        const track = document.getElementById("carouselTrack");
+        const dotsContainer = document.getElementById("carouselDots");
+        if (!track || !dotsContainer) return;
+        const total = track.children.length;
+        if (!total) return;
+        dotsContainer.replaceChildren();
+        for (let i = 0; i < total; i++) {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+          dot.setAttribute("aria-label", `Tampilkan foto ${i + 1}`);
+          dot.addEventListener("click", () => {
+            currentSlide = i;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dotsContainer.querySelectorAll(".carousel-dot").forEach((item, index) => {
+              item.classList.toggle("active", index === currentSlide);
+            });
+          });
+          dotsContainer.appendChild(dot);
+        }
+      };
+
+      // RSVP. Status berhasil dikirim hanya ditampilkan setelah permintaan dicoba;
+      // mode no-cors tidak memungkinkan browser membaca respons server.
+      window.submitRSVP = () => {
+        const namaEl = document.getElementById("rsvp-nama");
+        const statusEl = document.getElementById("rsvp-status");
+        const jumlahEl = document.getElementById("rsvp-jumlah");
+        const ucapanEl = document.getElementById("rsvp-ucapan");
+        const card = document.getElementById("rsvp-card");
+        if (!namaEl || !statusEl || !jumlahEl || !ucapanEl || !card) return;
+
+        const nama = namaEl.value.trim();
+        if (!nama) { alert("Mohon isi nama Anda terlebih dahulu."); namaEl.focus(); return; }
+
+        const status = statusEl.value;
+        const jumlah = Math.min(5, Math.max(1, Number(jumlahEl.value) || 1));
+        const ucapan = ucapanEl.value.trim();
+        const params = new URLSearchParams(window.location.search);
+        const currentUserId = params.get("user_id") || "{{ current_user_id|default('default_user') }}";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec";
+
+        // Hindari menyisipkan input pengguna langsung sebagai HTML.
+        card.replaceChildren();
+        const message = document.createElement("div");
+        message.style.cssText = "text-align:center;padding:30px 10px";
+        const icon = document.createElement("div");
+        icon.style.cssText = "font-size:36px;margin-bottom:12px";
+        icon.textContent = "💌";
+        const title = document.createElement("p");
+        title.style.cssText = "font-size:16px;font-weight:500;margin-bottom:8px";
+        title.textContent = `Terima kasih, ${nama}!`;
+        const detail = document.createElement("p");
+        detail.style.cssText = "font-size:13px;color:#666;line-height:1.5";
+        detail.textContent = "Konfirmasi Anda sedang diproses. Jika data belum masuk, silakan hubungi penyelenggara.";
+        message.append(icon, title, detail);
+        card.appendChild(message);
+
+        fetch(scriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ user_id: currentUserId, nama, status, jumlah, ucapan })
+        }).catch(error => console.error("Gagal mengirim RSVP:", error));
+      };
+
+      window.saveDate = () => alert("Fitur simpan ke kalender dapat ditambahkan sesuai kebutuhan.");
+
+      const init = () => {
+        formatWeddingDate();
+        initCountdown();
+        initCarousel();
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+	</script>
+
+  </div>
+</body>
+</html>
