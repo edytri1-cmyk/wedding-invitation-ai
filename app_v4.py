@@ -997,8 +997,8 @@ else:
 
                 if btn_generate:
                     with st.spinner(f"Merangkai data untuk {len(selected_templates_list)} template terpilih..."):
-                        rendered_templates = {}
                         
+                        rendered_templates = {}
                         for tpl_name in selected_templates_list:
                             target_tpl_file = f"{tpl_name}.html"
                             template_filename = target_tpl_file if os.path.exists(target_tpl_file) else "template.html"
