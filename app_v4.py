@@ -806,8 +806,8 @@ else:
         categories = {
             "💼 Temen Kantor - Formal & Elegan": ["FORMAL_KANTOR_01", "template01","template02","template03","template04"],
             "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template05","template06","template07","template08","template09"],
-            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template10","template11","template12","template13","template14","template15"],
-            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template16","template17","template18","template19"],
+            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template10","template11","template12","template13","template14"],
+            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template16","template17","template18","template19","template15"],
             "🕌 Temen Alim - Religius & Berkah": ["template20","template21","template22","template23","template24"],
         }
 
