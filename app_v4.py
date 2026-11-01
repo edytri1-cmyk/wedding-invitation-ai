@@ -724,7 +724,15 @@ else:
         import streamlit.components.v1 as components
 
         def get_thumb_url(tpl_name, w=400, h=600):
-            num = int(tpl_name.replace("template",""))
+            # FIX: Support FORMAL_KANTOR_01 dan template custom
+            try:
+                # Coba ambil angka dari nama template (01, 02, dll)
+                import re
+                numbers = re.findall(r'\d+', tpl_name)
+                num = int(numbers[-1]) if numbers else 1
+            except:
+                num = 1
+            
             thumbs = [
                 "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
                 "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
@@ -796,11 +804,11 @@ else:
         st.markdown('<div class="wow-hero"><div class="wow-badge">✨ ANTI KEDIP • NO RELOAD POPUP</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Klik +Pilih sekarang mulus, tanpa window kedip. Geser ke kanan →</div></div>', unsafe_allow_html=True)
 
         categories = {
-            "💼 Temen Kantor - Formal & Elegan": ["template01","template02","template03","template04","template05","template06","template07","template08","template09","FORMAL_KANTOR_01"],
-            "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template09","template10","template11","template12","template13","template14","template05","template06","template08","template08"],
-            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template15","template16","template17","template18","template19","template20","template02","template07","template08","template08"],
-            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template01","template08","template15","template16","template03","template04","template17","template18","template08","template08"],
-            "🕌 Temen Alim - Religius & Berkah": ["template09","template10","template11","template19","template20","template12","template13","template14","template08","template08"],
+            "💼 Temen Kantor - Formal & Elegan": ["FORMAL_KANTOR_01", "template01","template02","template03","template04"],
+            "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template05","template06","template07","template08","template09"],
+            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template10","template11","template12","template13","template14","template15"],
+            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template16","template17","template18","template19"],
+            "🕌 Temen Alim - Religius & Berkah": ["template20","template21","template22","template23","template24"],
         }
 
         @st.fragment
