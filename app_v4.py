@@ -122,28 +122,49 @@ import re
 from pathlib import Path
 
 def render_any_template(tpl_name: str, ctx: dict) -> str:
-    tpl_path = resolve_template_path(tpl_name)
-    if not tpl_path:
-        return f"<h1>Template {tpl_name} tidak ditemukan</h1>"
+    import re
+    from pathlib import Path
     
-    html = tpl_path.read_text(encoding='utf-8', errors='ignore')
+    # Cari file - sekarang cuma butuh index.html doang
+    base = Path("templates") / tpl_name / "index.html"
+    if not base.exists():
+        return f"<h1>Template {tpl_name} gak ketemu di {base}</h1>"
     
-    # Cuma mapping data, gak usah inline-inline lagi
-    akad_obj = ctx.get('akad_date_obj')
-    akad_str = akad_obj.strftime('%Y-%m-%d') if akad_obj else '2024-01-01'
+    html = base.read_text(encoding='utf-8', errors='ignore')
     
-    reps = {
-        "Wahyu &amp; Riski": f"{ctx.get('groom_name_short','Wahyu')} &amp; {ctx.get('bride_name_short','Riski')}",
-        "Nama Wahyu Siapa": ctx.get('groom_name','Nama Wahyu'),
-        "Nama Riski Siapa": ctx.get('bride_name','Nama Riski'),
-    }
-    for k,v in reps.items():
-        if v: html = html.replace(k, v)
+    # === MAPPING DATA USER ===
+    groom_short = ctx.get('groom_name_short','Wahyu')
+    bride_short = ctx.get('bride_name_short','Riski')
+    
+    # Ganti nama (ini mapping default ULEM - sesuaikan kalau perlu)
+    html = html.replace("Wahyu &amp; Riski", f"{groom_short} &amp; {bride_short}")
+    html = html.replace("Wahyu & Riski", f"{groom_short} & {bride_short}")
+    
+    if ctx.get('groom_name'):
+        html = html.replace("Nama Wahyu Siapa", ctx.get('groom_name'))
+    if ctx.get('bride_name'):
+        html = html.replace("Nama Riski Siapa", ctx.get('bride_name'))
 
-    if ctx.get('photo_url'):
-        # ganti semua placeholder dengan foto user
-        html = re.sub(r'data:image/[^;]+;base64,[^"]+', ctx.get('photo_url'), html, count=1)
-
+    # === PAKSA MATIKAN LOADING SCREEN PUTIH ===
+    # Ini yang bikin putih terus
+    html = html.replace(
+        'id="loading-screen"', 
+        'id="loading-screen" style="display:none!important;opacity:0!important;"'
+    )
+    
+    # Tambah script pemaksa di akhir body biar pasti muncul
+    force_show = """
+    <script>
+    setTimeout(function(){
+      var loader = document.getElementById('loading-screen');
+      if(loader){ loader.style.display='none'; loader.remove(); }
+      document.body.style.overflow='auto';
+      document.documentElement.style.overflow='auto';
+    }, 500);
+    </script>
+    """
+    html = html.replace("</body>", force_show + "</body>")
+    
     return html
         
 # =========================================================
@@ -1062,9 +1083,6 @@ else:
                     
                     st.info(f"📱 Menampilkan Pratinjau: **{preview_choice}**")
                     st.components.v1.html(rendered_templates[preview_choice], height=800, scrolling=True)
-                    st.write(f"DEBUG - CSS ada? {Path(f'templates/{preview_choice}/css/guest.css').exists()}")
-                    st.write(f"DEBUG - JS ada? {Path(f'templates/{preview_choice}/dist/guest.js').exists()}")
-                    st.write(f"DEBUG - Folder isi: {list(Path(f'templates/{preview_choice}').glob('*'))}")
                 else:
                     st.info("Silakan atur data di sebelah kiri lalu klik tombol **Generate & Render** untuk melihat pratinjau.")
 
