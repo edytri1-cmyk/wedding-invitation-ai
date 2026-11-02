@@ -90,87 +90,6 @@ def file_to_base64(uploaded_file):
         return f"data:{mime_type};base64,{base64_encoded}"
     return None
 
-# =========================================================
-# UNIVERSAL TEMPLATE ENGINE - ANTI PATCH SELAMANYA
-# =========================================================
-from pathlib import Path
-import json as _json_mod
-
-def resolve_template_path(tpl_name: str):
-    candidates = [
-        Path(f"templates/{tpl_name}/index.html"),
-        Path(f"templates/OLD_TEMPLATE/{tpl_name}.html"),
-        Path(f"templates/{tpl_name}.html"),
-        Path(f"{tpl_name}.html"),
-        Path("template.html"),
-    ]
-    for p in candidates:
-        if p.exists():
-            return p
-    return None
-
-def load_template_config(tpl_name: str):
-    cfg_path = Path(f"templates/{tpl_name}/config.json")
-    if cfg_path.exists():
-        try:
-            return _json_mod.loads(cfg_path.read_text(encoding='utf-8'))
-        except Exception:
-            return {}
-    return {}
-
-import re
-from pathlib import Path
-
-def render_any_template(tpl_name: str, ctx: dict) -> str:
-    import re
-    from pathlib import Path
-    
-    # Cari file - sekarang cuma butuh index.html doang
-    base = Path("templates") / tpl_name / "index.html"
-    if not base.exists():
-        return f"<h1>Template {tpl_name} gak ketemu di {base}</h1>"
-    
-    html = base.read_text(encoding='utf-8', errors='ignore')
-    
-    # === MAPPING DATA USER ===
-    groom_short = ctx.get('groom_name_short','Wahyu')
-    bride_short = ctx.get('bride_name_short','Riski')
-    
-    # Ganti nama (ini mapping default ULEM - sesuaikan kalau perlu)
-    html = html.replace("Wahyu &amp; Riski", f"{groom_short} &amp; {bride_short}")
-    html = html.replace("Wahyu & Riski", f"{groom_short} & {bride_short}")
-    
-    if ctx.get('groom_name'):
-        html = html.replace("Nama Wahyu Siapa", ctx.get('groom_name'))
-    if ctx.get('bride_name'):
-        html = html.replace("Nama Riski Siapa", ctx.get('bride_name'))
-
-    # === PAKSA MATIKAN LOADING SCREEN PUTIH ===
-    # Ini yang bikin putih terus
-    html = html.replace(
-        'id="loading-screen"', 
-        'id="loading-screen" style="display:none!important;opacity:0!important;"'
-    )
-    
-    # Tambah script pemaksa di akhir body biar pasti muncul
-    force_show = """
-    <script>
-    setTimeout(function(){
-      var loader = document.getElementById('loading-screen');
-      if(loader){ loader.style.display='none'; loader.remove(); }
-      document.body.style.overflow='auto';
-      document.documentElement.style.overflow='auto';
-    }, 500);
-    </script>
-    """
-    html = html.replace("</body>", force_show + "</body>")
-    
-    return html
-        
-# =========================================================
-# END UNIVERSAL ENGINE
-# =========================================================
-
 def generate_ai_content(prompt, theme_choice, groom_name, bride_name):
     GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
     GROQ_KEY = os.environ.get("GROQ_API_KEY", "")
@@ -719,15 +638,7 @@ else:
         import streamlit.components.v1 as components
 
         def get_thumb_url(tpl_name, w=400, h=600):
-            # FIX: Support FORMAL_KANTOR_01 dan template custom
-            try:
-                # Coba ambil angka dari nama template (01, 02, dll)
-                import re
-                numbers = re.findall(r'\d+', tpl_name)
-                num = int(numbers[-1]) if numbers else 1
-            except:
-                num = 1
-            
+            num = int(tpl_name.replace("template",""))
             thumbs = [
                 "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=600&fit=crop",
                 "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=600&fit=crop",
@@ -799,11 +710,11 @@ else:
         st.markdown('<div class="wow-hero"><div class="wow-badge">✨ ANTI KEDIP • NO RELOAD POPUP</div><div class="wow-title">PILIH TEMPLATE<br>SESUAI<br><span>SEGMEN TAMU</span></div><div class="wow-sub">Klik +Pilih sekarang mulus, tanpa window kedip. Geser ke kanan →</div></div>', unsafe_allow_html=True)
 
         categories = {
-            "💼 Temen Kantor - Formal & Elegan": ["FORMAL_KANTOR_01", "template01","template02","template03","template04"],
-            "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template05","template06","template07","template08","template09"],
-            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template10","template11","template12","template13","template14"],
-            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template16","template17","template18","template19","template15"],
-            "🕌 Temen Alim - Religius & Berkah": ["template20","template21","template22","template23","template24"],
+            "💼 Temen Kantor - Formal & Elegan": ["template01","template02","template03","template04","template05","template06","template07","template08","template09","template10"],
+            "🏡 Ortu & Tetangga - Tradisional & Local Wisdom": ["template09","template10","template11","template12","template13","template14","template05","template06","template08","template08"],
+            "🎓 Nongkrong & Kuliah - Gaul & Ceria": ["template15","template16","template17","template18","template19","template20","template02","template07","template08","template08"],
+            "🎮 Temen Mabar - Fun & Gaming Vibes": ["template01","template08","template15","template16","template03","template04","template17","template18","template08","template08"],
+            "🕌 Temen Alim - Religius & Berkah": ["template09","template10","template11","template19","template20","template12","template13","template14","template08","template08"],
         }
 
         @st.fragment
@@ -1000,57 +911,63 @@ else:
 
                 if btn_generate:
                     with st.spinner(f"Merangkai data untuk {len(selected_templates_list)} template terpilih..."):
-
                         rendered_templates = {}
+                        
                         for tpl_name in selected_templates_list:
-                            ctx = {
-                                "couple_initials": couple_initials,
-                                "groom_name": groom_name,
-                                "groom_name_short": groom_name_short,
-                                "bride_name": bride_name,
-                                "bride_name_short": bride_name_short,
-                                "bride_photo": bride_photo,
-                                "groom_photo": groom_photo,
-                                "bride_parents": bride_parents,
-                                "groom_parents": groom_parents,
-                                "intro_greeting": intro_greeting,
-                                "akad_date": akad_date.strftime("%d %B %Y"),
-                                "akad_date_str": akad_date.strftime("%d %B %Y"),
-                                "akad_date_obj": akad_date,
-                                "raw_event_date": akad_date.strftime("%Y-%m-%d"),
-                                "akad_time": akad_time,
-                                "akad_venue": akad_venue,
-                                "akad_address": akad_address,
-                                "akad_maps_url": akad_maps_url,
-                                "resep_date": resep_date.strftime("%d %B %Y"),
-                                "resep_time": resep_time,
-                                "resep_venue": resep_venue,
-                                "resep_address": resep_address,
-                                "resep_maps_url": resep_maps_url,
-                                "event_city": resep_address.split(",")[-1].strip() if resep_address else "Bandung",
-                                "story_photo": story_photo,
-                                "story_date_1": story_date_1,
-                                "story_title_1": story_title_1,
-                                "story_desc_1": story_desc_1,
-                                "story_date_2": story_date_2,
-                                "story_title_2": story_title_2,
-                                "story_desc_2": story_desc_2,
-                                "story_date_3": story_date_3,
-                                "story_title_3": story_title_3,
-                                "story_desc_3": story_desc_3,
-                                "gallery_list": gallery_list,
-                                "quote_text": quote_text,
-                                "closing_photo": closing_photo,
-                                "photo_url": cover_photo_url,
-                                "music_url": final_music_url,
-                                "guest_name": test_guest_name,
-                                "current_user_id": current_user
-                            }
-                            rendered_html = render_any_template(tpl_name, ctx)
+                            target_tpl_file = f"{tpl_name}.html"
+                            template_filename = target_tpl_file if os.path.exists(target_tpl_file) else "template.html"
+
+                            if os.path.exists(template_filename):
+                                with open(template_filename, "r", encoding="utf-8") as f:
+                                    template_content = f.read()
+                            else:
+                                template_content = f"<h1>Template {tpl_name} tidak ditemukan. Memakai fallback template.</h1>"
+
+                            jinja_template = Template(template_content)
+                            rendered_html = jinja_template.render(
+                                couple_initials=couple_initials,
+                                groom_name=groom_name,
+                                groom_name_short=groom_name_short,
+                                bride_name=bride_name,
+                                bride_name_short=bride_name_short,
+                                bride_photo=bride_photo,
+                                groom_photo=groom_photo,
+                                bride_parents=bride_parents,
+                                groom_parents=groom_parents,
+                                intro_greeting=intro_greeting,
+                                akad_date=akad_date.strftime("%d %B %Y"),
+                                raw_event_date=akad_date.strftime("%Y-%m-%d"),
+                                akad_time=akad_time,
+                                akad_venue=akad_venue,
+                                akad_address=akad_address,
+                                akad_maps_url=akad_maps_url,
+                                resep_date=resep_date.strftime("%d %B %Y"),
+                                resep_time=resep_time,
+                                resep_venue=resep_venue,
+                                resep_address=resep_address,
+                                resep_maps_url=resep_maps_url,
+                                event_city=resep_address.split(",")[-1].strip() if resep_address else "Bandung",
+                                story_photo=story_photo,
+                                story_date_1=story_date_1,
+                                story_title_1=story_title_1,
+                                story_desc_1=story_desc_1,
+                                story_date_2=story_date_2,
+                                story_title_2=story_title_2,
+                                story_desc_2=story_desc_2,
+                                story_date_3=story_date_3,
+                                story_title_3=story_title_3,
+                                story_desc_3=story_desc_3,
+                                gallery_list=gallery_list,
+                                quote_text=quote_text,
+                                closing_photo=closing_photo,
+                                photo_url=cover_photo_url,
+                                music_url=final_music_url,
+                                guest_name=test_guest_name,
+                                current_user_id=current_user
+                            )
                             rendered_templates[tpl_name] = rendered_html
 
                         st.session_state["rendered_templates"] = rendered_templates
-                        
                         st.session_state["design_ready"] = True
                         st.session_state["groom_name"] = groom_name
                         st.session_state["bride_name"] = bride_name
