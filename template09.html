@@ -421,19 +421,34 @@
 
     .credits a { color: var(--primary); text-decoration: none; }
 
-    /* Galeri */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    /* HALAMAN 6: GALLERY */
+    #gallery {
+         background: linear-gradient(135deg, #C8E6C9, #E8F5E9);
     }
 
-    .gallery-grid img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+    }
+
+    .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            height: 280px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover {
+            transform: scale(1.03);
+    }
+
+    .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
     }
 
     /* Form */
@@ -714,15 +729,18 @@
         </div>
       </section>
 
-      <!-- ===== GALERI ===== -->
+    <!-- ==================== HALAMAN 6: GALERI PREWEDDING ==================== -->
       <section id="gallery">
-        <div class="panel reveal">
-          <p class="eyebrow">MOMEN BAHAGIA</p>
-          <h2 class="font-esthetic title">Galeri Foto</h2>
-          <div class="gallery-grid reveal delay-1">
-				<img src="{{ img }}" alt="Prewedding Photo">
-          </div>
-        </div>
+         <div class="container">
+             <h2 class="section-title">Foto Kami Berdua</h2>
+             <div class="gallery-grid">
+                 {% for img in gallery_list %}
+                 <div class="gallery-item">
+                     <img src="{{ img }}" alt="Prewedding Photo">
+                 </div>
+                 {% endfor %}
+             </div>
+         </div>
       </section>
 
       <!-- ===== RSVP ===== -->
