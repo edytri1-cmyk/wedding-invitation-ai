@@ -784,6 +784,8 @@ else:
                     cover_photo_url = file_to_base64(cover_photo) if cover_photo else st.text_input("Atau URL Foto Cover", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
                     
                     couple_initials = st.text_input("Singkatan Nama Kedua Mempelai", "A & A", disabled=is_session_active, help="Contoh: A & A atau A & H")
+                    c_photo = st.file_uploader("Foto Couple", type=["jpg", "jpeg", "png"], key="b_photo_file", disabled=is_session_active)
+                    couple_photo = file_to_base64(b_photo) if b_photo else st.text_input("URL Foto Couple", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop", disabled=is_session_active)
                     groom_name = st.text_input("Nama Lengkap Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
                     groom_name_short = st.text_input("Nama Pendek Mempelai Pria", "Aditya", disabled=is_session_active)
                     bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
@@ -830,17 +832,17 @@ else:
                     story_img = st.file_uploader("Foto Ilustrasi Our Story", type=["jpg", "jpeg", "png"], key="story_img_file", disabled=is_session_active)
                     story_photo = file_to_base64(story_img) if story_img else st.text_input("URL Foto Story", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop", disabled=is_session_active)
                     
-                    st.markdown("#### Babak 1")
+                    st.markdown("#### Momen ke 1")
                     story_date_1 = st.text_input("Tanggal/Bulan Babak 1", "Januari 2021", disabled=is_session_active)
                     story_title_1 = st.text_input("Judul Babak 1", "Pertama Bertemu", disabled=is_session_active)
                     story_desc_1 = st.text_area("Narasi Babak 1", "Takdir mempertemukan kami di sebuah galeri seni rupa di kawasan Braga, Bandung, berdiskusi tentang arsitektur dan impian masa depan.", disabled=is_session_active)
 
-                    st.markdown("#### Babak 2")
+                    st.markdown("#### Momen ke 2")
                     story_date_2 = st.text_input("Tanggal/Bulan Babak 2", "Maret 2024", disabled=is_session_active)
                     story_title_2 = st.text_input("Judul Babak 2", "Komitmen Bersama", disabled=is_session_active)
                     story_desc_2 = st.text_area("Narasi Babak 2", "Setelah melalui berbagai suka dan duka bersama dalam karier dan pendidikan, kami memutuskan untuk membawa hubungan ini ke jenjang serius.", disabled=is_session_active)
 
-                    st.markdown("#### Babak 3")
+                    st.markdown("#### Momen ke 3")
                     story_date_3 = st.text_input("Tanggal/Bulan Babak 3", "Oktober 2026", disabled=is_session_active)
                     story_title_3 = st.text_input("Judul Babak 3", "Menuju Halal", disabled=is_session_active)
                     story_desc_3 = st.text_area("Narasi Babak 3", "Hari yang paling dinantikan akhirnya tiba. Kami siap mengikat janji suci sehidup semati dalam ikatan pernikahan yang diridhoi-Nya.", disabled=is_session_active)
@@ -926,6 +928,7 @@ else:
                             jinja_template = Template(template_content)
                             rendered_html = jinja_template.render(
                                 couple_initials=couple_initials,
+                                couple_photo=couple_photo,
                                 groom_name=groom_name,
                                 groom_name_short=groom_name_short,
                                 bride_name=bride_name,
