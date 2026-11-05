@@ -346,51 +346,74 @@
       color: var(--muted);
     }
 
-    /* HALAMAN 4: OUR STORY */
-    #story {
-          background: linear-gradient(to bottom, #E8F5E9, #C8E6C9);
-    }
-
-    .timeline {
-        max-width: 600px;
-        margin: 40px auto 0;
-        position: relative;
-    }
-
-    .timeline::before {
-     content: '';
-       position: absolute;
-	    left: 20px;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: var(--hijau-medium);
-    }
-
-    .timeline-item {
-        position: relative;
-        padding-left: 60px;
-        margin-bottom: 40px;
-        text-align: left;
-    }
-
-    .timeline-dot {
-        position: absolute;
-        left: 11px;
-        top: 5px;
-        width: 20px;
-        height: 20px;
-        background: var(--hijau-tua);
-        border-radius: 50%;
-        border: 4px solid var(--hijau-muda);
-    }
-
-    .timeline-title {
-        font-weight: 600;
-		text-align: left;
-        color: var(--hijau-gelap);
-        margin-bottom: 5px;
-    }
+	/* OUR STORY — transparan agar Background Scene tetap terlihat */
+	#story {
+	  background: transparent;
+	}
+	
+	.story-panel {
+	  background: transparent;
+	  border: none;
+	  box-shadow: none;
+	  text-align: center;
+	}
+	
+	.story-panel .eyebrow,
+	.story-panel .title {
+	  text-align: center;
+	  text-shadow: 0 1px 2px #fff, 0 0 14px rgba(255, 255, 255, 0.95);
+	}
+	
+	.timeline {
+	  max-width: 320px;
+	  margin: 24px auto 0;
+	  position: relative;
+	  text-align: left;
+	}
+	
+	.timeline::before {
+	  content: '';
+	  position: absolute;
+	  left: 9px;
+	  top: 0;
+	  bottom: 0;
+	  width: 2px;
+	  background: linear-gradient(180deg, var(--primary), #f5c2d0);
+	  border-radius: 1px;
+	}
+	
+	.timeline-item {
+	  position: relative;
+	  padding-left: 36px;
+	  margin-bottom: 28px;
+	}
+	
+	.timeline-dot {
+	  position: absolute;
+	  left: 2px;
+	  top: 4px;
+	  width: 16px;
+	  height: 16px;
+	  background: var(--primary);
+	  border: 3px solid #fff;
+	  border-radius: 50%;
+	  box-shadow: 0 0 0 3px rgba(201, 24, 74, 0.2);
+	}
+	
+	.timeline-title {
+	  font-weight: 700;
+	  font-size: 0.95rem;
+	  color: var(--primary);
+	  margin-bottom: 4px;
+	  text-align: left;
+	}
+	
+	.timeline-item p {
+	  font-size: 0.85rem;
+	  color: var(--dark);
+	  line-height: 1.45;
+	  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+	}
 	  
     /* Kartu acara */
     .event-card {
@@ -747,29 +770,31 @@
           </div>
         </div>
       </section>
-    <!-- ==================== HALAMAN 4: OUR STORY ==================== -->
-      <section id="story">
-        <div class="container">
-            <h2 class="section-title">Our Story</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-title">{{ story_title_1 }} ({{ story_date_1 }})</div>
-                    <p>{{ story_desc_1 }}</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-title">{{ story_title_2 }} ({{ story_date_2 }})</div>
-                    <p>{{ story_desc_2 }}</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-title">{{ story_title_3 }} ({{ story_date_3 }})</div>
-                    <p>{{ story_desc_3 }}</p>
-                </div>
-            </div>
-        </div>
-      </section>
+		<!-- ===== OUR STORY ===== -->
+	  <section id="story">
+		<div class="panel story-panel reveal">
+		   <p class="eyebrow">PERJALANAN CINTA</p>
+		   <h2 class="font-esthetic title">Our Story</h2>
+		
+		   <div class="timeline reveal delay-1">
+		     <div class="timeline-item">
+		       <div class="timeline-dot"></div>
+		       <div class="timeline-title">{{ story_title_1 }} ({{ story_date_1 }})</div>
+		       <p>{{ story_desc_1 }}</p>
+		     </div>
+		     <div class="timeline-item">
+		       <div class="timeline-dot"></div>
+		       <div class="timeline-title">{{ story_title_2 }} ({{ story_date_2 }})</div>
+		       <p>{{ story_desc_2 }}</p>
+		     </div>
+		     <div class="timeline-item">
+		       <div class="timeline-dot"></div>
+		       <div class="timeline-title">{{ story_title_3 }} ({{ story_date_3 }})</div>
+		       <p>{{ story_desc_3 }}</p>
+		     </div>
+		   </div>
+		</div>
+	  </section>
 
       <!-- ===== GALERI ===== -->
       <section id="gallery">
