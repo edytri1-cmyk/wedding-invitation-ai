@@ -784,8 +784,8 @@ else:
                     cover_photo_url = file_to_base64(cover_photo) if cover_photo else st.text_input("Atau URL Foto Cover", "https://images.unsplash.com/photo-1519741497674-611481863552", disabled=is_session_active)
                     
                     couple_initials = st.text_input("Singkatan Nama Kedua Mempelai", "A & A", disabled=is_session_active, help="Contoh: A & A atau A & H")
-                    c_photo = st.file_uploader("Foto Couple", type=["jpg", "jpeg", "png"], key="b_photo_file", disabled=is_session_active)
-                    couple_photo = file_to_base64(b_photo) if b_photo else st.text_input("URL Foto Couple", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop", disabled=is_session_active)
+                    couple_file = st.file_uploader("Foto Couple", type=["jpg", "jpeg", "png"], key="couple_photo_file", disabled=is_session_active)
+                    couple_photo = file_to_base64(couple_file) if couple_file else st.text_input("URL Foto Couple", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop", disabled=is_session_active)
                     groom_name = st.text_input("Nama Lengkap Mempelai Pria", "Aditya Pratama, S.T", disabled=is_session_active)
                     groom_name_short = st.text_input("Nama Pendek Mempelai Pria", "Aditya", disabled=is_session_active)
                     bride_name = st.text_input("Nama Lengkap Mempelai Wanita", "Aruna Kirana Putri, S.Arch", disabled=is_session_active)
