@@ -579,33 +579,6 @@
     #soundBtn.show    { display: flex; }
     #soundBtn.playing { color: #fff; background: var(--primary); }
 
-    .mobile-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      z-index: 90;
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-      max-width: var(--app-width);
-      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.96);
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .mobile-nav a {
-      flex: 1;
-      font-size: 0.6rem;
-      text-align: center;
-      text-decoration: none;
-      color: #8a7a70;
-    }
-
-    .mobile-nav a i { display: block; margin-bottom: 2px; font-size: 1.1rem; }
-    .mobile-nav a.active { font-weight: 700; color: var(--primary); }
-
     @media (prefers-reduced-motion: reduce) {
       .cloud, .blade, .wing { animation: none; }
       .reveal { transition: none; }
@@ -840,15 +813,6 @@
         </div>
       </section>
     </main>
-
-    <!-- ===== NAV ===== -->
-    <nav class="mobile-nav" aria-label="Navigasi">
-      <a href="#home"    class="nav-link active" data-target="home"><i class="fa-solid fa-house"></i>Home</a>
-      <a href="#couple"  class="nav-link" data-target="couple"><i class="fa-solid fa-heart"></i>Couple</a>
-      <a href="#event"   class="nav-link" data-target="event"><i class="fa-solid fa-calendar"></i>Acara</a>
-      <a href="#gallery" class="nav-link" data-target="gallery"><i class="fa-solid fa-images"></i>Galeri</a>
-      <a href="#rsvp"    class="nav-link" data-target="rsvp"><i class="fa-solid fa-envelope"></i>RSVP</a>
-    </nav>
   </div>
 
   <script>
