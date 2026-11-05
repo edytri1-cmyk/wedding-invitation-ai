@@ -635,9 +635,8 @@
     <div id="opening">
       <div class="opening-card">
         <p style="font-size:0.75rem;letter-spacing:2px;color:var(--muted);margin-bottom:4px;">THE WEDDING OF</p>
-        <h1 class="font-esthetic" style="font-size:2.6rem;line-height:1.1;color:var(--primary);">Alya &amp; Raka</h1>
-        <img data-photo="coupleHijab" data-w="400" class="img-circle" alt="Alya dan Raka">
-		<img src="{{ bride_photo }}" alt="Alya dan Raka" class="img-circle">
+        <h1 class="font-esthetic" style="font-size:2.6rem;line-height:1.1;color:var(--primary);">{{ bride_name_short }} &amp; {{ groom_name_short }}</h1>
+		<img src="{{ couple_photo }}" alt="Kedua Mempelai" class="img-circle">
 
         <div class="guest-box">
           <p style="font-size:0.7rem;color:var(--muted);margin-bottom:2px;">Kepada Yth.</p>
@@ -660,8 +659,8 @@
         <div class="panel reveal">
           <p class="eyebrow">UNDANGAN PERNIKAHAN</p>
           <h1 class="font-esthetic" style="font-size:2.4rem;margin:4px 0;">{{ bride_name_short }} &amp; {{ groom_name_short }}</h1>
-          <img src="{{ bride_photo }}" data-w="600" class="img-circle reveal delay-1" alt="Alya dan Raka">
-          <p class="reveal delay-2" style="margin:8px 0 14px;font-weight:600;">12 Desember 2027</p>
+          <img src="{{ couple_photo }}" data-w="600" class="img-circle reveal delay-1" alt="Alya dan Raka">
+          <p class="reveal delay-2" style="margin:8px 0 14px;font-weight:600;">{{ resep_date }}</p>
 
           <div class="countdown reveal delay-3">
             <div class="countdown-box"><b id="cd-day">00</b><span>Hari</span></div>
