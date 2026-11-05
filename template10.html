@@ -350,7 +350,7 @@
     .event-card {
       margin-bottom: 12px;
       padding: 1.1rem;
-      text-align: left;
+      text-align: center;
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -370,17 +370,22 @@
     .event-card p i  { width: 18px; }
     .event-card .address { padding-left: 22px; font-size: 0.8rem; color: var(--muted); }
 
-	.btn-maps {
-		display: inline-block;
-		margin-top: 18px;
-		padding: 10px 22px;
-		background: var(--hijau-tua);
-		color: white;
-		text-decoration: none;
-		border-radius: 50px;
-		font-size: 0.9rem;
-		transition: all 0.3s;
-	}
+    .btn-maps {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 10px 22px;
+        background: var(--hijau-tua);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .btn-maps:hover {
+        background: var(--hijau-gelap);
+        transform: scale(1.05);
+    }
 
     /* Tombol */
     .btn-main,
@@ -619,9 +624,7 @@
         <button id="openBtn" class="btn-main" type="button">
           <i class="fa-solid fa-envelope-open"></i> Buka Undangan
         </button>
-        <p style="margin-top:12px;font-size:0.7rem;color:var(--muted);">
-          <i class="fa-solid fa-dove" style="color:var(--primary);"></i> Taman Kupu-Kupu
-        </p>
+
       </div>
     </div>
 
@@ -676,7 +679,6 @@
           <h2 class="font-esthetic title">Detail Acara</h2>
 
           <div class="event-card reveal delay-1">
-            <img data-photo="mosque" data-w="600" class="event-photo" alt="Masjid">
             <h5><i class="fa-solid fa-moon"></i>Akad Nikah</h5>
             <p><i class="fa-regular fa-calendar"></i>{{ akad_date }}</p>
             <p><i class="fa-regular fa-clock"></i>{{ akad_time }}</p>
@@ -685,7 +687,6 @@
           </div>
 
           <div class="event-card reveal delay-2">
-            <img data-photo="decor" data-w="600" class="event-photo" alt="Dekorasi pelaminan">
             <h5><i class="fa-solid fa-champagne-glasses"></i>Resepsi</h5>
             <p><i class="fa-regular fa-calendar"></i>{{ resep_date }}</p>
             <p><i class="fa-regular fa-clock"></i>{{ resep_time }}</p>
