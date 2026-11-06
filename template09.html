@@ -70,7 +70,6 @@
       scroll-margin-top: 10px;
     }
 
-    /* Background */
     .bg-scene {
       position: fixed;
       top: 0;
@@ -240,7 +239,6 @@
     .b5 .wing        { background: linear-gradient(135deg, #b5f7b5, #52b788); }
     .b5 .wing.bottom { background: linear-gradient(135deg, #52b788, #2d6a4f); }
 
-    /* Komponen */
     .panel {
       padding: 1.4rem 1.1rem;
       text-align: center;
@@ -478,8 +476,6 @@
 
     form { text-align: left; }
     .field { margin-bottom: 0.9rem; }
-    .field-row { display: flex; gap: 8px; }
-    .field-row .field { flex: 1; }
 
     label {
       display: block;
@@ -587,6 +583,12 @@
   </style>
 </head>
 <body class="locked">
+
+  <!-- Config dari Jinja (aman, di HTML bukan di dalam JS string '{{') -->
+  <div id="invite-config"
+       data-event-date="{{ raw_event_date | default('2027-12-12', true) }}"
+       data-user-id="{{ current_user_id | default('default_user', true) }}"
+       hidden></div>
 
   <div class="bg-scene" id="bgScene" aria-hidden="true">
     <div class="sun"></div>
@@ -717,7 +719,6 @@
         </div>
       </section>
 
-      <!-- ===== RSVP ===== -->
       <section id="rsvp">
         <div class="panel reveal">
           <p class="eyebrow">KONFIRMASI</p>
@@ -794,8 +795,9 @@
     </main>
   </div>
 
-  <!-- RSVP → Google Sheets (fungsi global, di luar IIFE) -->
+  <!-- Script aman untuk Jinja: dibungkus raw agar {{ di JS tidak diparse -->
   <script>
+  {% raw %}
     function escapeHtml(str) {
       return String(str)
         .replace(/&/g, '&amp;')
@@ -812,6 +814,7 @@
       var ucapanEl = document.getElementById('rsvp-ucapan');
       var card = document.getElementById('rsvp-card');
       var btn = document.getElementById('rsvpSubmitBtn');
+      var cfg = document.getElementById('invite-config');
 
       var nama = (namaEl && namaEl.value || '').trim();
       var status = statusEl ? statusEl.value : '';
@@ -828,9 +831,11 @@
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
       }
 
-      // GANTI URL ini jika deployment Apps Script berubah
       var scriptUrl = 'https://script.google.com/macros/s/AKfycbyQoSKGx4NEpWy-WEZN87MSFMt9b661LCLEmTXErhDKOMZOWpF2iXzVh2GZS7TGBO0h/exec';
-      var currentUserId = new URLSearchParams(location.search).get('user_id') || 'default_user';
+      var currentUserId =
+        new URLSearchParams(location.search).get('user_id') ||
+        (cfg && cfg.dataset.userId) ||
+        'default_user';
 
       var payload = {
         type: 'rsvp',
@@ -850,7 +855,6 @@
         console.error('Gagal mengirim RSVP:', err);
       });
 
-      // Tampilkan sukses (no-cors tidak bisa baca response server)
       if (card) {
         card.innerHTML =
           '<div class="rsvp-success">' +
@@ -860,325 +864,337 @@
           '</div>';
       }
     }
-  </script>
 
-  <script>
-  (() => {
-    'use strict';
+    (function () {
+      'use strict';
 
-    const CONFIG = {
-      eventDate: '{{ raw_event_date | default("2027-12-12", true) }}T08:00:00+07:00',
-      fallbackEventDate: '2027-12-12T08:00:00+07:00',
-      bankAccount: { bank: 'BCA', number: '1234567890', name: 'Alya Putri' },
-      defaultGuest: 'Teman & Keluarga'
-    };
+      var cfg = document.getElementById('invite-config');
+      var rawDate = (cfg && cfg.dataset.eventDate) ? cfg.dataset.eventDate : '2027-12-12';
 
-    const $  = (id) => document.getElementById(id);
-    const $$ = (sel) => document.querySelectorAll(sel);
-    const rand = (min, max) => min + Math.random() * (max - min);
-    const pad2 = (n) => String(n).padStart(2, '0');
+      var CONFIG = {
+        eventDate: rawDate + 'T08:00:00+07:00',
+        fallbackEventDate: '2027-12-12T08:00:00+07:00',
+        bankAccount: { bank: 'BCA', number: '1234567890', name: 'Alya Putri' },
+        defaultGuest: 'Teman & Keluarga'
+      };
 
-    /* Background */
-    function buildGrass() {
-      const grass = $('grass');
-      if (!grass) return;
-      const frag = document.createDocumentFragment();
-      for (let i = 0; i < 70; i++) {
-        const blade = document.createElement('div');
-        blade.className = 'blade';
-        blade.style.cssText = `left:${rand(0, 100)}%;height:${rand(18, 46)}px;animation-delay:${rand(0, 3)}s`;
-        frag.appendChild(blade);
-      }
-      grass.appendChild(frag);
-    }
+      var $  = function (id) { return document.getElementById(id); };
+      var $$ = function (sel) { return document.querySelectorAll(sel); };
+      var rand = function (min, max) { return min + Math.random() * (max - min); };
+      var pad2 = function (n) { return String(n).padStart(2, '0'); };
 
-    function buildFlowers() {
-      const scene = $('bgScene');
-      if (!scene) return;
-      const colors = ['', 'yellow', 'purple', 'white'];
-      const frag = document.createDocumentFragment();
-      for (let i = 0; i < 22; i++) {
-        const flower = document.createElement('div');
-        flower.className = `flower ${colors[i % 4]} ${Math.random() < 0.5 ? 'small' : ''}`.trim();
-        flower.style.cssText = `left:${rand(2, 96)}%;bottom:${rand(6, 84)}%;transform:scale(${rand(0.7, 1.6)})`;
-        for (let p = 0; p < 5; p++) {
-          const petal = document.createElement('div');
-          petal.className = 'petal';
-          petal.style.transform = `translate(-50%,-100%) rotate(${p * 72}deg) translateY(-2px)`;
-          flower.appendChild(petal);
+      function buildGrass() {
+        var grass = $('grass');
+        if (!grass) return;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 70; i++) {
+          var blade = document.createElement('div');
+          blade.className = 'blade';
+          blade.style.cssText = 'left:' + rand(0, 100) + '%;height:' + rand(18, 46) + 'px;animation-delay:' + rand(0, 3) + 's';
+          frag.appendChild(blade);
         }
-        const center = document.createElement('div');
-        center.className = 'flower-center';
-        flower.appendChild(center);
-        frag.appendChild(flower);
+        grass.appendChild(frag);
       }
-      scene.appendChild(frag);
-    }
 
-    function buildButterflies() {
-      const scene = $('bgScene');
-      if (!scene) return;
-      const configs = [
-        { x: 20, y: 60, vx:  0.8, vy: -0.6, speed: 0.90, ampX: 22, ampY: 14, freqX: 0.0012, freqY: 0.0017 },
-        { x: 70, y: 40, vx: -0.7, vy: -0.4, speed: 0.75, ampX: 18, ampY: 20, freqX: 0.0010, freqY: 0.0014 },
-        { x: 45, y: 75, vx:  0.6, vy: -0.8, speed: 1.00, ampX: 25, ampY: 12, freqX: 0.0015, freqY: 0.0011 },
-        { x: 80, y: 65, vx: -0.9, vy:  0.2, speed: 0.85, ampX: 16, ampY: 18, freqX: 0.0013, freqY: 0.0016 },
-        { x: 30, y: 35, vx:  0.5, vy:  0.7, speed: 0.80, ampX: 20, ampY: 16, freqX: 0.0011, freqY: 0.0019 }
-      ];
+      function buildFlowers() {
+        var scene = $('bgScene');
+        if (!scene) return;
+        var colors = ['', 'yellow', 'purple', 'white'];
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 22; i++) {
+          var flower = document.createElement('div');
+          flower.className = ('flower ' + colors[i % 4] + (Math.random() < 0.5 ? ' small' : '')).trim();
+          flower.style.cssText = 'left:' + rand(2, 96) + '%;bottom:' + rand(6, 84) + '%;transform:scale(' + rand(0.7, 1.6) + ')';
+          for (var p = 0; p < 5; p++) {
+            var petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.transform = 'translate(-50%,-100%) rotate(' + (p * 72) + 'deg) translateY(-2px)';
+            flower.appendChild(petal);
+          }
+          var center = document.createElement('div');
+          center.className = 'flower-center';
+          flower.appendChild(center);
+          frag.appendChild(flower);
+        }
+        scene.appendChild(frag);
+      }
 
-      const list = configs.map((cfg, i) => {
-        const el = document.createElement('div');
-        el.className = `butterfly b${i + 1}`;
-        el.innerHTML =
-          '<div class="wing left top"></div><div class="wing left bottom"></div>' +
-          '<div class="wing right top"></div><div class="wing right bottom"></div>' +
-          '<div class="butterfly-body"></div>';
-        scene.appendChild(el);
-        return { ...cfg, el };
-      });
+      function buildButterflies() {
+        var scene = $('bgScene');
+        if (!scene) return;
+        var configs = [
+          { x: 20, y: 60, vx:  0.8, vy: -0.6, speed: 0.90, ampX: 22, ampY: 14, freqX: 0.0012, freqY: 0.0017 },
+          { x: 70, y: 40, vx: -0.7, vy: -0.4, speed: 0.75, ampX: 18, ampY: 20, freqX: 0.0010, freqY: 0.0014 },
+          { x: 45, y: 75, vx:  0.6, vy: -0.8, speed: 1.00, ampX: 25, ampY: 12, freqX: 0.0015, freqY: 0.0011 },
+          { x: 80, y: 65, vx: -0.9, vy:  0.2, speed: 0.85, ampX: 16, ampY: 18, freqX: 0.0013, freqY: 0.0016 },
+          { x: 30, y: 35, vx:  0.5, vy:  0.7, speed: 0.80, ampX: 20, ampY: 16, freqX: 0.0011, freqY: 0.0019 }
+        ];
 
-      function tick(now) {
-        list.forEach((b, i) => {
-          const t  = now * b.freqX + i * 1.7;
-          const t2 = now * b.freqY + i * 2.3;
-          b.vx += (Math.random() - 0.5) * 0.04;
-          b.vy += (Math.random() - 0.5) * 0.04;
-          if (b.x < 8)  b.vx =  Math.abs(b.vx) + 0.2;
-          if (b.x > 92) b.vx = -Math.abs(b.vx) - 0.2;
-          if (b.y < 8)  b.vy =  Math.abs(b.vy) + 0.2;
-          if (b.y > 88) b.vy = -Math.abs(b.vy) - 0.3;
-          const slow = b.y > 68 ? 0.45 : 1;
-          b.x += b.vx * b.speed * slow;
-          b.y += b.vy * b.speed * slow;
-          b.vx *= 0.992;
-          b.vy *= 0.992;
-          const wobbleX = Math.sin(t)  * b.ampX * 0.18;
-          const wobbleY = Math.sin(t2) * b.ampY * 0.18;
-          const rotation = Math.atan2(b.vy, b.vx) * 180 / Math.PI + wobbleX * 1.2;
-          b.el.style.left = `${b.x + wobbleX * 0.12}%`;
-          b.el.style.top  = `${b.y + wobbleY * 0.12}%`;
-          b.el.style.transform = `translate(-50%,-50%) rotate(${rotation}deg)`;
+        var list = configs.map(function (cfgItem, i) {
+          var el = document.createElement('div');
+          el.className = 'butterfly b' + (i + 1);
+          el.innerHTML =
+            '<div class="wing left top"></div><div class="wing left bottom"></div>' +
+            '<div class="wing right top"></div><div class="wing right bottom"></div>' +
+            '<div class="butterfly-body"></div>';
+          scene.appendChild(el);
+          var o = Object.assign({}, cfgItem);
+          o.el = el;
+          return o;
         });
+
+        function tick(now) {
+          list.forEach(function (b, i) {
+            var t  = now * b.freqX + i * 1.7;
+            var t2 = now * b.freqY + i * 2.3;
+            b.vx += (Math.random() - 0.5) * 0.04;
+            b.vy += (Math.random() - 0.5) * 0.04;
+            if (b.x < 8)  b.vx =  Math.abs(b.vx) + 0.2;
+            if (b.x > 92) b.vx = -Math.abs(b.vx) - 0.2;
+            if (b.y < 8)  b.vy =  Math.abs(b.vy) + 0.2;
+            if (b.y > 88) b.vy = -Math.abs(b.vy) - 0.3;
+            var slow = b.y > 68 ? 0.45 : 1;
+            b.x += b.vx * b.speed * slow;
+            b.y += b.vy * b.speed * slow;
+            b.vx *= 0.992;
+            b.vy *= 0.992;
+            var wobbleX = Math.sin(t)  * b.ampX * 0.18;
+            var wobbleY = Math.sin(t2) * b.ampY * 0.18;
+            var rotation = Math.atan2(b.vy, b.vx) * 180 / Math.PI + wobbleX * 1.2;
+            b.el.style.left = (b.x + wobbleX * 0.12) + '%';
+            b.el.style.top  = (b.y + wobbleY * 0.12) + '%';
+            b.el.style.transform = 'translate(-50%,-50%) rotate(' + rotation + 'deg)';
+          });
+          requestAnimationFrame(tick);
+        }
         requestAnimationFrame(tick);
       }
-      requestAnimationFrame(tick);
-    }
 
-    /* Suara burung */
-    const Sparrows = (() => {
-      let ctx = null, master = null, timers = [], running = false;
+      var Sparrows = (function () {
+        var ctx = null, master = null, timers = [], running = false;
 
-      function setup() {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
-        master = ctx.createGain();
-        master.gain.value = 0;
-        const delay = ctx.createDelay(0.5);
-        delay.delayTime.value = 0.13;
-        const feedback = ctx.createGain();
-        feedback.gain.value = 0.22;
-        const tone = ctx.createBiquadFilter();
-        tone.type = 'lowpass';
-        tone.frequency.value = 5200;
-        master.connect(ctx.destination);
-        master.connect(delay);
-        delay.connect(tone);
-        tone.connect(feedback);
-        feedback.connect(delay);
-        tone.connect(ctx.destination);
-      }
-
-      function chirp(when, baseFreq, duration, pan, volume) {
-        const f0 = baseFreq * rand(0.92, 1.08);
-        const out = ctx.createGain();
-        out.gain.setValueAtTime(0.0001, when);
-        out.gain.exponentialRampToValueAtTime(volume, when + 0.008);
-        out.gain.exponentialRampToValueAtTime(0.0001, when + duration);
-        let node = out;
-        if (ctx.createStereoPanner) {
-          const panner = ctx.createStereoPanner();
-          panner.pan.value = pan;
-          out.connect(panner);
-          node = panner;
+        function setup() {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          master = ctx.createGain();
+          master.gain.value = 0;
+          var delay = ctx.createDelay(0.5);
+          delay.delayTime.value = 0.13;
+          var feedback = ctx.createGain();
+          feedback.gain.value = 0.22;
+          var tone = ctx.createBiquadFilter();
+          tone.type = 'lowpass';
+          tone.frequency.value = 5200;
+          master.connect(ctx.destination);
+          master.connect(delay);
+          delay.connect(tone);
+          tone.connect(feedback);
+          feedback.connect(delay);
+          tone.connect(ctx.destination);
         }
-        node.connect(master);
-        [['sine', 1, 1], ['triangle', 2, 0.25]].forEach(([type, mult, level]) => {
-          const osc = ctx.createOscillator();
-          const g = ctx.createGain();
-          osc.type = type;
-          g.gain.value = level;
-          osc.frequency.setValueAtTime(f0 * mult, when);
-          osc.frequency.exponentialRampToValueAtTime(f0 * mult * 1.4, when + duration * 0.35);
-          osc.frequency.exponentialRampToValueAtTime(f0 * mult * 0.78, when + duration);
-          osc.connect(g);
-          g.connect(out);
-          osc.start(when);
-          osc.stop(when + duration + 0.02);
-        });
-      }
 
-      function singBird({ base, pan, volume, minPause, maxPause }) {
-        function phrase() {
-          if (!running) return;
-          const count = Math.floor(rand(2, 6));
-          let t = ctx.currentTime + 0.05;
-          for (let i = 0; i < count; i++) {
-            const dur = rand(0.05, 0.11);
-            chirp(t, base, dur, pan, volume);
-            t += dur + rand(0.06, 0.16);
+        function chirp(when, baseFreq, duration, pan, volume) {
+          var f0 = baseFreq * rand(0.92, 1.08);
+          var out = ctx.createGain();
+          out.gain.setValueAtTime(0.0001, when);
+          out.gain.exponentialRampToValueAtTime(volume, when + 0.008);
+          out.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+          var node = out;
+          if (ctx.createStereoPanner) {
+            var panner = ctx.createStereoPanner();
+            panner.pan.value = pan;
+            out.connect(panner);
+            node = panner;
           }
-          const phraseLength = (t - ctx.currentTime) * 1000;
-          timers.push(setTimeout(phrase, phraseLength + rand(minPause, maxPause) * 1000));
-        }
-        timers.push(setTimeout(phrase, rand(0, 1200)));
-      }
-
-      return {
-        get isPlaying() { return running; },
-        async start() {
-          if (running) return;
-          if (!ctx) setup();
-          await ctx.resume();
-          running = true;
-          master.gain.cancelScheduledValues(ctx.currentTime);
-          master.gain.linearRampToValueAtTime(0.45, ctx.currentTime + 1.2);
-          singBird({ base: 3300, pan: -0.5, volume: 0.35, minPause: 0.8, maxPause: 3.0 });
-          singBird({ base: 2800, pan:  0.5, volume: 0.28, minPause: 1.5, maxPause: 4.5 });
-          singBird({ base: 3800, pan:  0.0, volume: 0.20, minPause: 2.5, maxPause: 6.0 });
-        },
-        stop() {
-          if (!running) return;
-          running = false;
-          timers.forEach(clearTimeout);
-          timers = [];
-          master.gain.cancelScheduledValues(ctx.currentTime);
-          master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
-        },
-        suspend() { if (ctx && ctx.state === 'running') ctx.suspend(); },
-        resume()  { if (ctx && running && ctx.state === 'suspended') ctx.resume(); }
-      };
-    })();
-
-    function initSound() {
-      const btn = $('soundBtn');
-      if (!btn) return { async startFromGesture() {} };
-
-      const render = () => {
-        const on = Sparrows.isPlaying;
-        btn.classList.toggle('playing', on);
-        btn.innerHTML = `<i class="fa-solid ${on ? 'fa-volume-high' : 'fa-volume-xmark'}"></i>`;
-      };
-
-      btn.addEventListener('click', async () => {
-        if (Sparrows.isPlaying) Sparrows.stop();
-        else await Sparrows.start();
-        render();
-      });
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) Sparrows.suspend();
-        else Sparrows.resume();
-      });
-
-      return {
-        async startFromGesture() {
-          try { await Sparrows.start(); } catch (_) {}
-          btn.classList.add('show');
-          render();
-        }
-      };
-    }
-
-    function initOpening(sound) {
-      const openBtn = $('openBtn');
-      if (!openBtn) return;
-      openBtn.addEventListener('click', async () => {
-        $('opening').classList.add('hide');
-        document.body.classList.remove('locked');
-        if (window.confetti) {
-          const colors = ['#ff3b6e', '#ffe066', '#a06cff', '#52b788'];
-          const end = Date.now() + 2000;
-          (function frame() {
-            confetti({ particleCount: 3, angle: 60,  spread: 55, origin: { x: 0 }, colors });
-            confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors });
-            if (Date.now() < end) requestAnimationFrame(frame);
-          })();
-        }
-        await sound.startFromGesture();
-        setTimeout(() => {
-          $$('.reveal').forEach((el) => {
-            if (el.getBoundingClientRect().top < window.innerHeight - 40) el.classList.add('active');
+          node.connect(master);
+          [['sine', 1, 1], ['triangle', 2, 0.25]].forEach(function (item) {
+            var type = item[0], mult = item[1], level = item[2];
+            var osc = ctx.createOscillator();
+            var g = ctx.createGain();
+            osc.type = type;
+            g.gain.value = level;
+            osc.frequency.setValueAtTime(f0 * mult, when);
+            osc.frequency.exponentialRampToValueAtTime(f0 * mult * 1.4, when + duration * 0.35);
+            osc.frequency.exponentialRampToValueAtTime(f0 * mult * 0.78, when + duration);
+            osc.connect(g);
+            g.connect(out);
+            osc.start(when);
+            osc.stop(when + duration + 0.02);
           });
-        }, 400);
-      });
-    }
+        }
 
-    function initCountdown() {
-      let target = new Date(CONFIG.eventDate);
-      if (isNaN(target.getTime())) target = new Date(CONFIG.fallbackEventDate);
-      const els = { day: $('cd-day'), hour: $('cd-hour'), min: $('cd-min'), sec: $('cd-sec') };
-      if (!els.day) return;
-      function update() {
-        const diff = Math.max(0, target - new Date());
-        els.day.textContent  = pad2(Math.floor(diff / 86400000));
-        els.hour.textContent = pad2(Math.floor(diff / 3600000) % 24);
-        els.min.textContent  = pad2(Math.floor(diff / 60000) % 60);
-        els.sec.textContent  = pad2(Math.floor(diff / 1000) % 60);
-      }
-      update();
-      setInterval(update, 1000);
-    }
-
-    function initGuestName() {
-      const el = $('guestName');
-      if (!el) return;
-      const to = new URLSearchParams(location.search).get('to');
-      if (to) {
-        const name = decodeURIComponent(to);
-        el.textContent = name;
-        const rsvpNama = $('rsvp-nama');
-        if (rsvpNama && !rsvpNama.value) rsvpNama.value = name;
-      } else if (!el.textContent.trim() || el.textContent.includes('{{')) {
-        el.textContent = CONFIG.defaultGuest;
-      }
-    }
-
-    function initScroll() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target);
+        function singBird(opts) {
+          function phrase() {
+            if (!running) return;
+            var count = Math.floor(rand(2, 6));
+            var t = ctx.currentTime + 0.05;
+            for (var i = 0; i < count; i++) {
+              var dur = rand(0.05, 0.11);
+              chirp(t, opts.base, dur, opts.pan, opts.volume);
+              t += dur + rand(0.06, 0.16);
+            }
+            var phraseLength = (t - ctx.currentTime) * 1000;
+            timers.push(setTimeout(phrase, phraseLength + rand(opts.minPause, opts.maxPause) * 1000));
           }
-        });
-      }, { threshold: 0.12 });
-      $$('.reveal').forEach((el) => observer.observe(el));
-    }
+          timers.push(setTimeout(phrase, rand(0, 1200)));
+        }
 
-    function initButtons() {
-      const copyBtn = $('copyRekBtn');
-      if (copyBtn) {
-        copyBtn.addEventListener('click', async () => {
-          const { bank, number, name } = CONFIG.bankAccount;
-          try {
-            await navigator.clipboard.writeText(number);
-            alert('Nomor rekening disalin!');
-          } catch {
-            alert(`${bank} ${number} a.n. ${name}`);
+        return {
+          get isPlaying() { return running; },
+          start: async function () {
+            if (running) return;
+            if (!ctx) setup();
+            await ctx.resume();
+            running = true;
+            master.gain.cancelScheduledValues(ctx.currentTime);
+            master.gain.linearRampToValueAtTime(0.45, ctx.currentTime + 1.2);
+            singBird({ base: 3300, pan: -0.5, volume: 0.35, minPause: 0.8, maxPause: 3.0 });
+            singBird({ base: 2800, pan:  0.5, volume: 0.28, minPause: 1.5, maxPause: 4.5 });
+            singBird({ base: 3800, pan:  0.0, volume: 0.20, minPause: 2.5, maxPause: 6.0 });
+          },
+          stop: function () {
+            if (!running) return;
+            running = false;
+            timers.forEach(clearTimeout);
+            timers = [];
+            master.gain.cancelScheduledValues(ctx.currentTime);
+            master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
+          },
+          suspend: function () { if (ctx && ctx.state === 'running') ctx.suspend(); },
+          resume: function () { if (ctx && running && ctx.state === 'suspended') ctx.resume(); }
+        };
+      })();
+
+      function initSound() {
+        var btn = $('soundBtn');
+        if (!btn) return { startFromGesture: async function () {} };
+
+        var render = function () {
+          var on = Sparrows.isPlaying;
+          btn.classList.toggle('playing', on);
+          btn.innerHTML = on
+            ? '<i class="fa-solid fa-volume-high"></i>'
+            : '<i class="fa-solid fa-volume-xmark"></i>';
+        };
+
+        btn.addEventListener('click', async function () {
+          if (Sparrows.isPlaying) Sparrows.stop();
+          else await Sparrows.start();
+          render();
+        });
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) Sparrows.suspend();
+          else Sparrows.resume();
+        });
+
+        return {
+          startFromGesture: async function () {
+            try { await Sparrows.start(); } catch (e) {}
+            btn.classList.add('show');
+            render();
           }
+        };
+      }
+
+      function initOpening(sound) {
+        var openBtn = $('openBtn');
+        if (!openBtn) return;
+        openBtn.addEventListener('click', async function () {
+          $('opening').classList.add('hide');
+          document.body.classList.remove('locked');
+          if (window.confetti) {
+            var colors = ['#ff3b6e', '#ffe066', '#a06cff', '#52b788'];
+            var end = Date.now() + 2000;
+            (function frame() {
+              confetti({ particleCount: 3, angle: 60,  spread: 55, origin: { x: 0 }, colors: colors });
+              confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
+              if (Date.now() < end) requestAnimationFrame(frame);
+            })();
+          }
+          await sound.startFromGesture();
+          setTimeout(function () {
+            $$('.reveal').forEach(function (el) {
+              if (el.getBoundingClientRect().top < window.innerHeight - 40) el.classList.add('active');
+            });
+          }, 400);
         });
       }
-    }
 
-    buildGrass();
-    buildFlowers();
-    buildButterflies();
-    const sound = initSound();
-    initOpening(sound);
-    initCountdown();
-    initGuestName();
-    initScroll();
-    initButtons();
-  })();
+      function initCountdown() {
+        var target = new Date(CONFIG.eventDate);
+        if (isNaN(target.getTime())) target = new Date(CONFIG.fallbackEventDate);
+        var els = { day: $('cd-day'), hour: $('cd-hour'), min: $('cd-min'), sec: $('cd-sec') };
+        if (!els.day) return;
+        function update() {
+          var diff = Math.max(0, target - new Date());
+          els.day.textContent  = pad2(Math.floor(diff / 86400000));
+          els.hour.textContent = pad2(Math.floor(diff / 3600000) % 24);
+          els.min.textContent  = pad2(Math.floor(diff / 60000) % 60);
+          els.sec.textContent  = pad2(Math.floor(diff / 1000) % 60);
+        }
+        update();
+        setInterval(update, 1000);
+      }
+
+      function initGuestName() {
+        var el = $('guestName');
+        if (!el) return;
+        var to = new URLSearchParams(location.search).get('to');
+        if (to) {
+          var name = decodeURIComponent(to);
+          el.textContent = name;
+          var rsvpNama = $('rsvp-nama');
+          if (rsvpNama && !rsvpNama.value) rsvpNama.value = name;
+        } else {
+          var text = el.textContent.trim();
+          // Aman untuk Jinja: jangan tulis string '{{' di source
+          var looksLikePlaceholder = text.indexOf('{') !== -1 && text.indexOf('}') !== -1;
+          if (!text || looksLikePlaceholder) {
+            el.textContent = CONFIG.defaultGuest;
+          }
+        }
+      }
+
+      function initScroll() {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        $$('.reveal').forEach(function (el) { observer.observe(el); });
+      }
+
+      function initButtons() {
+        var copyBtn = $('copyRekBtn');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', async function () {
+            var bank = CONFIG.bankAccount.bank;
+            var number = CONFIG.bankAccount.number;
+            var name = CONFIG.bankAccount.name;
+            try {
+              await navigator.clipboard.writeText(number);
+              alert('Nomor rekening disalin!');
+            } catch (e) {
+              alert(bank + ' ' + number + ' a.n. ' + name);
+            }
+          });
+        }
+      }
+
+      buildGrass();
+      buildFlowers();
+      buildButterflies();
+      var sound = initSound();
+      initOpening(sound);
+      initCountdown();
+      initGuestName();
+      initScroll();
+      initButtons();
+    })();
+  {% endraw %}
   </script>
 </body>
 </html>
